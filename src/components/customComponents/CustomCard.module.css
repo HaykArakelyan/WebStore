@@ -1,0 +1,36 @@
+.container {
+    background-color: white;
+    height: 20rem;
+    color: black;
+    text-align: center;
+    border-radius: 1rem;
+    transition: 0.3s;
+    cursor: pointer;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    padding: .8rem;
+}
+
+.container:hover {
+    box-shadow: 1rem 1rem 1rem black;
+    scale: 1.2;
+}
+
+.title {
+    padding-top: 0.3rem;
+    font-weight: bold;
+    font-size: 1.3rem;
+}
+
+.bottomCard {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.rating {}
+
+.price {
+    color: red;
+}

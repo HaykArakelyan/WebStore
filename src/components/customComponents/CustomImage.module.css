@@ -1,0 +1,8 @@
+.container {
+    height: 10rem;
+    width: 10rem;
+    background-size: cover;
+    background-repeat: no-repeat;
+    border-radius: 1rem;
+    align-self: center;
+}

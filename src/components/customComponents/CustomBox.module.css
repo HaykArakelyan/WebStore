@@ -1,0 +1,15 @@
+.container {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    /* width: 100px;
+    height: 100px; */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-radius: 10px;
+    padding: 50px;
+    background: linear-gradient(calc(360deg - 45deg), rgb(80, 54, 227), 50%, rgb(237, 92, 155));
+    box-shadow: 100px black;
+}

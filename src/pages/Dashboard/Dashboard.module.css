@@ -1,0 +1,26 @@
+.container {
+    display: flex;
+    flex-direction: column;
+}
+
+.products {
+    column-gap: 50px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    margin: 3rem auto 3rem;
+    row-gap: 3rem;
+    width: 80%;
+    /* height: 100vh; */
+}
+
+.paginationControl {
+    align-self: center;
+    background-color: #a3a2a2;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    padding: 3rem 0;
+    width: 40%;
+    border-radius: 1rem;
+    margin: 1rem 0;
+}

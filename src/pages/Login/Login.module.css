@@ -1,0 +1,36 @@
+.innerContainer {
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 50px;
+}
+
+.loginBox {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-radius: 10px;
+    padding: 50px;
+    background: linear-gradient(calc(360deg - 45deg), rgb(80, 54, 227), 50%, rgb(237, 92, 155));
+    box-shadow: 100px black;
+}
+
+.login:focus {
+    transform: scale(1.2);
+}
+
+.linkToReg {
+    color: white;
+    padding-top: 1rem;
+    text-align: center;
+    transition: .3s;
+    text-decoration: none;
+}
+
+.linkToReg:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+}
