@@ -12,7 +12,7 @@
     transition: 0.3s;
 }
 
-.container:hover:enabled>.title {
+.container:hover:enabled .title {
     animation: gradientAnimation ease 0.5s both;
 }
 

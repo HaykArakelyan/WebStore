@@ -7,7 +7,7 @@
     width: 100%;
 }
 
-.ul>li {
+.ul li {
     display: inline-block;
     padding-right: 2rem;
     transition: transform 0.3s ease;
@@ -21,7 +21,7 @@
 
 }
 
-ul>li:hover {
+ul li:hover {
     transform: scale(1.2);
 }
 

@@ -9,6 +9,7 @@
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     padding: .8rem;
 }
 
@@ -26,11 +27,8 @@
 .bottomCard {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
 }
 
-.rating {}
-
-.price {
-    color: red;
+.bottomCard label {
+    font-weight: 600;
 }

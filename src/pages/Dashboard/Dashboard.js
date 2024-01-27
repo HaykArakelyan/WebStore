@@ -4,8 +4,8 @@ import styles from './Dashboard.module.css'
 import CustomCard from '../../components/customComponents/CustomCard';
 import CustomButton from '../../components/customComponents/CustomButton'
 import CustomPaginator from '../../components/customComponents/CustomPaginator'
-import { motion } from 'framer-motion';
-import { productsAnimation } from '../../Navigation/RouteVariants';
+import { AnimatePresence } from 'framer-motion';
+import CustomModal from '../../components/customComponents/CustomModal';
 
 export default function Dashboard() {
     const [products, setProducts] = useState([])
@@ -18,8 +18,9 @@ export default function Dashboard() {
     const END_INDEX = START_INDEX + ITEMS_PER_PAGE
     const CURRENT_DATA = products.slice(START_INDEX, END_INDEX)
 
-    // const [scrollY, setScrollY] = useState(0)
+    const [isModalHidden, setIsModalHidden] = useState(true)
 
+    const [activeProduct, setActiveProduct] = useState({})
 
     const handlePageSwitch = (action, n) => {
         switch (action) {
@@ -38,14 +39,16 @@ export default function Dashboard() {
                 if (n >= 0 && n < MAX_PAGE_COUNT) {
                     setCurrentPage(n)
                 }
+                break;
             default:
                 break;
         }
     }
 
-    // const handleScrollY = () => {
-    //     setScrollY(window.scrollY)
-    // }
+    const handleCardClick = (e) => {
+        setIsModalHidden(false)
+        setActiveProduct(e)
+    }
 
     useEffect(() => {
         axios.get('https://dummyjson.com/products').then((res) => {
@@ -59,34 +62,48 @@ export default function Dashboard() {
     }, [currentPage])
 
     return (
-        <div className={styles.container}>
+        <div className={styles.outterContainer}>
+            <div className={styles.container}>
 
-            <div className={styles.products}>
-                {CURRENT_DATA.map(e =>
-                    <CustomCard
-                        key={e.id}
-                        p={e}
-                    />
-                )}
-            </div>
-            {products.length != 0 ? <div className={styles.paginationControl}>
-                <CustomButton
-                    text={"Back"}
-                    onClick={() =>
-                        handlePageSwitch("back")
+                <div className={styles.products}>
+                    {CURRENT_DATA.map(e =>
+                        <CustomCard
+                            key={e.id}
+                            p={e}
+                            onClick={() => handleCardClick(e)}
+                        />
+                    )}
+                </div>
+
+                {products.length !== 0 ?
+                    <div className={styles.paginationControl}>
+                        <CustomButton
+                            text={"Back"}
+                            onClick={() => handlePageSwitch("back")}
+                        />
+                        <CustomPaginator
+                            numberOfPages={MAX_PAGE_COUNT}
+                            handlePageSwitch={handlePageSwitch}
+                        />
+                        <CustomButton
+                            text={"Next"}
+                            onClick={() => handlePageSwitch("next")}
+                        />
+                    </div> : null
+                }
+
+                <AnimatePresence
+                    initial={false}
+                    mode='wait'
+                >
+                    {!isModalHidden ?
+                        <CustomModal
+                            onCloseModal={setIsModalHidden}
+                            activeProduct={activeProduct}
+                        /> : null
                     }
-                />
-                <CustomPaginator
-                    numberOfPages={MAX_PAGE_COUNT}
-                    handlePageSwitch={handlePageSwitch}
-                />
-                <CustomButton
-                    text={"Next"}
-                    onClick={() =>
-                        handlePageSwitch("next")
-                    }
-                />
-            </div> : null}
+                </AnimatePresence>
+            </div >
         </div>
     )
 }

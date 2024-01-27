@@ -7,9 +7,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background: linear-gradient(135deg, rgb(252, 3, 3), rgb(247, 227, 2), rgb(80, 54, 227), rgb(237, 92, 155));
   background-size: 1450% 1450%;
-  /* background-size: 400% 400%; */
   background-repeat: no-repeat;
-  /* height: 100vh; */
   animation: gradientBackground 10s ease-in-out infinite;
 }
 

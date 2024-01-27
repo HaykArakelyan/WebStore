@@ -7,7 +7,6 @@ import Header from './components/Header/Header'
 import LocationProvider from './Navigation/LocationProvider'
 import RoutesWithAnimation from './Navigation/RoutesWithAnimation'
 
-
 export default function App() {
 
   return (

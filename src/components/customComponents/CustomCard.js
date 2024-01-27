@@ -2,22 +2,32 @@ import React from 'react'
 import styles from './CustomCard.module.css'
 import CustomImage from './CustomImage'
 
-import { faStar } from '@fortawesome/free-regular-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import Star from '../Icons/Star'
 
-import { colorIdentifier } from '../../CustomTools/CustomTools'
-
-export default function CustomCard({ p }) {
+export default function CustomCard({ p, onClick }) {
     const colors = {
-        lowRank: "red",
-        midRank: "yellow",
-        highRank: "green"
+        lowRank: {
+            red: 255,
+            green: 0,
+            blue: 0
+        },
+        midRank: {
+            red: 255,
+            green: 255,
+            blue: 0
+        },
+        highRank: {
+            red: 0,
+            green: 255,
+            blue: 0
+        }
     }
 
-    console.log(colorIdentifier(4.92))
-
     return (
-        <div className={styles.container}>
+        <div
+            className={styles.container}
+            onClick={onClick}
+        >
             <CustomImage
                 url={p.images[0]}
                 name={p.title}
@@ -33,13 +43,8 @@ export default function CustomCard({ p }) {
             </label>
             <div className={styles.bottomCard}>
                 <label className={styles.rating}>
+                    <Star rating={p.rating} colors={colors} />
                     {p.rating}
-                    <FontAwesomeIcon
-                        icon={faStar}
-                        style={{
-                            color: colorIdentifier(p.rating, colors)
-                        }}
-                    />
                 </label>
                 <label className={styles.price}>
                     ${p.price}

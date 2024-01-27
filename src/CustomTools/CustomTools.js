@@ -1,5 +1,3 @@
-import { color } from "framer-motion"
-
 export const isEmpty = (string) => {
     if (string == null || string === '' || string.length < 8) {
         return true
@@ -9,68 +7,35 @@ export const isEmpty = (string) => {
 
 
 export const colorIdentifier = (rank, colors) => {
-    let percentage = 0
-    // let shades = {
-    //     green: 0,
-    //     yellow: 0,
-    //     red: 0
-    // }
-
-    // if (rank <= 3) {
-    //     shades.red = 255
-    //     shades.yellow = Math.round(255 * (rank / 3));
-    //     return `rgb(${shades.red}, ${shades.yellow}, ${shades.green})`
-    // } else if (rank > 3 && rank < 4) {
-    //     percentage = (rank - 3) * 100
-    //     shades.red = Math.round(255 - (255 * (percentage / 100)))
-    //     shades.yellow = Math.round(255 * (percentage / 100))
-    //     return `rgb(${shades.red}, ${shades.yellow}, ${shades.green})`
-    // } else if (rank === 4) {
-    //     return `rgb(${shades.red}, ${shades.yellow}, ${shades.green})`
-    // } else if (rank > 4 && rank < 5) {
-    //     percentage = (rank - 4) * 100
-    //     shades.green = Math.round(255 * (percentage / 100))
-    //     shades.yellow = Math.round(255 - (255 * (percentage / 100)))
-    //     return `rgb(${shades.red}, ${shades.yellow}, ${shades.green})`
-    // } else if (rank === 5) {
-    //     return `rgb(${shades.red}, ${shades.yellow}, ${shades.green})`
-    // }
-
-
-    let red = 0;
-    let green = 0;
-    let blue = 0;
-
-    // if (rank <= 3) {
-    //     red = Math.round(255 * (rank / 3));
-    // } else if (rank > 3 && rank < 4) {
-    //     red = 255;
-    //     green = Math.round(255 * (4 - rank));
-    // } else if (rank === 4) {
-    //     green = 255;
-    // } else if (rank > 4 && rank < 5) {
-    //     green = 255;
-    //     blue = Math.round(255 * (rank - 4));
-    // } else if (rank >= 5) {
-    //     green = Math.round(255 - (255 * (rank - 5)));
-    //     blue = 255;
-    // }
-
+    let percentage = (rank % 1)
+    const shades = {
+        r: 0,
+        g: 0,
+        b: 0
+    }
     if (rank <= 3) {
-        red = 255;
+        shades.r = 255
+        shades.g = 0
+        shades.b = 0
     } else if (rank > 3 && rank < 4) {
-        red = 255;
-        green = Math.round(255 * (4 - rank));
+        shades.r = Math.round(colors.lowRank.red + (colors.midRank.red - colors.lowRank.red) * percentage)
+        shades.g = Math.round(colors.lowRank.green + (colors.midRank.green - colors.lowRank.green) * percentage)
+        shades.b = Math.round(colors.lowRank.blue + (colors.midRank.blue - colors.lowRank.blue) * percentage)
+
     } else if (rank === 4) {
-        green = 255;
-    } else if (rank > 4 && rank < 5) {
-        green = 255;
-        blue = Math.round(255 * (rank - 4));
-    } else if (rank >= 5) {
-        green = Math.round(255 - (255 * (rank - 5)));
-        blue = 255;
+        shades.r = 255
+        shades.g = 255
+        shades.b = 0
+    }
+    else if (rank > 4 && rank < 5) {
+        shades.r = Math.round(colors.midRank.red + (colors.highRank.red - colors.midRank.red) * percentage)
+        shades.g = Math.round(colors.midRank.green + (colors.highRank.green - colors.midRank.green) * percentage)
+        shades.b = Math.round(colors.midRank.blue + (colors.highRank.blue - colors.midRank.blue) * percentage)
+    } else if (rank === 5) {
+        shades.r = 0
+        shades.g = 255
+        shades.b = 0
     }
 
-
-    return `rgb(${red}, ${green}, ${blue})`;
+    return `rgb(${shades.r}, ${shades.g}, ${shades.b})`
 }
