@@ -21,6 +21,7 @@ export default function Register() {
     const [notMatchingStyle, setNotMatchingStyle] = useState({ "color": "red" })
     const [isPasswdHidden, setIsPasswdHidden] = useState(false)
 
+    //TODO
     useEffect(() => {
         areValidCredentials()
     }, [username, email, passwd])

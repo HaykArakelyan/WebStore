@@ -1,0 +1,160 @@
+.container {
+    height: 100%;
+    padding-top: 3rem;
+}
+
+.content {
+    width: 80%;
+    display: flex;
+    margin: auto;
+    padding: 1rem;
+    background-color: #C5C6C7;
+    border-radius: 1rem;
+    justify-content: space-around;
+}
+
+
+.userImage img {
+    width: 16rem;
+    height: 16rem;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.userBio {
+    display: flex;
+    flex-direction: column;
+}
+
+.userName,
+.userEmail {
+    color: white;
+    font-weight: bold;
+    margin-top: 1rem;
+    padding: 1rem;
+    background-color: gray;
+    border-radius: 1rem;
+    text-align: center;
+}
+
+.contentCenter {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    height: 100%;
+}
+
+.nameFields,
+.contactFields,
+.bioFields {
+    color: white;
+    font-weight: bold;
+    justify-content: space-between;
+    display: flex;
+    gap: 2rem;
+}
+
+.contactFields {
+    gap: 0;
+}
+
+.firstNameBlock,
+.lastNameBlock {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.dataBox {
+    padding: 1rem;
+    background-color: gray;
+    border-radius: 1rem;
+    text-align: center;
+}
+
+.dataBoxLabels {
+    font-size: .8rem;
+    padding-bottom: .2rem;
+}
+
+.contactFields {
+    display: flex;
+    flex-direction: column;
+}
+
+.emailBlock,
+.phoneBlock,
+.ageBlock,
+.genderBlock {
+    display: flex;
+    flex-direction: column;
+    padding-top: 1rem;
+    flex: 1;
+}
+
+.editInfoField {
+    display: flex;
+    justify-content: center;
+    padding-top: 2rem;
+}
+
+.contentRight {
+    align-items: center;
+    background-clip: text;
+    background-image: linear-gradient(270deg, rgb(80, 54, 227), rgb(237, 92, 155));
+    color: transparent;
+    display: flex;
+    flex-direction: column;
+    flex: .3;
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+.userProductsTitle {
+    border-bottom: 1px solid black;
+    padding-bottom: 1rem;
+    text-align: center;
+    width: 100%;
+}
+
+.userProducts {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.userEmptyList {
+    text-align: center;
+    padding: 1rem;
+}
+
+.productBox {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 0 1rem;
+}
+
+.product {
+    height: 4rem;
+    display: flex;
+    padding: .5rem;
+    background-color: gray;
+    border-radius: 1rem;
+    padding: 1rem;
+    cursor: pointer;
+}
+
+.productImage {
+    width: 4rem;
+    object-fit: cover;
+}
+
+.productDescription {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: .8rem;
+    font-weight: bold;
+    color: white;
+    padding: 0 1rem 0;
+}

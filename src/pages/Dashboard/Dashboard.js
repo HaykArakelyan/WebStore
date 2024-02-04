@@ -99,7 +99,7 @@ export default function Dashboard() {
                     {!isModalHidden ?
                         <CustomModal
                             onCloseModal={setIsModalHidden}
-                            activeProduct={activeProduct}
+                            product={activeProduct}
                         /> : null
                     }
                 </AnimatePresence>

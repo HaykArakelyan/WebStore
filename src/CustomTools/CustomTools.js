@@ -39,3 +39,19 @@ export const colorIdentifier = (rank, colors) => {
 
     return `rgb(${shades.r}, ${shades.g}, ${shades.b})`
 }
+
+export const makeFirstUpper = (string) => {
+    if (string.length <= 1) {
+        return string
+    }
+
+    return string.charAt(0).toUpperCase() + string.slice(1)
+}
+
+
+export const makeStringShorter = (string, maxLength) => {
+    if (string.length > maxLength) {
+        return string.substring(0, maxLength) + "..."
+    }
+    return string
+}

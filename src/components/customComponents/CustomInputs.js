@@ -10,7 +10,8 @@ export default function CustomInputs({
     icon = null,
     onIconClick = null,
     iconSize = null,
-    iconStyle = null
+    iconStyle = null,
+    value
 }) {
     return (
         <div className={styles.container}>
@@ -20,6 +21,7 @@ export default function CustomInputs({
                 className={styles.input}
                 onChange={(e) => onChange(e.target.value)}
                 style={style}
+                value={value}
             />
             {icon && onIconClick ?
                 <CustomIcon
