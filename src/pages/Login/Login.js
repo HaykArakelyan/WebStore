@@ -11,6 +11,9 @@ import { Link } from 'react-router-dom'
 
 import { useNavigate, useParams } from 'react-router-dom'
 
+import axios from 'axios'
+import { get_token_login, get_user_by_token } from '../../CustomTools/Requests'
+
 export default function Login() {
   const navigate = useNavigate()
 
@@ -19,28 +22,20 @@ export default function Login() {
   const [isDisabled, setIsDisabled] = useState(true)
   const [isCheckBoxChecked, setIsCheckBoxChecked] = useState(false)
 
-  useEffect(() => {
-    areValidCredentials()
-  }, [passwd, login])
+  // useEffect(() => {
+  //   areValidCredentials()
+  // }, [passwd, login])
 
-  const areValidCredentials = () => {
-    if (isEmpty(login) || isEmpty(passwd)) {
-      setIsDisabled(true)
-      return true
-    }
-    setIsDisabled(false)
-    return false
-  }
+  // const areValidCredentials = () => {
+  //   if (isEmpty(login) || isEmpty(passwd)) {
+  //     setIsDisabled(true)
+  //     return true
+  //   }
+  //   setIsDisabled(false)
+  //   return false
+  // }
 
   const handleLoginClick = () => {
-    //if user is logged in
-    //TODO **Simulation of getting the data of the current User**
-    // Scenario is the following:
-    // Front -(login, password)-> Back
-    // Front <-(JWT with user-data)- Back
-    // Front redirect(/user-profile/<username>)
-    // Currently login, but we should extract username having email
-
     const fake_user = {
       "id": 1,
       "info": {
@@ -110,11 +105,37 @@ export default function Login() {
       }]
     }
 
+    // // axios.post('http://localhost:5000/login', {
+    // //   email: login,
+    // //   password: passwd
+    // // })
+    // //   .then(function (response) {
+    // //     // console.log(response);
+    // //     if (response.ok) {
+    // //       // console.log(response.data)
 
-    const arg = fake_user.id
-    if (areValidCredentials) {
-      navigate(`/user-profile/${arg}`, { state: { user: fake_user } })
-    }
+    // //       // const arg = fake_user.id
+    // //       // navigate(`/user-profile/${arg}`, { state: { user: fake_user } })
+    // //     }
+    // //   })
+    //   .catch(function (error) {
+    //     console.log(error);
+    //   });
+
+
+    get_token_login(login, passwd)
+      .then(userId => {
+        if (userId) {
+          get_user_by_token(userId).then((user) => {
+            //TODO
+            navigate(`/user-profile/${user.id}`, { state: { user: { ...user, products: [], cart: [] } } })
+          }).catch((err) => {
+            console.log(err)
+          })
+
+        }
+      })
+      .catch(error => console.error(error));
   }
 
   return (
@@ -144,7 +165,6 @@ export default function Login() {
             text={"Sign In!"}
             onClick={() => handleLoginClick()}
             style={{ marginTop: "8px" }}
-            isDisabled={isDisabled}
           />
 
           <Link to={"/register"} className={styles.linkToReg}>

@@ -2,15 +2,14 @@ import React, { useState } from 'react'
 import styles from './EdiProfile.module.css'
 import CustomInputs from '../../components/customComponents/CustomInputs'
 import CustomButton from '../../components/customComponents/CustomButton'
-import { json } from 'react-router-dom'
 
 export default function EditProfile({ user, closeModal }) {
 
-    const [newFirstName, setNewFirstName] = useState(user.info.firstName)
-    const [newLastName, setNewLastName] = useState(user.info.lastName)
+    const [newFirstName, setNewFirstName] = useState(user.first_name)
+    const [newLastName, setNewLastName] = useState(user.last_lame)
 
-    const [newEmail, setNewEmail] = useState(user.info.email)
-    const [newPhone, setNewPhone] = useState(user.info.phone)
+    const [newEmail, setNewEmail] = useState(user.email)
+    const [newPhone, setNewPhone] = useState(user.phone)
 
     const [newGender, setnewGender] = useState(user.gender)
 
@@ -25,15 +24,15 @@ export default function EditProfile({ user, closeModal }) {
         //         "email": newEmail,
         //         "phone": newPhone,
         //         "gender": newGender,
-        //         "age": user.info.age
+        //         "age": user.age
         //     },
         //     "imageUrl": newImageurl,
         //     "products": user.products,
         //     "cart": user.cart
         // }
 
-        // console.log(json(updatedUser))
-        closeModal(true)
+        console.log(123)
+        closeModal(false)
     }
 
     return (
@@ -74,7 +73,7 @@ export default function EditProfile({ user, closeModal }) {
             <div className={styles.saveButton}>
                 <CustomButton
                     text={"Save Changes"}
-                    onClick={() => closeModal(true)}
+                    onClick={() => handleSaveChangesClick()}
                 />
             </div>
 

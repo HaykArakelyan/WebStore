@@ -1,5 +1,5 @@
 export const isEmpty = (string) => {
-    if (string == null || string === '' || string.length < 8) {
+    if (string == null || string === '') {
         return true
     }
     return false

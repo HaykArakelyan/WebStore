@@ -15,11 +15,10 @@ export default function UserProfile({ }) {
     const location = useLocation()
     const user = location.state?.user
 
-    const [imageUrl, setImageUrl] = useState(user.imageUrl)
+    const [imageUrl, setImageUrl] = useState(user.img)
     const [userProducts, setUserProducts] = useState(user.products)
     const [userCart, setUserCart] = useState(user.cart)
 
-    const [activeProduct, setActiveProduct] = useState(null)
     const [isModalHidden, setIsModalHidden] = useState(true)
 
     const { id } = useParams()
@@ -33,13 +32,11 @@ export default function UserProfile({ }) {
     }
 
     const handleEditbuttonClick = () => {
-        console.log("handleEditbuttonClick")
         setIsModalHidden(false)
     }
 
-    const handleSaveButtonClick = (bool) => {
-        setIsModalHidden(bool)
-        console.log(bool)
+    const handleSaveButtonClick = () => {
+        setIsModalHidden(true)
     }
 
     return (
@@ -52,16 +49,16 @@ export default function UserProfile({ }) {
                             title={"It's you dude"}
                             alt={"Your image"}
                             src={hasImage(imageUrl) ?
-                                imageUrl : user.info.gender === "male" ?
+                                imageUrl : user.gender == "Male" ?
                                     male_image : female_image}
                         />
                     </div>
                     <div className={styles.userBio}>
                         <span className={styles.userName}>
-                            {makeFirstUpper(user.info.firstName)} {makeFirstUpper(user.info.lastName)}
+                            {makeFirstUpper(user.first_name)} {makeFirstUpper(user.last_name)}
                         </span>
                         <span className={styles.userEmail}>
-                            {user.info.email}
+                            {user.email}
                         </span>
                     </div>
                     <div className={styles.deleteProile}>
@@ -76,7 +73,7 @@ export default function UserProfile({ }) {
                                 Name
                             </label>
                             <span className={styles.dataBox}>
-                                {makeFirstUpper(user.info.firstName)}
+                                {makeFirstUpper(user.first_name)}
                             </span>
                         </div>
                         <div className={styles.lastNameBlock}>
@@ -84,7 +81,7 @@ export default function UserProfile({ }) {
                                 Surname
                             </label>
                             <span className={styles.dataBox}>
-                                {makeFirstUpper(user.info.lastName)}
+                                {makeFirstUpper(user.last_name)}
                             </span>
                         </div>
                     </div>
@@ -95,7 +92,7 @@ export default function UserProfile({ }) {
                                 Email
                             </label>
                             <span className={styles.dataBox}>
-                                {user.info.email}
+                                {user.email}
                             </span>
                         </div>
 
@@ -104,7 +101,7 @@ export default function UserProfile({ }) {
                                 Phone
                             </label>
                             <span className={styles.dataBox}>
-                                {user.info.phone}
+                                {user.phone}
                             </span>
                         </div>
                     </div>
@@ -115,7 +112,7 @@ export default function UserProfile({ }) {
                                 Age
                             </label>
                             <span className={styles.dataBox}>
-                                {user.info.age}
+                                {user.age}
                             </span>
                         </div>
 
@@ -124,7 +121,7 @@ export default function UserProfile({ }) {
                                 Gender
                             </label>
                             <span className={styles.dataBox}>
-                                {makeFirstUpper(user.info.gender)}
+                                {makeFirstUpper(user.gender)}
                             </span>
                         </div>
                     </div>

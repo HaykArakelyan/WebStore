@@ -4,11 +4,17 @@
     align-items: center;
 }
 
-.passwdBlock :focus {
+.passwdBlock:focus {
     transform: scale(1.2);
 }
 
-.linkToLog {
+.ageAndGender {
+    display: flex;
+    align-items: center;
+    gap: 1rem
+}
+
+.linkToLogin {
     color: white;
     text-align: center;
     padding-top: 1rem;
@@ -16,7 +22,7 @@
     text-decoration: none;
 }
 
-.linkToLog:hover {
+.linkToLogin:hover {
     cursor: pointer;
     transform: scale(1.1);
 }

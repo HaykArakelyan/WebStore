@@ -9,25 +9,78 @@ import { routeVariants } from '../../Navigation/RouteVariants'
 import { isEmpty } from '../../CustomTools/CustomTools'
 import { faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons'
 import { Link } from 'react-router-dom'
+import CustomDropdown from '../../components/customComponents/CustomDropdown'
+import { register_user } from '../../CustomTools/Requests'
+
+const genders = ["Male", "Female", "Attack helicopter"]
 
 
 export default function Register() {
     const navigate = useNavigate()
 
-    const [username, setUsername] = useState()
-    const [email, setEmail] = useState()
-    const [passwd, setPasswd] = useState()
+    const [newUser, setNewUser] = useState({ gender: genders[0] })
+
     const [isDisabled, setIsDisabled] = useState(true)
     const [notMatchingStyle, setNotMatchingStyle] = useState({ "color": "red" })
     const [isPasswdHidden, setIsPasswdHidden] = useState(false)
 
+
     //TODO
     useEffect(() => {
         areValidCredentials()
-    }, [username, email, passwd])
+    }, [newUser])
+
+
+    const setNewFirstName = (newFirstName) => {
+        setNewUser({
+            ...newUser,
+            first_name: newFirstName
+        })
+    }
+    const setNewLastname = (newLastName) => {
+        setNewUser({
+            ...newUser,
+            last_name: newLastName
+        })
+    }
+
+    const setNewEmail = (newEmail) => {
+        setNewUser({
+            ...newUser,
+            email: newEmail
+        })
+    }
+
+    const setNewPhone = (newPhone) => {
+        setNewUser({
+            ...newUser,
+            phone: newPhone
+        })
+    }
+
+    const setNewPassword = (newPassword) => {
+        setNewUser({
+            ...newUser,
+            password: newPassword
+        })
+    }
+
+    const setNewGender = (newGender) => {
+        setNewUser({
+            ...newUser,
+            gender: newGender.target.value
+        })
+    }
+
+    const setNewAge = (age) => {
+        setNewUser({
+            ...newUser,
+            age: parseInt(age)
+        })
+    }
 
     const isMatching = (e) => {
-        if (e === passwd) {
+        if (e === newUser.password) {
             setNotMatchingStyle({ "color": "black" })
             return
         }
@@ -35,11 +88,22 @@ export default function Register() {
     }
 
     const areValidCredentials = () => {
-        if (isEmpty(username) || isEmpty(email) || isEmpty(passwd)) {
+        if (isEmpty(newUser.first_name) ||
+            isEmpty(newUser.last_name) ||
+            isEmpty(newUser.email) ||
+            isEmpty(newUser.password) ||
+            isEmpty(newUser.gender) ||
+            isEmpty(newUser.age)
+        ) {
             setIsDisabled(true)
             return
         }
         setIsDisabled(false)
+    }
+
+    const handleRegister = () => {
+        register_user(newUser)
+        // console.log(newUser)
     }
 
     return (
@@ -51,18 +115,41 @@ export default function Register() {
         >
             <CustomBox style={{ "backgroundColor": "red" }}>
                 <CustomInputs
-                    placeholder={"Username"}
-                    onChange={setUsername}
+                    placeholder={"First Name"}
+                    onChange={setNewFirstName}
+                />
+                <CustomInputs
+                    placeholder={"Last Name"}
+                    onChange={setNewLastname}
                 />
                 <CustomInputs
                     placeholder={"Email"}
                     type={"email"}
-                    onChange={setEmail}
+                    onChange={setNewEmail}
                 />
+                <CustomInputs
+                    placeholder={"Phone"}
+                    type={"tel"}
+                    onChange={setNewPhone}
+                />
+
+                <div className={styles.ageAndGender}>
+                    <CustomInputs
+                        placeholder={"Age"}
+                        type={"number"}
+                        onChange={setNewAge}
+                    />
+                    <CustomDropdown
+                        options={genders}
+                        selectedValue={newUser.gender}
+                        onSelect={setNewGender}
+                    />
+                </div>
+
                 <CustomInputs
                     placeholder={"Password"}
                     type={isPasswdHidden ? "text" : "password"}
-                    onChange={setPasswd}
+                    onChange={setNewPassword}
                     icon={isPasswdHidden ? faEyeSlash : faEye}
                     onIconClick={() => setIsPasswdHidden(!isPasswdHidden)}
                     iconSize={"lg"}
@@ -77,11 +164,13 @@ export default function Register() {
                 <CustomButton
                     text={"Register"}
                     style={{ "marginTop": ".5rem" }}
-                    onClick={() => navigate('/login')}
-                    isDisabled={isDisabled}
+                    onClick={() => handleRegister()}
+                // isDisabled={isDisabled}
                 />
 
-                <Link to={'/login'} className={styles.linkToLog}>Already have an account?</Link>
+                <Link to={'/login'} className={styles.linkToLogin}>
+                    Already have an account?
+                </Link>
             </CustomBox>
         </motion.div >
     )

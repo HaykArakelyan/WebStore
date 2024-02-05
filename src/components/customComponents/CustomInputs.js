@@ -13,6 +13,13 @@ export default function CustomInputs({
     iconStyle = null,
     value
 }) {
+
+    const handleIconClick = (e) => {
+        e.stopPropagation()
+        onIconClick()
+    }
+
+
     return (
         <div className={styles.container}>
             <input
@@ -22,11 +29,12 @@ export default function CustomInputs({
                 onChange={(e) => onChange(e.target.value)}
                 style={style}
                 value={value}
+
             />
             {icon && onIconClick ?
                 <CustomIcon
                     icon={icon}
-                    onClick={onIconClick}
+                    onClick={(e) => handleIconClick(e)}
                     size={iconSize}
                     style={iconStyle}
                 /> : null
