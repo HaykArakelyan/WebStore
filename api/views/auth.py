@@ -29,7 +29,7 @@ def login():
             email=email, password=generate_hash(password)).first()
         if user:
             access_token = create_access_token(identity=[email])
-            return jsonify(access_token=access_token), 200
+            return jsonify(access_token=access_token, id=user.id), 200
         else:
             return jsonify(message='Invalid username or password'), 401
     return jsonify(message='Method Not Allowed'), 405
