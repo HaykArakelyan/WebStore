@@ -34,7 +34,6 @@ export const register_user = (newUser) => {
 export const get_token_login = (email, password) => {
     return api.post("login", { email, password })
         .then((res) => {
-            console.log(res.data.id);
             localStorage.setItem("access_token", res.data.access_token);
             return res.data.id;
         })
@@ -48,7 +47,6 @@ export const get_token_login = (email, password) => {
 export const get_user_by_token = (id) => {
     return api.get(`user_profile/${id}`)
         .then((res) => {
-            console.log(res.data)
             return res.data
         })
         .catch((err) => {

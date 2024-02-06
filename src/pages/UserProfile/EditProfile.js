@@ -31,8 +31,7 @@ export default function EditProfile({ user, closeModal }) {
         //     "cart": user.cart
         // }
 
-        console.log(123)
-        closeModal(false)
+        closeModal(true)
     }
 
     return (

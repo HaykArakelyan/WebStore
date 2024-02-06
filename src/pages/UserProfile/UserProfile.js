@@ -181,7 +181,7 @@ export default function UserProfile({ }) {
                 {!isModalHidden ?
                     <CustomModal
                         onCloseModal={setIsModalHidden}
-                        element={
+                        element={() =>
                             <EditProfile
                                 user={user}
                                 closeModal={handleSaveButtonClick}
