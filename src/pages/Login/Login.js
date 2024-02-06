@@ -12,7 +12,7 @@ import { Link } from 'react-router-dom'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import axios from 'axios'
-import { get_token_login, get_user_by_token } from '../../CustomTools/Requests'
+import { get_token_login, get_user_by_id } from '../../CustomTools/Requests'
 
 export default function Login() {
   const navigate = useNavigate()
@@ -126,7 +126,7 @@ export default function Login() {
     get_token_login(login, passwd)
       .then(userId => {
         if (userId) {
-          get_user_by_token(userId).then((user) => {
+          get_user_by_id(userId).then((user) => {
             //TODO
             navigate(`/user-profile/${user.id}`, { state: { user: { ...user, products: [], cart: [] } } })
           }).catch((err) => {

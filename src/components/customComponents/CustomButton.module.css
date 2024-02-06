@@ -1,7 +1,6 @@
 .container {
     background-color: white;
     border: none;
-    /* border-radius: 0.3rem; */
     border-radius: 1rem;
     padding: 0.7rem;
     transition: transform 0.3s ease;

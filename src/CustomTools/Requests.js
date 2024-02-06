@@ -44,8 +44,19 @@ export const get_token_login = (email, password) => {
 };
 
 
-export const get_user_by_token = (id) => {
+export const get_user_by_id = (id) => {
     return api.get(`user_profile/${id}`)
+        .then((res) => {
+            return res.data
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+}
+
+
+export const delete_user_by_id = (id) => {
+    return api.delete(`user_profile/${id}`)
         .then((res) => {
             return res.data
         })

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import styles from './UserProfile.module.css'
 
-import { useParams, useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 import male_image from '../../assets/user_image_male.jpg'
 import female_image from '../../assets/user_image_female.jpg'
@@ -10,9 +10,11 @@ import CustomButton from '../../components/customComponents/CustomButton'
 import CustomModal from '../../components/customComponents/CustomModal'
 import { AnimatePresence } from 'framer-motion'
 import EditProfile from './EditProfile'
+import { delete_user_by_id } from '../../CustomTools/Requests'
 
 export default function UserProfile({ }) {
     const location = useLocation()
+    const navigate = useNavigate()
     const user = location.state?.user
 
     const [imageUrl, setImageUrl] = useState(user.img)
@@ -21,9 +23,6 @@ export default function UserProfile({ }) {
 
     const [isModalHidden, setIsModalHidden] = useState(true)
 
-    const { id } = useParams()
-
-    //TODO
     const hasImage = (image) => {
         if (image === "" || image) {
             return false
@@ -37,6 +36,17 @@ export default function UserProfile({ }) {
 
     const handleSaveButtonClick = () => {
         setIsModalHidden(true)
+    }
+
+    const handleDeleteProfile = () => {
+        const answer = prompt("You will lose forever access to your account. Type 'Delete' to continue the process... ", "")
+        if (answer === "Delete") {
+            delete_user_by_id(user.id).then(() => {
+                localStorage.removeItem("access_token")
+                navigate('/login')
+            })
+
+        }
     }
 
     return (
@@ -62,7 +72,11 @@ export default function UserProfile({ }) {
                         </span>
                     </div>
                     <div className={styles.deleteProile}>
-                        <CustomButton text={"Delete Profile"} />
+                        <CustomButton
+                            text={"Delete Profile"}
+                            onClick={handleDeleteProfile}
+                            style={{ width: "100%" }}
+                        />
                     </div>
                 </div>
 
