@@ -103,7 +103,13 @@ export default function Register() {
 
     const handleRegister = () => {
         register_user(newUser)
-        // console.log(newUser)
+            .then((res) => {
+                console.log(res)
+                navigate("/login")
+            })
+            .catch((err) => {
+                console.log(err)
+            })
     }
 
     return (

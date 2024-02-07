@@ -22,9 +22,9 @@ api.interceptors.request.use(
 )
 
 export const register_user = (newUser) => {
-    api.post("register", newUser)
+    return api.post("register", newUser)
         .then((res) => {
-            console.log(res)
+            return res.data
         })
         .catch((err) => {
             console.log(err)
@@ -57,6 +57,16 @@ export const get_user_by_id = (id) => {
 
 export const delete_user_by_id = (id) => {
     return api.delete(`user_profile/${id}`)
+        .then((res) => {
+            return res.data
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+}
+
+export const update_user = (id, updatedUser) => {
+    return api.put(`user_profile/${id}`, updatedUser)
         .then((res) => {
             return res.data
         })
