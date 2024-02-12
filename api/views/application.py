@@ -82,9 +82,9 @@ def add_product():
             category = data.get("category")
             description = data.get("description")
             price = data.get("price")
-            rating = data.get("rating")
-            rating_count = data.get("rating_count")
-            final_rating = data.get("final_rating")
+            # rating = data.get("rating")
+            # rating_count = data.get("rating_count")
+            # final_rating = data.get("final_rating")
 
             product = Product(
                 title=title,
@@ -94,9 +94,9 @@ def add_product():
                 category=category,
                 description=description,
                 price=price,
-                rating=rating,
-                rating_count=rating_count,
-                final_rating=final_rating,
+                # rating=rating,
+                # rating_count=rating_count,
+                # final_rating=final_rating,
             )
             db.session.add(product)
             db.session.commit()

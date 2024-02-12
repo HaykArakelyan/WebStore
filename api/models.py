@@ -63,9 +63,9 @@ class Product(db.Model):
     category = db.Column(db.String(50))
     description = db.Column(db.Text)
     price = db.Column(db.Float)
-    rating = db.Column(db.Integer)
-    rating_count = db.Column(db.Integer)
-    final_rating = db.Column(db.Float)
+    rating = db.Column(db.Integer, default=5)
+    rating_count = db.Column(db.Integer, default=0)
+    final_rating = db.Column(db.Float, default=5)
     created_at = db.Column(db.TIMESTAMP,  default=datetime.utcnow)
 
     def product_to_dict(self):
