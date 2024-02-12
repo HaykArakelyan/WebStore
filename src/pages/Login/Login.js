@@ -22,6 +22,8 @@ export default function Login() {
   const [isDisabled, setIsDisabled] = useState(true)
   const [isCheckBoxChecked, setIsCheckBoxChecked] = useState(false)
 
+  const [user, setUser] = useState({})
+
   // useEffect(() => {
   //   areValidCredentials()
   // }, [passwd, login])
@@ -36,106 +38,22 @@ export default function Login() {
   // }
 
   const handleLoginClick = () => {
-    const fake_user = {
-      "id": 1,
-      "info": {
-        "firstName": "Hayk",
-        "lastName": "Arakelyan",
-        "email": "hayk.arakelyan@gmail.com",
-        "phone": "+37477345227",
-        "gender": "male",
-        "age": 21,
-        "address": "Armenia, Yerevan, bla bla bla",
-        "balance": 1000
-      },
-      "imageUrl": "",
-      "products": [{
-        "id": 1,
-        "title": "iPhone 9",
-        "description": "An apple mobile which is nothing like apple",
-        "price": 549,
-        "discountPercentage": 12.96,
-        "rating": 4.69,
-        "stock": 94,
-        "brand": "Apple",
-        "category": "smartphones",
-        "thumbnail": "https://cdn.dummyjson.com/product-images/1/thumbnail.jpg",
-        "images": [
-          "https://cdn.dummyjson.com/product-images/1/1.jpg",
-          "https://cdn.dummyjson.com/product-images/1/2.jpg",
-          "https://cdn.dummyjson.com/product-images/1/3.jpg",
-          "https://cdn.dummyjson.com/product-images/1/4.jpg",
-          "https://cdn.dummyjson.com/product-images/1/thumbnail.jpg"
-        ]
-      },
-      {
-        "id": 2,
-        "title": "iPhone X",
-        "description": "SIM-Free, Model A19211 6.5-inch Super Retina HD display with OLED technology A12 Bionic chip with ...",
-        "price": 899,
-        "discountPercentage": 17.94,
-        "rating": 4.44,
-        "stock": 34,
-        "brand": "Apple",
-        "category": "smartphones",
-        "thumbnail": "https://cdn.dummyjson.com/product-images/2/thumbnail.jpg",
-        "images": [
-          "https://cdn.dummyjson.com/product-images/2/1.jpg",
-          "https://cdn.dummyjson.com/product-images/2/2.jpg",
-          "https://cdn.dummyjson.com/product-images/2/3.jpg",
-          "https://cdn.dummyjson.com/product-images/2/thumbnail.jpg"
-        ]
-      }],
-      "cart": [{
-        "id": 5,
-        "title": "Huawei P30",
-        "description": "Huawei’s re-badged P30 Pro New Edition was officially unveiled yesterday in Germany and now the device has made its way to the UK.",
-        "price": 499,
-        "discountPercentage": 10.58,
-        "rating": 4.09,
-        "stock": 32,
-        "brand": "Huawei",
-        "category": "smartphones",
-        "thumbnail": "https://cdn.dummyjson.com/product-images/5/thumbnail.jpg",
-        "images": [
-          "https://cdn.dummyjson.com/product-images/5/1.jpg",
-          "https://cdn.dummyjson.com/product-images/5/2.jpg",
-          "https://cdn.dummyjson.com/product-images/5/3.jpg"
-        ]
-      }]
-    }
-
-    // // axios.post('http://localhost:5000/login', {
-    // //   email: login,
-    // //   password: passwd
-    // // })
-    // //   .then(function (response) {
-    // //     // console.log(response);
-    // //     if (response.ok) {
-    // //       // console.log(response.data)
-
-    // //       // const arg = fake_user.id
-    // //       // navigate(`/user-profile/${arg}`, { state: { user: fake_user } })
-    // //     }
-    // //   })
-    //   .catch(function (error) {
-    //     console.log(error);
-    //   });
-
-
     get_token_login(login, passwd)
       .then(userId => {
         if (userId) {
-          get_user_by_id(userId).then((user) => {
-            //TODO
-            navigate(`/user-profile/${user.id}`, { state: { user: { ...user, products: [], cart: [] } } })
-          }).catch((err) => {
-            console.log(err)
-          })
+          get_user_by_id(userId)
+            .then((userdata) => {
+              setUser(userdata)
+              navigate(`/user-profile/${userdata.id}`)
+            }).catch((err) => {
+              console.log(err)
+            })
 
         }
       })
-      .catch(error => console.error(error));
+      .catch((err) => {
+        console.log(err)
+      });
   }
 
   return (
