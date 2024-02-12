@@ -33,6 +33,7 @@ def get_course_by_id(user_id):
         new_last_name = data.get('last_name')
         new_email = data.get('email')
         new_phone = data.get('phone')
+        new_gender = data.get('gender')
         if data:
             user = User.query.filter_by(id=user_id).first()
             if user:
@@ -40,6 +41,7 @@ def get_course_by_id(user_id):
                 user.last_name = new_last_name
                 user.email = new_email
                 user.phone = new_phone
+                user.gender = new_gender
                 db.session.commit()
                 return jsonify({'message': 'User info updated successfully'}), 200
             return jsonify(message='User not found'), 404
