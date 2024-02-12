@@ -16,12 +16,9 @@ def get_course_by_id(user_id):
     if request.method == 'GET':
         user = User.query.get(user_id)
         if user:
-            # Fetch the user's products IDs from the UserProduct table
             user_product_ids = UserProduct.query.filter_by(user_id=user_id).all()
-            # Fetch the products using the IDs
             products_info = [Product.query.get(user_product.product_id).product_to_dict() for user_product in
                              user_product_ids]
-            # Convert user information to dictionary format
             user_info = user.user_to_dict()
 
             return jsonify({'user_info': user_info, 'products_info': products_info}), 200
@@ -142,10 +139,6 @@ def edit_product(product_id):
                         product.category = data.get("category", product.category)
                         product.description = data.get("description", product.description)
                         product.price = data.get("price", product.price)
-                        product.rating = data.get("rating", product.rating)
-                        product.rating_count = data.get("rating_count", product.rating_count)
-                        product.final_rating = data.get("final_rating", product.final_rating)
-
                         db.session.commit()
                         return jsonify(message="Product updated successfully"), 200
                     else:
@@ -157,14 +150,11 @@ def edit_product(product_id):
         else:
             return jsonify(message="No data provided"), 400
     elif request.method == 'DELETE':
-        # Fetch the product
         product = Product.query.get(product_id)
         if product:
-            # Delete associated entries in the `user_prod` table
             UserProduct.query.filter_by(product_id=product_id).delete()
             db.session.commit()
 
-            # Now delete the product
             db.session.delete(product)
             db.session.commit()
             return jsonify(message="Product deleted successfully"), 200

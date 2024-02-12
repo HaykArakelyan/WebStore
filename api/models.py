@@ -22,7 +22,7 @@ class User(db.Model, UserMixin):
     age = db.Column(db.Integer, nullable=False)
     password = db.Column(db.String(255), nullable=False)
     balance = db.Column(db.Integer, nullable=False)
-    img = db.Column(db.String(255), nullable=True)
+    img = db.Column(db.String(255), nullable=True, default="")
     registered_at = db.Column(db.Date, nullable=False, default=datetime.utcnow)
     #TODO Get img for every user
     #TODO do email validations, unique
