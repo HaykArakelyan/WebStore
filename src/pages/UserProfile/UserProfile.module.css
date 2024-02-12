@@ -37,8 +37,9 @@
     text-align: center;
 }
 
-.deleteProile {
-    padding: 1rem 0 1rem;
+.deleteProile,
+.manageProducts {
+    padding: 1rem 0 0;
 
 }
 

@@ -41,11 +41,11 @@ export const colorIdentifier = (rank, colors) => {
 }
 
 export const makeFirstUpper = (string) => {
-    if (string.length <= 1) {
+    if (string?.length <= 1) {
         return string
     }
 
-    return string.charAt(0).toUpperCase() + string.slice(1)
+    return string?.charAt(0).toUpperCase() + string?.slice(1)
 }
 
 
@@ -54,4 +54,8 @@ export const makeStringShorter = (string, maxLength) => {
         return string.substring(0, maxLength) + "..."
     }
     return string
+}
+
+export const isNullOrUndefined = (value) => {
+    return value === undefined || value === ""
 }

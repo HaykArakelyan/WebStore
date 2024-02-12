@@ -35,6 +35,7 @@ export const get_token_login = (email, password) => {
     return api.post("login", { email, password })
         .then((res) => {
             localStorage.setItem("access_token", res.data.access_token);
+            localStorage.setItem("id", res.data.id)
             return res.data.id;
         })
         .catch((err) => {
@@ -71,6 +72,15 @@ export const update_user = (id, updatedUser) => {
             return res.data
         })
         .catch((err) => {
+            console.log(err)
+        })
+}
+
+export const add_product = (newProduct) => {
+    return api.post('/add_product', newProduct)
+        .then((res) => {
+            return res.data
+        }).catch((err) => {
             console.log(err)
         })
 }

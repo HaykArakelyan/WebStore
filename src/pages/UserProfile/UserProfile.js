@@ -10,18 +10,45 @@ import CustomButton from '../../components/customComponents/CustomButton'
 import CustomModal from '../../components/customComponents/CustomModal'
 import { AnimatePresence } from 'framer-motion'
 import EditProfile from './EditProfile'
-import { delete_user_by_id } from '../../CustomTools/Requests'
+import { delete_user_by_id, update_user, get_user_by_id, add_product } from '../../CustomTools/Requests'
+import NewProduct from '../../components/Product/NewProduct'
+
 
 export default function UserProfile({ }) {
     const location = useLocation()
     const navigate = useNavigate()
-    const user = location.state?.user
+    const [user, setUser] = useState({
+        first_name: "",
+        last_name: "",
+        email: "",
+        phone: "",
+        gender: "",
+        age: "",
+    })
+    const userId = localStorage.getItem("id")
 
-    const [imageUrl, setImageUrl] = useState(user.img)
-    const [userProducts, setUserProducts] = useState(user.products)
-    const [userCart, setUserCart] = useState(user.cart)
+    const [imageUrl, setImageUrl] = useState("")
+    const [userProducts, setUserProducts] = useState([])
+    const [userCart, setUserCart] = useState([])
+
+    useEffect(() => {
+        get_user_by_id(userId)
+            .then((res) => {
+                setUser(res.user_info)
+                setImageUrl(res.user_info.img)
+                setUserProducts([...userProducts, ...res.products_info])
+                setUserCart([])
+
+            })
+            .catch((err) => {
+                console.log(err)
+                navigate("/login")
+            })
+    }, [])
+
 
     const [isModalHidden, setIsModalHidden] = useState(true)
+    const [modalElement, setModalElement] = useState()
 
     const hasImage = (image) => {
         if (image === "" || image) {
@@ -31,22 +58,59 @@ export default function UserProfile({ }) {
     }
 
     const handleEditbuttonClick = () => {
+        setModalElement(
+            <EditProfile
+                user={user}
+                closeModal={handleSaveButtonClick}
+            />
+        )
         setIsModalHidden(false)
     }
 
-    const handleSaveButtonClick = () => {
+    const handleSaveButtonClick = (updatedUser) => {
+        update_user(
+            user.id,
+            updatedUser,
+        ).then((msg) => {
+            console.log(msg)
+            setUser({ ...user, ...updatedUser })
+        }).catch((err) => {
+            console.log(err)
+        })
         setIsModalHidden(true)
     }
 
     const handleDeleteProfile = () => {
         const answer = prompt("You will lose forever access to your account. Type 'Delete' to continue the process... ", "")
         if (answer === "Delete") {
-            delete_user_by_id(user.id).then(() => {
-                localStorage.removeItem("access_token")
-                navigate('/login')
-            })
+            delete_user_by_id(user.id)
+                .then(() => {
+                    localStorage.removeItem("access_token")
+                    navigate('/login')
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
 
         }
+    }
+
+    const handleAddProductButtonClick = () => {
+        setModalElement(<NewProduct
+            closeModal={handlePostProductButtonClick}
+        />)
+        setIsModalHidden(false)
+    }
+
+    const handlePostProductButtonClick = (e) => {
+
+        add_product(e)
+            .then((res) => {
+                console.log(res)
+                setIsModalHidden(true)
+            }).catch((err) => {
+                console.log(err)
+            })
     }
 
     return (
@@ -70,6 +134,13 @@ export default function UserProfile({ }) {
                         <span className={styles.userEmail}>
                             {user.email}
                         </span>
+                    </div>
+                    <div className={styles.manageProducts}>
+                        <CustomButton
+                            text={"Add Product"}
+                            onClick={handleAddProductButtonClick}
+                            style={{ width: "100%" }}
+                        />
                     </div>
                     <div className={styles.deleteProile}>
                         <CustomButton
@@ -134,7 +205,7 @@ export default function UserProfile({ }) {
                             <label className={styles.dataBoxLabels}>
                                 Gender
                             </label>
-                            <span className={styles.dataBox}>
+                            <span key={123} className={styles.dataBox}>
                                 {makeFirstUpper(user.gender)}
                             </span>
                         </div>
@@ -150,37 +221,46 @@ export default function UserProfile({ }) {
                 <div className={styles.contentRight}>
                     <div className={styles.userProducts}>
                         <span className={styles.userProductsTitle}>My Products</span>
-                        {userProducts.length === 0 ?
+                        {userProducts && userProducts.length === 0 ?
                             <span className={styles.userEmptyList}>The List is Empty...</span> :
-                            userProducts.map((e, i) =>
-                                <div className={styles.productBox} key={i}>
-                                    <div className={styles.product}>
-                                        <img src={e.images[0]} className={styles.productImage}></img>
-                                        <span className={styles.productDescription}>
-                                            {makeStringShorter(e.description, 41)}
-                                        </span>
-                                    </div>
-                                </div>
-                            )
+                            userProducts.map((e, i) => {
+                                if (i < 2) {
+                                    return (
+                                        <div className={styles.productBox} key={i}>
+                                            <div className={styles.product}>
+                                                {/* TODO: Back should return product images */}
+                                                {/* <img src={e.images[0]} className={styles.productImage} /> */}
+                                                <span className={styles.productDescription}>
+                                                    {makeStringShorter(e.description, 41)}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    )
+                                }
+                            })
                         }
                     </div>
                     {/* TODO: Add limitations to the list */}
                     <div className={styles.userProducts}>
                         <span className={styles.userProductsTitle}>My Cart</span>
-                        {userCart.length === 0 ?
+                        {userCart && userCart.length === 0 ?
                             <span className={styles.userEmptyList}>The Cart is Empty...</span> :
-                            userCart.map((e, i) =>
-                                <div className={styles.productBox} key={i}>
-                                    <div
-                                        className={styles.product}
-                                    >
-                                        <img src={e.images[0]} className={styles.productImage}></img>
-                                        <span className={styles.productDescription}>
-                                            {makeStringShorter(e.description, 41)}
-                                        </span>
-                                    </div>
-                                </div>
-                            )
+                            userCart.map((e, i) => {
+                                if (i < 2) {
+                                    return (
+                                        <div className={styles.productBox} key={i}>
+                                            <div
+                                                className={styles.product}
+                                            >
+                                                <img src={e.images[0]} className={styles.productImage} />
+                                                <span className={styles.productDescription}>
+                                                    {makeStringShorter(e.description, 41)}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    )
+                                }
+                            })
                         }
                     </div>
                 </div>
@@ -196,10 +276,7 @@ export default function UserProfile({ }) {
                     <CustomModal
                         onCloseModal={setIsModalHidden}
                         element={() =>
-                            <EditProfile
-                                user={user}
-                                closeModal={handleSaveButtonClick}
-                            />
+                            modalElement
                         }
                     /> :
                     null

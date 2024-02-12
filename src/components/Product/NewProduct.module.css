@@ -1,0 +1,38 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    gap: 4rem;
+}
+
+.productInfo {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    gap: 1rem;
+}
+
+.titleAndDesc,
+.priceAndSale,
+.productStats {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+}
+
+.inputBox {
+    background-color: gray;
+    padding: 1rem;
+    border-radius: 1rem;
+    flex: 1;
+}
+
+.inputLabel {
+    color: white;
+    font-weight: bold;
+}
+
+.postProduct {
+    display: flex;
+    justify-content: center;
+}
