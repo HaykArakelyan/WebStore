@@ -16,7 +16,7 @@ export default function Header() {
             <li><Link to={'/'} className={styles.a}>Home</Link></li>
             <li><Link to={'/login'} className={styles.a}>Sign In</Link></li>
             <li><Link to={'/register'} className={styles.a}>Sign Up</Link></li>
-            <li><Link to={`/user-profile/${5}`} className={styles.a}>My Page</Link></li>
+            <li><Link to={`/user-profile/${localStorage.getItem("id")}`} className={styles.a}>My Page</Link></li>
           </ul>
         </div>
         <div className={styles.authButtons}>
