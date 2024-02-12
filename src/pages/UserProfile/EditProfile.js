@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
-import styles from './EdiProfile.module.css'
+import styles from './EditProfile.module.css'
 import CustomInputs from '../../components/customComponents/CustomInputs'
 import CustomButton from '../../components/customComponents/CustomButton'
+import { update_user } from '../../CustomTools/Requests'
 
 export default function EditProfile({ user, closeModal }) {
 
     const [newFirstName, setNewFirstName] = useState(user.first_name)
-    const [newLastName, setNewLastName] = useState(user.last_lame)
+    const [newLastName, setNewLastName] = useState(user.last_name)
 
     const [newEmail, setNewEmail] = useState(user.email)
     const [newPhone, setNewPhone] = useState(user.phone)
@@ -16,22 +17,13 @@ export default function EditProfile({ user, closeModal }) {
     const [newImageurl, setNewImageUrl] = useState(user.imageUrl)
 
     const handleSaveChangesClick = () => {
-        // const updatedUser = {
-        //     "id": user.id,
-        //     "info": {
-        //         "firstName": newFirstName,
-        //         "lastName": newLastName,
-        //         "email": newEmail,
-        //         "phone": newPhone,
-        //         "gender": newGender,
-        //         "age": user.age
-        //     },
-        //     "imageUrl": newImageurl,
-        //     "products": user.products,
-        //     "cart": user.cart
-        // }
-
-        closeModal(true)
+        closeModal({
+            first_name: newFirstName,
+            last_name: newLastName,
+            email: newEmail,
+            phone: newPhone,
+            gender: newGender
+        })
     }
 
     return (
