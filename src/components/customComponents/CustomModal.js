@@ -9,6 +9,14 @@ export default function CustomModal({ onCloseModal, product = null, element = nu
         // onCloseModal(false)
     }
 
+    if (product || element) {
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "Escape") {
+                onCloseModal(true)
+            }
+        })
+    }
+
     return (
         <motion.div
             key={"modal"}
