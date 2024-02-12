@@ -2,8 +2,7 @@ from datetime import datetime
 
 from flask import request, jsonify
 from flask_cors import cross_origin
-from flask_jwt_extended import create_access_token, jwt_required
-
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt
 from app import app, login_manager
 from helpers import generate_hash
 from models import User, db
@@ -29,7 +28,7 @@ def login():
             email=email, password=generate_hash(password)).first()
         if user:
             access_token = create_access_token(identity=[email])
-            return jsonify(access_token=access_token), 200
+            return jsonify(access_token=access_token, id=user.id), 200
         else:
             return jsonify(message='Invalid username or password'), 401
     return jsonify(message='Method Not Allowed'), 405
@@ -63,5 +62,13 @@ def register_user():
                 return jsonify(message='Successfully registered'), 200
             return jsonify(message='bad request'), 400
         return jsonify(message='Method Not Allowed'), 405
+
+#TODO update logout
+# @app.route("/logout", methods=["POST"])
+# @jwt_required()
+# def post(BLOCKLIST=None):
+#     jti = get_jwt()["jti"]
+#     BLOCKLIST.add(jti)
+#     return {"message": "Successfully logged out"}, 200
 
 

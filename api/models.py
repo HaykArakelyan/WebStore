@@ -25,6 +25,7 @@ class User(db.Model, UserMixin):
     img = db.Column(db.String(255), nullable=True)
     registered_at = db.Column(db.Date, nullable=False, default=datetime.utcnow)
     #TODO Get img for every user
+    #TODO do email validations, unique
 
     def user_to_dict(self):
         user_dict = {
@@ -65,7 +66,23 @@ class Product(db.Model):
     rating = db.Column(db.Integer)
     rating_count = db.Column(db.Integer)
     final_rating = db.Column(db.Float)
-    created_at = db.Column(db.TIMESTAMP)
+    created_at = db.Column(db.TIMESTAMP,  default=datetime.utcnow)
+
+    def product_to_dict(self):
+        return {
+            'product_id': self.product_id,
+            'title': self.title,
+            'discountPercentage': self.discountPercentage,
+            'stock': self.stock,
+            'brand': self.brand,
+            'category': self.category,
+            'description': self.description,
+            'price': self.price,
+            'rating': self.rating,
+            'rating_count': self.rating_count,
+            'final_rating': self.final_rating,
+            'created_at': self.created_at.isoformat() if self.created_at else None
+        }
 
 
 class Review(db.Model):
