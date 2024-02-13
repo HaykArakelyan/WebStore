@@ -89,6 +89,7 @@ export default function Dashboard() {
                             text={"Next"}
                             onClick={() => handlePageSwitch("next")}
                         />
+                        {/* //TODO: Add Loading Icon */}
                     </div> : null
                 }
 
