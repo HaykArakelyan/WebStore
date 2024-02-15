@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import styles from './UserProfile.module.css'
 
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 import male_image from '../../assets/user_image_male.jpg'
 import female_image from '../../assets/user_image_female.jpg'
@@ -11,11 +11,10 @@ import CustomModal from '../../components/customComponents/CustomModal'
 import { AnimatePresence } from 'framer-motion'
 import EditProfile from './EditProfile'
 import { delete_user_by_id, update_user, get_user_by_id, add_product } from '../../CustomTools/Requests'
-import NewProduct from '../../components/Product/NewProduct'
+import ProductForm from '../../components/Product/ProductForm'
 
 
 export default function UserProfile({ }) {
-    const location = useLocation()
     const navigate = useNavigate()
     const [user, setUser] = useState({
         first_name: "",
@@ -38,7 +37,6 @@ export default function UserProfile({ }) {
                 setImageUrl(res.user_info.img)
                 setUserProducts([...userProducts, ...res.products_info])
                 setUserCart([])
-
             })
             .catch((err) => {
                 console.log(err)
@@ -96,8 +94,8 @@ export default function UserProfile({ }) {
     }
 
     const handleAddProductButtonClick = () => {
-        setModalElement(<NewProduct
-            closeModal={handlePostProductButtonClick}
+        setModalElement(<ProductForm
+            onSubmit={handlePostProductButtonClick}
         />)
         setIsModalHidden(false)
     }
@@ -219,7 +217,16 @@ export default function UserProfile({ }) {
                     </div>
                 </div>
                 <div className={styles.contentRight}>
-                    <div className={styles.userProducts}>
+                    <div
+                        className={styles.userProducts}
+                        onClick={() => navigate('/my-products',
+                            {
+                                state: {
+                                    products: userProducts
+                                }
+                            })
+                        }
+                    >
                         <span className={styles.userProductsTitle}>My Products</span>
                         {userProducts && userProducts.length === 0 ?
                             <span className={styles.userEmptyList}>The List is Empty...</span> :

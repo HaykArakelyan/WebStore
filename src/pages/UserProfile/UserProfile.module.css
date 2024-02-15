@@ -127,6 +127,7 @@
     display: flex;
     flex-direction: column;
     width: 100%;
+    cursor: pointer;
 }
 
 .userEmptyList {
@@ -147,7 +148,6 @@
     background-color: gray;
     border-radius: 1rem;
     padding: 1rem;
-    cursor: pointer;
 }
 
 .productImage {
