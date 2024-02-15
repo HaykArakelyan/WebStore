@@ -1,0 +1,8 @@
+.container {
+    column-gap: 50px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    margin: 3rem auto 3rem;
+    row-gap: 3rem;
+    width: 80%;
+}

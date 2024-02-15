@@ -82,3 +82,9 @@ export const add_product = (newProduct) => {
             return Promise.reject(err)
         })
 }
+
+export const edit_product = (productId, updatedtProduct) => {
+    return api.put(`edit_product/${productId}`, updatedtProduct)
+        .then((res) => res.data)
+        .catch((err) => Promise.reject(err))
+}
