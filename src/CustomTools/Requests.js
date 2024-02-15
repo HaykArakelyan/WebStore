@@ -16,7 +16,6 @@ api.interceptors.request.use(
         return config
     },
     (error) => {
-        console.log(error)
         return Promise.reject(error)
     }
 )
@@ -27,7 +26,7 @@ export const register_user = (newUser) => {
             return res.data
         })
         .catch((err) => {
-            console.log(err)
+            return Promise.reject(err)
         })
 }
 
@@ -39,8 +38,7 @@ export const get_token_login = (email, password) => {
             return res.data.id;
         })
         .catch((err) => {
-            console.log(err);
-            return false;
+            return Promise.reject(err)
         });
 };
 
@@ -51,7 +49,7 @@ export const get_user_by_id = (id) => {
             return res.data
         })
         .catch((err) => {
-            console.log(err)
+            return Promise.reject(err)
         })
 }
 
@@ -62,7 +60,7 @@ export const delete_user_by_id = (id) => {
             return res.data
         })
         .catch((err) => {
-            console.log(err)
+            return Promise.reject(err)
         })
 }
 
@@ -72,15 +70,15 @@ export const update_user = (id, updatedUser) => {
             return res.data
         })
         .catch((err) => {
-            console.log(err)
+            return Promise.reject(err)
         })
 }
 
 export const add_product = (newProduct) => {
-    return api.post('/add_product', newProduct)
+    return api.post('add_product', newProduct)
         .then((res) => {
             return res.data
         }).catch((err) => {
-            console.log(err)
+            return Promise.reject(err)
         })
 }
