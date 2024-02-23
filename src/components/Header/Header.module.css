@@ -18,7 +18,16 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+}
 
+.navbar {
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    height: 5rem;
+    cursor: pointer;
 }
 
 ul li:hover {
@@ -42,6 +51,7 @@ ul li:hover {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: center;
 }
 
 .bottomBar {

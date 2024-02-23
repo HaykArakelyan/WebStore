@@ -4,7 +4,9 @@ import styles from './Header.module.css'
 import CustomButton from '../customComponents/CustomButton'
 import { clearStorage, isAuth } from '../../CustomTools/CustomTools'
 import { get_products_by_userId } from '../../CustomTools/Requests'
+import CustomImage from '../customComponents/CustomImage'
 
+import logo from '../../assets/logo/logo_removed_bg.png'
 export default function Header() {
   const navigate = useNavigate()
 
@@ -19,7 +21,7 @@ export default function Header() {
   useEffect(() => {
     if (isUserAuth) {
       getUserProducts()
-      navigate(`/user-profile/${userId}`, { replace: true })
+      // navigate(`/user-profile/${userId}`, { replace: true })
     }
   }, [])
 
@@ -34,10 +36,21 @@ export default function Header() {
       })
   }
 
+  const handleLogoClick = () => {
+    navigate('/')
+  }
+
   return (
     <div className={styles.container}>
       <div className={styles.innerContainer}>
         <div className={styles.navbar}>
+          <div className={styles.logo}>
+            <img
+              src={logo}
+              className={styles.logo}
+              onClick={handleLogoClick}
+            />
+          </div>
           <ul className={styles.ul}>
             <li><Link to={'/'} className={styles.a}>Home</Link></li>
             <li><Link to={'/dashboard'} className={styles.a}>Dashboard</Link></li>
