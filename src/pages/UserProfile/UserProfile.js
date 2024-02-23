@@ -5,14 +5,13 @@ import { useNavigate } from 'react-router-dom'
 
 import male_image from '../../assets/user_image_male.jpg'
 import female_image from '../../assets/user_image_female.jpg'
-import { makeFirstUpper, makeStringShorter } from '../../CustomTools/CustomTools'
+import { clearStorage, makeFirstUpper, makeStringShorter } from '../../CustomTools/CustomTools'
 import CustomButton from '../../components/customComponents/CustomButton'
 import CustomModal from '../../components/customComponents/CustomModal'
 import { AnimatePresence } from 'framer-motion'
 import EditProfile from './EditProfile'
 import { delete_user_by_id, update_user, get_user_by_id, add_product } from '../../CustomTools/Requests'
 import ProductForm from '../../components/Product/ProductForm'
-
 
 export default function UserProfile({ }) {
     const navigate = useNavigate()
@@ -40,6 +39,7 @@ export default function UserProfile({ }) {
             })
             .catch((err) => {
                 console.log(err)
+                clearStorage();
                 navigate("/login")
             })
     }, [])

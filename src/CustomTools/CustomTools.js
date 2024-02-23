@@ -5,7 +5,6 @@ export const isEmpty = (string) => {
     return false
 }
 
-
 export const colorIdentifier = (rank, colors) => {
     let percentage = (rank % 1)
     const shades = {
@@ -48,7 +47,6 @@ export const makeFirstUpper = (string) => {
     return string?.charAt(0).toUpperCase() + string?.slice(1)
 }
 
-
 export const makeStringShorter = (string, maxLength) => {
     if (string.length > maxLength) {
         return string.substring(0, maxLength) + "..."
@@ -57,5 +55,13 @@ export const makeStringShorter = (string, maxLength) => {
 }
 
 export const isNullOrUndefined = (value) => {
-    return value === undefined || value === ""
+    return value === undefined || value === "" || value === null
+}
+
+export const isAuth = () => {
+    return !isNullOrUndefined(localStorage.getItem("access_token"))
+}
+
+export const clearStorage = () => {
+    localStorage.clear()
 }

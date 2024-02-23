@@ -88,3 +88,9 @@ export const edit_product = (productId, updatedtProduct) => {
         .then((res) => res.data)
         .catch((err) => Promise.reject(err))
 }
+
+export const get_products_by_userId = (userId) => {
+    return api.get(`/get_products/${userId}`)
+        .then((res) => res.data)
+        .catch((err) => Promise.reject(err))
+}

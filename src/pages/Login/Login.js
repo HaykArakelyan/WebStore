@@ -6,8 +6,8 @@ import CustomCheckbox from '../../components/customComponents/CustomCheckbox'
 import { motion } from 'framer-motion'
 import { routeVariants } from '../../Navigation/RouteVariants'
 
-import { isEmpty } from '../../CustomTools/CustomTools'
-import { Link } from 'react-router-dom'
+import { isAuth, isEmpty } from '../../CustomTools/CustomTools'
+import { Link, Navigate } from 'react-router-dom'
 
 import { useNavigate, useParams } from 'react-router-dom'
 
@@ -37,6 +37,12 @@ export default function Login() {
   //   return false
   // }
 
+  useEffect(() => {
+    if (isAuth()) {
+      navigate(`/user-profile/${localStorage.getItem('id')}`)
+    }
+  }, [isAuth()])
+
   const handleLoginClick = () => {
     get_token_login(login, passwd)
       .then(userId => {
@@ -44,7 +50,7 @@ export default function Login() {
           get_user_by_id(userId)
             .then((userdata) => {
               setUser(userdata)
-              navigate(`/user-profile/${userdata.user_info.id}`)
+              navigate(`/user-profile/${userdata.user_info.id}`, { replace: true })
             }).catch((err) => {
               console.log(err)
             })

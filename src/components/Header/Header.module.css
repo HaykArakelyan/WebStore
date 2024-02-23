@@ -36,7 +36,8 @@ ul li:hover {
     color: rgb(237, 92, 155);
 }
 
-.authButtons {
+.authButtons,
+.profileButtons {
     width: 15%;
     display: flex;
     flex-direction: row;

@@ -1,10 +1,38 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import styles from './Header.module.css'
 import CustomButton from '../customComponents/CustomButton'
+import { clearStorage, isAuth } from '../../CustomTools/CustomTools'
+import { get_products_by_userId } from '../../CustomTools/Requests'
 
 export default function Header() {
   const navigate = useNavigate()
+
+  const userId = localStorage.getItem("id")
+  const [isUserAuth, setIsUserAuth] = useState(isAuth());
+  const [userProducts, setUserProducts] = useState([])
+
+  useEffect(() => {
+    setIsUserAuth(isAuth())
+  }, [isAuth()])
+
+  useEffect(() => {
+    if (isUserAuth) {
+      getUserProducts()
+      navigate(`/user-profile/${userId}`, { replace: true })
+    }
+  }, [])
+
+
+  const getUserProducts = async () => {
+    get_products_by_userId(userId)
+      .then((res) =>
+        setUserProducts(res.products)
+      )
+      .catch((err) => {
+        console.log(err)
+      })
+  }
 
   return (
     <div className={styles.container}>
@@ -13,21 +41,46 @@ export default function Header() {
           <ul className={styles.ul}>
             <li><Link to={'/'} className={styles.a}>Home</Link></li>
             <li><Link to={'/dashboard'} className={styles.a}>Dashboard</Link></li>
-            <li><Link to={'/'} className={styles.a}>Home</Link></li>
-            <li><Link to={'/login'} className={styles.a}>Sign In</Link></li>
-            <li><Link to={'/register'} className={styles.a}>Sign Up</Link></li>
-            <li><Link to={`/user-profile/${localStorage.getItem("id")}`} className={styles.a}>My Page</Link></li>
+            {isUserAuth &&
+              <li>
+                <Link
+                  to={'/my-products'}
+                  state={{
+                    products: userProducts
+                  }}
+                  className={styles.a}
+                >
+                  My Products
+                </Link>
+              </li>
+            }
           </ul>
         </div>
-        <div className={styles.authButtons}>
-          <CustomButton
-            text={"Sign In"}
-            onClick={() => navigate("/login")}
-          />
-          <CustomButton text={"Sing Up"}
-            onClick={() => navigate("/register")}
-          />
-        </div>
+        {isUserAuth ?
+          <div className={styles.profileButtons}>
+            <CustomButton
+              text={'My Profile'}
+              onClick={() => navigate(`/user-profile/${userId}`)}
+            />
+            <CustomButton
+              text={"Sign Out"}
+              onClick={() => {
+                clearStorage()
+                navigate('/login')
+              }}
+            />
+          </div> :
+          <div className={styles.authButtons}>
+            <CustomButton
+              text={"Sign In"}
+              onClick={() => navigate("/login")}
+            />
+            <CustomButton text={"Sing Up"}
+              onClick={() => navigate("/register")}
+            />
+          </div>
+        }
+
       </div>
       <div className={styles.bottomBar} />
     </div>
