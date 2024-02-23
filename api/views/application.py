@@ -170,6 +170,19 @@ def get_all_products():
     return jsonify({'products_info': products_info}), 200
 
 
+@app.route('/get_products/<int:user_id>')
+@jwt_required()
+def get_product_bu_user_id(user_id):
+    user = User.query.filter_by(id=user_id).first()
+    if(user):
+        user_products = UserProduct.query.filter_by(user_id=user_id).all()
+        product_ids = [user_prod.product_id for user_prod in user_products]
+        products = Product.query.filter(Product.product_id.in_(product_ids)).all()
+        
+        products_dict = [product.product_to_dict() for product in products]
+        return jsonify({'products': products_dict}), 200
+    else:
+        return jsonify(message="User not found"), 404
 
 
 
