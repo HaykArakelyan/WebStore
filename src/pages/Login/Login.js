@@ -44,7 +44,7 @@ export default function Login() {
           get_user_by_id(userId)
             .then((userdata) => {
               setUser(userdata)
-              navigate(`/user-profile/${userdata.id}`)
+              navigate(`/user-profile/${userdata.user_info.id}`)
             }).catch((err) => {
               console.log(err)
             })
