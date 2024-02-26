@@ -120,10 +120,9 @@ def add_product():
 @app.route('/edit_product/<int:product_id>', methods=['PUT', 'DELETE'])
 @jwt_required()
 def edit_product(product_id):
-    user_email = get_jwt_identity()[0]
-    data = request.json
-
     if request.method == 'PUT':
+        user_email = get_jwt_identity()[0]
+        data = request.json
         if data:
             product = Product.query.get(product_id)
             if product:
