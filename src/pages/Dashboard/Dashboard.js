@@ -6,6 +6,7 @@ import CustomButton from '../../components/customComponents/CustomButton'
 import CustomPaginator from '../../components/customComponents/CustomPaginator'
 import { AnimatePresence } from 'framer-motion';
 import CustomModal from '../../components/customComponents/CustomModal';
+import Product from '../../components/Product/Product';
 
 export default function Dashboard() {
     const [products, setProducts] = useState([])
@@ -100,7 +101,7 @@ export default function Dashboard() {
                     {!isModalHidden ?
                         <CustomModal
                             onCloseModal={setIsModalHidden}
-                            product={activeProduct}
+                            element={() => <Product product={activeProduct} />}
                         /> : null
                     }
                 </AnimatePresence>
