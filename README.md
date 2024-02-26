@@ -25,12 +25,12 @@ Welcome to Webstore! This project combines the power of **React.js** for the fro
 
     ```python
     class Config:
-        SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:<YOUR PASSWORD HERE>@localhost:5432/market'
+        SQLALCHEMY_DATABASE_URI = 'postgresql://<YOUR USERNAME HERE>:<YOUR PASSWORD HERE>@localhost:5432/market'
         ...
 
     class DevEnvConfig(Config):
         ...
-        SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:root@localhost:5432/market'
+        SQLALCHEMY_DATABASE_URI = 'postgresql://<YOUR USERNAME HERE>:<YOUR PASSWORD HERE>@localhost:5432/market'
     ```
 
 Feel free to adapt this `README.md` to provide more context or additional details about your project. Happy coding! 🚀
