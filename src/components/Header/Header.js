@@ -10,7 +10,7 @@ import logo from '../../assets/logo/logo_removed_bg.png'
 export default function Header() {
   const navigate = useNavigate()
 
-  const userId = localStorage.getItem("id")
+  const userId = sessionStorage.getItem("id")
   const [isUserAuth, setIsUserAuth] = useState(isAuth());
   const [userProducts, setUserProducts] = useState([])
 

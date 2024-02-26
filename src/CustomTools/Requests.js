@@ -9,7 +9,7 @@ const api = axios.create({
 
 api.interceptors.request.use(
     (config) => {
-        const token = localStorage.getItem("access_token")
+        const token = sessionStorage.getItem("access_token")
         if (token) {
             config.headers['Authorization'] = `Bearer ${token}`;
         }
@@ -33,8 +33,8 @@ export const register_user = (newUser) => {
 export const get_token_login = (email, password) => {
     return api.post("login", { email, password })
         .then((res) => {
-            localStorage.setItem("access_token", res.data.access_token);
-            localStorage.setItem("id", res.data.id)
+            sessionStorage.setItem("access_token", res.data.access_token);
+            sessionStorage.setItem("id", res.data.id)
             return res.data.id;
         })
         .catch((err) => {

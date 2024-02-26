@@ -39,7 +39,7 @@ export default function Login() {
 
   useEffect(() => {
     if (isAuth()) {
-      navigate(`/user-profile/${localStorage.getItem('id')}`)
+      navigate(`/user-profile/${sessionStorage.getItem('id')}`)
     }
   }, [isAuth()])
 

@@ -59,9 +59,9 @@ export const isNullOrUndefined = (value) => {
 }
 
 export const isAuth = () => {
-    return !isNullOrUndefined(localStorage.getItem("access_token"))
+    return !isNullOrUndefined(sessionStorage.getItem("access_token"))
 }
 
 export const clearStorage = () => {
-    localStorage.clear()
+    sessionStorage.clear()
 }
