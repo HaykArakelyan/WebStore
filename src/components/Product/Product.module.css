@@ -65,7 +65,8 @@
     text-align: center;
 }
 
-.cartButtons {
+.cartButtons,
+.controlButtons {
     display: flex;
     flex-direction: row;
     justify-content: space-around;

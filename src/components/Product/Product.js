@@ -4,7 +4,7 @@ import SlickSlider from '../Slider/SlickSlider'
 import StarCounter from '../Icons/StarCounter'
 import CustomButton from '../customComponents/CustomButton'
 
-export default function Product({ product }) {
+export default function Product({ product, currentUserProduct = false, onEditButtonClick, onDeleteButtonClick }) {
     return (
         <div className={styles.container}>
             <div className={styles.productImageSlider}>
@@ -39,17 +39,31 @@ export default function Product({ product }) {
                 </div>
 
 
-                <div className={styles.cartButtons}>
-                    <CustomButton
-                        text={"View Full Product"}
-                        onClick={() => console.log("Navigate to Full Produtc Page")}
-                    />
+                {!currentUserProduct ?
+                    <div className={styles.cartButtons}>
+                        <CustomButton
+                            text={"View Full Product"}
+                            onClick={() => console.log("Navigate to Full Produtc Page")}
+                        />
 
-                    <CustomButton
-                        text={"Add to Cart"}
-                        onClick={() => console.log("Added to Cart")}
-                    />
-                </div>
+                        <CustomButton
+                            text={"Add to Cart"}
+                            onClick={() => console.log("Added to Cart")}
+                        />
+                    </div>
+                    :
+                    <div className={styles.controlButtons}>
+                        <CustomButton
+                            text={"Edit Product"}
+                            onClick={onEditButtonClick}
+                        />
+
+                        <CustomButton
+                            text={"Delete Product"}
+                            onClick={onDeleteButtonClick}
+                        />
+                    </div>
+                }
             </div>
         </div>
     )

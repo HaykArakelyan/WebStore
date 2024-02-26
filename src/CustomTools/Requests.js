@@ -94,3 +94,9 @@ export const get_products_by_userId = (userId) => {
         .then((res) => res.data)
         .catch((err) => Promise.reject(err))
 }
+
+export const delete_user_product = (productId) => {
+    return api.delete(`edit_product/${productId}`)
+        .then((res) => res.data)
+        .catch((err) => Promise.reject(err))
+}

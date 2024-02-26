@@ -20,21 +20,10 @@ export default function Header() {
 
   useEffect(() => {
     if (isUserAuth) {
-      getUserProducts()
       // navigate(`/user-profile/${userId}`, { replace: true })
     }
   }, [])
 
-
-  const getUserProducts = async () => {
-    get_products_by_userId(userId)
-      .then((res) =>
-        setUserProducts(res.products)
-      )
-      .catch((err) => {
-        console.log(err)
-      })
-  }
 
   const handleLogoClick = () => {
     navigate('/')

@@ -5,7 +5,7 @@ import CustomInputs from '../customComponents/CustomInputs'
 import CustomButton from '../customComponents/CustomButton'
 
 
-export default function ProductForm({ p = null, updateProduct = null, onSubmit }) {
+export default function ProductForm({ p = null, updateProduct = null, onSubmit, newProduct = false }) {
 
     const [product, setProduct] = useState(
         p ? p
@@ -16,16 +16,13 @@ export default function ProductForm({ p = null, updateProduct = null, onSubmit }
                 discountPercentage: "",
                 stock: "",
                 category: "",
+                brand: ""
                 // images: []
             }
     )
 
     const handleProductEdit = (value) => {
-        if (!updateProduct) {
-            setProduct(value)
-        } else {
-            updateProduct(value)
-        }
+        setProduct(value)
     }
 
     useEffect(() => {
@@ -150,7 +147,7 @@ export default function ProductForm({ p = null, updateProduct = null, onSubmit }
 
             <div className={styles.postProduct}>
                 <CustomButton
-                    text={!p ? "Post Product" : "Update Product"}
+                    text={newProduct ? "Post Product" : "Update Product"}
                     onClick={handleSubmitButtockClick}
                 />
             </div>

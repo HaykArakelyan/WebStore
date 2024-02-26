@@ -96,6 +96,7 @@ export default function UserProfile({ }) {
     const handleAddProductButtonClick = () => {
         setModalElement(<ProductForm
             onSubmit={handlePostProductButtonClick}
+            newProduct
         />)
         setIsModalHidden(false)
     }
