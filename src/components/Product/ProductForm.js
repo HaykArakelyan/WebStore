@@ -29,7 +29,6 @@ export default function ProductForm({ p = null, updateProduct = null, onSubmit }
     }
 
     useEffect(() => {
-        console.log(p === null)
         if (p) {
             setProduct(p)
         }

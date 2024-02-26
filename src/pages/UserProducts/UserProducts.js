@@ -36,8 +36,7 @@ export default function UserProducts() {
 
     const handleEditProductButtonClick = (e) => {
         if (isProductValid(e)) {
-            // TODO: Get product ID with request
-            edit_product(7, e)
+            edit_product(e.product_id, e)
                 .then((res) => {
                     console.log(res)
                 })
