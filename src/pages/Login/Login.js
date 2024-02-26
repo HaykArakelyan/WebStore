@@ -22,8 +22,6 @@ export default function Login() {
   const [isDisabled, setIsDisabled] = useState(true)
   const [isCheckBoxChecked, setIsCheckBoxChecked] = useState(false)
 
-  const [user, setUser] = useState({})
-
   // useEffect(() => {
   //   areValidCredentials()
   // }, [passwd, login])
@@ -47,14 +45,7 @@ export default function Login() {
     get_token_login(login, passwd)
       .then(userId => {
         if (userId) {
-          get_user_by_id(userId)
-            .then((userdata) => {
-              setUser(userdata)
-              navigate(`/user-profile/${userdata.user_info.id}`, { replace: true })
-            }).catch((err) => {
-              console.log(err)
-            })
-
+          navigate(`/user-profile/${userId}`, { replace: true })
         }
       })
       .catch((err) => {

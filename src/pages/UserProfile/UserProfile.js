@@ -23,7 +23,7 @@ export default function UserProfile({ }) {
         gender: "",
         age: "",
     })
-    const userId = localStorage.getItem("id")
+    const userId = sessionStorage.getItem("id")
 
     const [imageUrl, setImageUrl] = useState("")
     const [userProducts, setUserProducts] = useState([])
