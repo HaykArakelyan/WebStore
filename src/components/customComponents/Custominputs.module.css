@@ -4,10 +4,11 @@
     flex-direction: row;
     align-items: center;
     transition: 0.3s;
+    gap: 1rem;
 }
 
-.container:focus-within {
-    transform: scale(1.2);
+.input:focus-within {
+    transform: scale(1.1);
 }
 
 .input {
