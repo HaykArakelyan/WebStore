@@ -65,3 +65,10 @@ export const isAuth = () => {
 export const clearStorage = () => {
     sessionStorage.clear()
 }
+
+export const filteredProducts = (products, condition) => {
+    if (condition === "") {
+        return products
+    }
+    return products.filter(p => p.title.toLowerCase().includes(condition.toLowerCase()))
+}

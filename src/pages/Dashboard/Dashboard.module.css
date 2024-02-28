@@ -3,13 +3,37 @@
     flex-direction: column;
 }
 
+.searchBox {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-self: center;
+    width: 80%;
+    gap: 2rem;
+    align-items: center;
+    padding-top: 1rem;
+}
+
 .products {
     column-gap: 50px;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    margin: 3rem auto 3rem;
+    padding: 2rem 0 1rem;
+    margin: auto;
     row-gap: 3rem;
     width: 80%;
+}
+
+.productsError {
+    display: flex;
+    flex-direction: row;
+    align-self: center;
+    width: 20%;
+    justify-content: center;
+    background-color: #C5C6C7;
+    font-weight: bold;
+    border-radius: 1rem;
+    padding: 1rem;
 }
 
 .paginationControl {
