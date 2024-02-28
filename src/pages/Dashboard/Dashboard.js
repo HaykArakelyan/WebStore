@@ -11,6 +11,7 @@ import CustomInputs from '../../components/customComponents/CustomInputs';
 import { filteredProducts } from '../../CustomTools/CustomTools';
 
 import { faX } from '@fortawesome/free-solid-svg-icons';
+import Loader from '../../components/Loader/Loader';
 
 export default function Dashboard() {
     const [products, setProducts] = useState([])
@@ -24,7 +25,15 @@ export default function Dashboard() {
     const [searchQuery, setSearchQuery] = useState("")
     const [filteredProductList, setFilteredProductList] = useState([])
 
-    const [errorMessege, setErrorMessege] = useState(null)
+    const [errorMessege, setErrorMessege] = useState("")
+    const [isFetching, setIsFethcing] = useState(true)
+
+    useEffect(() => {
+        if (isFetching) {
+            setErrorMessege(<Loader />)
+        }
+    }, [isFetching])
+
 
     useEffect(() => {
         axios.request('https://dummyjson.com/products')
@@ -39,6 +48,7 @@ export default function Dashboard() {
                     setErrorMessege("Something Went Wrong")
                 }
             })
+        setIsFethcing(false)
     }, [])
 
 
@@ -49,7 +59,7 @@ export default function Dashboard() {
 
     useEffect(() => {
         const result = filteredProducts(products, searchQuery)
-        if (result.length === 0) {
+        if (result.length === 0 && products.length !== 0) {
             setErrorMessege(`No Product Found With "${searchQuery}"`)
         }
         setFilteredProductList(result)
