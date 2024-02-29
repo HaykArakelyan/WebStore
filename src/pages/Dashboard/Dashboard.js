@@ -72,7 +72,7 @@ export default function Dashboard() {
     }
 
 
-    const handleSeatchQueryChange = (value) => {
+    const handleSearchQueryChange = (value) => {
         setSearchQuery(value)
     }
 
@@ -86,7 +86,7 @@ export default function Dashboard() {
                 <div className={styles.searchBox}>
                     <CustomInputs
                         placeholder={"Search"}
-                        onChange={handleSeatchQueryChange}
+                        onChange={handleSearchQueryChange}
                         value={searchQuery}
                         icon={faX}
                         onIconClick={() => setSearchQuery("")}
