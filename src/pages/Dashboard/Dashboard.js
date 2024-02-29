@@ -2,13 +2,12 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import styles from './Dashboard.module.css'
 import CustomCard from '../../components/customComponents/CustomCard';
-import CustomButton from '../../components/customComponents/CustomButton'
-import CustomPaginator from '../../components/customComponents/CustomPaginator'
 import { AnimatePresence } from 'framer-motion';
 import CustomModal from '../../components/customComponents/CustomModal';
 import Product from '../../components/Product/Product';
 import CustomInputs from '../../components/customComponents/CustomInputs';
 import { filteredProducts } from '../../CustomTools/CustomTools';
+import PaginationControl from '../../components/PaginationControl/PaginationControl';
 
 import { faX } from '@fortawesome/free-solid-svg-icons';
 import Loader from '../../components/Loader/Loader';
@@ -67,35 +66,11 @@ export default function Dashboard() {
     }, [products, searchQuery])
 
 
-    const handlePageSwitch = (action, n) => {
-        const MAX_PAGE_COUNT = Math.ceil(products.length / ITEMS_PER_PAGE)
-
-        switch (action) {
-            case "next":
-                if (currentPage === MAX_PAGE_COUNT - 1)
-                    return
-                setCurrentPage(currentPage + 1)
-                break;
-
-            case "back":
-                if (currentPage === 0)
-                    return
-                setCurrentPage(currentPage - 1)
-                break
-            case "switch":
-                if (n >= 0 && n < MAX_PAGE_COUNT) {
-                    setCurrentPage(n)
-                }
-                break;
-            default:
-                break;
-        }
-    }
-
     const handleCardClick = (e) => {
         setIsModalHidden(false)
         setActiveProduct(e)
     }
+
 
     const handleSeatchQueryChange = (value) => {
         setSearchQuery(value)
@@ -132,20 +107,14 @@ export default function Dashboard() {
                 </div>
                 {filteredProductList.length !== 0 ?
                     Math.ceil(filteredProductList.length / ITEMS_PER_PAGE) !== 1 &&
-                    <div className={styles.paginationControl}>
-                        <CustomButton
-                            text={"Back"}
-                            onClick={() => handlePageSwitch("back")}
-                        />
-                        <CustomPaginator
-                            numberOfPages={Math.ceil(filteredProductList.length / ITEMS_PER_PAGE)}
-                            handlePageSwitch={handlePageSwitch}
-                        />
-                        <CustomButton
-                            text={"Next"}
-                            onClick={() => handlePageSwitch("next")}
-                        />
-                    </div> :
+                    <PaginationControl
+                        productsLength={products.length}
+                        itemsPerPage={ITEMS_PER_PAGE}
+                        currentPage={currentPage}
+                        setCurrentPage={setCurrentPage}
+                        filteredProductList={filteredProductList}
+                    />
+                    :
                     <div className={styles.productsError}>
                         <label>{errorMessege}</label>
                     </div>
