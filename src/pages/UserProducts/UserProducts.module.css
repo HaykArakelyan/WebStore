@@ -1,8 +1,35 @@
 .container {
+    display: flex;
+    flex-direction: column;
+}
+
+.controls {
+    display: flex;
+    flex-direction: row;
+    width: 60%;
+    justify-content: space-around;
+    align-items: center;
+    align-self: center;
+    padding-top: 1rem;
+}
+
+.userProducts {
     column-gap: 50px;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     margin: 3rem auto 3rem;
     row-gap: 3rem;
     width: 80%;
+}
+
+.productsError {
+    display: flex;
+    flex-direction: row;
+    align-self: center;
+    width: 20%;
+    justify-content: center;
+    background-color: #C5C6C7;
+    font-weight: bold;
+    border-radius: 1rem;
+    padding: 1rem;
 }
