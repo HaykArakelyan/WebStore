@@ -12,6 +12,7 @@ import { AnimatePresence } from 'framer-motion'
 import EditProfile from './EditProfile'
 import { delete_user_by_id, update_user, get_user_by_id, add_product } from '../../CustomTools/Requests'
 import ProductForm from '../../components/Product/ProductForm'
+import { useMessageBox } from '../../components/Messages/MessageBox'
 
 export default function UserProfile({ }) {
     const navigate = useNavigate()
@@ -29,6 +30,8 @@ export default function UserProfile({ }) {
     const [userProducts, setUserProducts] = useState([])
     const [userCart, setUserCart] = useState([])
 
+    const { showMessage } = useMessageBox()
+
     useEffect(() => {
         get_user_by_id(userId)
             .then((res) => {
@@ -38,7 +41,7 @@ export default function UserProfile({ }) {
                 setUserCart([])
             })
             .catch((err) => {
-                console.log(err)
+                showMessage({ msg: "Session Expired", msgType: "info" })
                 clearStorage();
                 navigate("/login")
             })
@@ -70,12 +73,12 @@ export default function UserProfile({ }) {
             user.id,
             updatedUser,
         ).then((msg) => {
-            console.log(msg)
+            showMessage({ msg: "Credentials Updated", msgType: "success" })
             setUser({ ...user, ...updatedUser })
+            setIsModalHidden(true)
         }).catch((err) => {
-            console.log(err)
+            showMessage({ msg: "Something Went Wrong", msgType: "error" })
         })
-        setIsModalHidden(true)
     }
 
     const handleDeleteProfile = () => {
@@ -85,19 +88,21 @@ export default function UserProfile({ }) {
                 .then(() => {
                     localStorage.removeItem("access_token")
                     navigate('/login')
+                    showMessage({ msg: "Account Deleted", msgType: "success" })
                 })
                 .catch((err) => {
-                    console.log(err)
+                    showMessage({ msg: "Something went wrong", msgType: "error" })
                 })
 
         }
     }
 
     const handleAddProductButtonClick = () => {
-        setModalElement(<ProductForm
-            onSubmit={handlePostProductButtonClick}
-            newProduct
-        />)
+        setModalElement(
+            <ProductForm
+                onSubmit={handlePostProductButtonClick}
+                newProduct
+            />)
         setIsModalHidden(false)
     }
 
@@ -105,10 +110,10 @@ export default function UserProfile({ }) {
 
         add_product(e)
             .then((res) => {
-                console.log(res)
+                showMessage({ msg: "Product Added", msgType: "success" })
                 setIsModalHidden(true)
             }).catch((err) => {
-                console.log(err)
+                showMessage({ msg: "Error Occured While Adding a Product", msgType: "error" })
             })
     }
 

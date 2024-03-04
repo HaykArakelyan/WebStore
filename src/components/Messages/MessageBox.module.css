@@ -12,6 +12,7 @@
     padding-left: 2rem;
     border-radius: 1rem;
     border-left: .3125rem solid;
+    z-index: 1002;
 }
 
 .error {

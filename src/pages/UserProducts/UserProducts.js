@@ -18,6 +18,7 @@ import { faX } from '@fortawesome/free-solid-svg-icons';
 import { filteredProducts } from '../../CustomTools/CustomTools'
 import Loader from '../../components/Loader/Loader'
 import CustomButton from '../../components/customComponents/CustomButton'
+import { useMessageBox } from '../../components/Messages/MessageBox'
 
 
 const userId = sessionStorage.getItem("id")
@@ -34,6 +35,8 @@ export default function UserProducts() {
     const [errorMessege, setErrorMessege] = useState("")
     const [isFetching, setIsFethcing] = useState(true)
     const [isNewProductAdded, setIsNewProductAdded] = useState(false)
+
+    const { showMessage } = useMessageBox()
 
     useEffect(() => {
         if (isFetching) {
@@ -113,7 +116,6 @@ export default function UserProducts() {
         if (isProductValid(e)) {
             edit_product(e.product_id, e)
                 .then((res) => {
-                    console.log(res)
                     updateProductsOnproductUpdate(e)
                     setModalElement(
                         <Product
@@ -122,9 +124,10 @@ export default function UserProducts() {
                             userProduct
                         />
                     )
+                    showMessage({ msg: "Product Updated", msgType: "success" })
                 })
                 .catch((err) => {
-                    console.log(err)
+                    showMessage({ msg: "Error Occured While Updating a Product", msgType: "error" })
                 })
         }
 
@@ -133,14 +136,14 @@ export default function UserProducts() {
     const handleDeleteProduct = (deletedProduct) => {
         delete_user_product(deletedProduct.product_id)
             .then((res) => {
-                console.log(res)
                 setIsModalHidden(true)
                 setProducts((prevProductsState) => {
                     return prevProductsState.filter((product => product != deletedProduct))
                 })
+                showMessage({ msg: "Product Deleted", msgType: "success" })
             })
             .catch((err) => {
-                console.log(err)
+                showMessage({ msg: "Error Occured While Deleting a Product", msgType: "error" })
             })
     }
 
@@ -170,8 +173,9 @@ export default function UserProducts() {
             .then((res) => {
                 setIsModalHidden(true)
                 setIsNewProductAdded(true)
+                showMessage({ msg: "Product Added", msgType: "success" })
             }).catch((err) => {
-                console.log(err)
+                showMessage({ msg: "Error Occured While Adding a Product", msgType: "error" })
             })
     }
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import styles from './Register.module.css'
 import CustomBox from '../../components/customComponents/CustomBox'
 import CustomInputs from '../../components/customComponents/CustomInputs'
@@ -6,11 +6,11 @@ import CustomButton from '../../components/customComponents/CustomButton'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { routeVariants } from '../../Navigation/RouteVariants'
-import { isEmpty } from '../../CustomTools/CustomTools'
 import { faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons'
 import { Link } from 'react-router-dom'
 import CustomDropdown from '../../components/customComponents/CustomDropdown'
 import { register_user } from '../../CustomTools/Requests'
+import { useMessageBox } from '../../components/Messages/MessageBox'
 
 const genders = ["Male", "Female", "Attack helicopter"]
 
@@ -20,15 +20,10 @@ export default function Register() {
 
     const [newUser, setNewUser] = useState({ gender: genders[0] })
 
-    const [isDisabled, setIsDisabled] = useState(true)
     const [notMatchingStyle, setNotMatchingStyle] = useState({ "color": "red" })
     const [isPasswdHidden, setIsPasswdHidden] = useState(false)
 
-
-    //TODO
-    useEffect(() => {
-        areValidCredentials()
-    }, [newUser])
+    const { showMessage } = useMessageBox()
 
 
     const setNewFirstName = (newFirstName) => {
@@ -87,28 +82,14 @@ export default function Register() {
         setNotMatchingStyle({ "color": "red" })
     }
 
-    const areValidCredentials = () => {
-        if (isEmpty(newUser.first_name) ||
-            isEmpty(newUser.last_name) ||
-            isEmpty(newUser.email) ||
-            isEmpty(newUser.password) ||
-            isEmpty(newUser.gender) ||
-            isEmpty(newUser.age)
-        ) {
-            setIsDisabled(true)
-            return
-        }
-        setIsDisabled(false)
-    }
-
     const handleRegister = () => {
         register_user(newUser)
             .then((res) => {
-                console.log(res)
+                showMessage({ msg: "Account created", msgType: "success" })
                 navigate("/login")
             })
             .catch((err) => {
-                console.log(err)
+                showMessage({ msg: "Invalid Credentials", msgType: "error" })
             })
     }
 
@@ -171,7 +152,6 @@ export default function Register() {
                     text={"Register"}
                     style={{ "marginTop": ".5rem" }}
                     onClick={() => handleRegister()}
-                // isDisabled={isDisabled}
                 />
 
                 <Link to={'/login'} className={styles.linkToLogin}>

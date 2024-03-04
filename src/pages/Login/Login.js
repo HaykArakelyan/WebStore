@@ -5,35 +5,21 @@ import CustomButton from '../../components/customComponents/CustomButton'
 import CustomCheckbox from '../../components/customComponents/CustomCheckbox'
 import { motion } from 'framer-motion'
 import { routeVariants } from '../../Navigation/RouteVariants'
+import { isAuth, } from '../../CustomTools/CustomTools'
+import { Link } from 'react-router-dom'
 
-import { isAuth, isEmpty } from '../../CustomTools/CustomTools'
-import { Link, Navigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
-import { useNavigate, useParams } from 'react-router-dom'
-
-import axios from 'axios'
-import { get_token_login, get_user_by_id } from '../../CustomTools/Requests'
+import { get_token_login } from '../../CustomTools/Requests'
+import { useMessageBox } from '../../components/Messages/MessageBox'
 
 export default function Login() {
   const navigate = useNavigate()
 
   const [login, setLogin] = useState('')
   const [passwd, setPasswd] = useState('')
-  const [isDisabled, setIsDisabled] = useState(true)
-  const [isCheckBoxChecked, setIsCheckBoxChecked] = useState(false)
 
-  // useEffect(() => {
-  //   areValidCredentials()
-  // }, [passwd, login])
-
-  // const areValidCredentials = () => {
-  //   if (isEmpty(login) || isEmpty(passwd)) {
-  //     setIsDisabled(true)
-  //     return true
-  //   }
-  //   setIsDisabled(false)
-  //   return false
-  // }
+  const { showMessage } = useMessageBox()
 
   useEffect(() => {
     if (isAuth()) {
@@ -45,11 +31,12 @@ export default function Login() {
     get_token_login(login, passwd)
       .then(userId => {
         if (userId) {
+          showMessage({ msg: "Login Successful", msgType: "success" })
           navigate(`/user-profile/${userId}`, { replace: true })
         }
       })
       .catch((err) => {
-        console.log(err)
+        showMessage({ msg: "Invalid Credentials", msgType: "error" })
       });
   }
 
@@ -71,10 +58,6 @@ export default function Login() {
             type={"password"}
             placeholder={"MySuperPassword"}
             onChange={setPasswd}
-          />
-          <CustomCheckbox
-            text={"Remember Me"}
-            onChange={setIsCheckBoxChecked}
           />
           <CustomButton
             text={"Sign In!"}
