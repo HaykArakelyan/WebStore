@@ -1,0 +1,51 @@
+.container {
+    position: fixed;
+    right: 0;
+    top: 10rem;
+    width: 30rem;
+    background-color: white;
+    height: 5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+    padding-left: 2rem;
+    border-radius: 1rem;
+    border-left: .3125rem solid;
+}
+
+.error {
+    /* color: #DD2424; */
+    border-color: #DD2424;
+    background-color: #F6E6E7;
+}
+
+.success {
+    /* color: #04884C; */
+    border-color: #04884C;
+    background-color: #CEF1D1;
+}
+
+.note {
+    /* color: #9B9B9B; */
+    border-color: #9B9B9B;
+    background-color: #EAEAEA;
+}
+
+.info {
+    /* color: #6397DC; */
+    border-color: #6397DC;
+    background-color: #6397DC;
+}
+
+.warning {
+    /* color: #F9DD3A; */
+    border-color: #F9DD3A;
+    background-color: #F9EAAD;
+}
+
+.messege {
+    padding: .3rem;
+    padding-left: 0;
+    font-weight: 500;
+}
