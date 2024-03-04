@@ -20,7 +20,7 @@ export const productsAnimation = {
     }
 }
 
-export const messegeBoxVariants = {
+export const messageBoxVariants = {
     hidden: {
         x: '100vw', opacity: 0
     },

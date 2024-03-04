@@ -4,17 +4,17 @@ import {
 } from 'react-router-dom'
 
 import Header from './components/Header/Header'
-import LocationProvider from './Navigation/LocationProvider'
 import RoutesWithAnimation from './Navigation/RoutesWithAnimation'
+import { MessageBoxProvider } from './components/Messages/MessageBox'
 
 export default function App() {
 
   return (
     <Router>
-      <Header />
-      <LocationProvider>
+      <MessageBoxProvider>
+        <Header />
         <RoutesWithAnimation />
-      </LocationProvider>
-    </Router >
+      </MessageBoxProvider>
+    </Router>
   )
 }

@@ -15,36 +15,31 @@
 }
 
 .error {
-    /* color: #DD2424; */
     border-color: #DD2424;
     background-color: #F6E6E7;
 }
 
 .success {
-    /* color: #04884C; */
     border-color: #04884C;
     background-color: #CEF1D1;
 }
 
 .note {
-    /* color: #9B9B9B; */
     border-color: #9B9B9B;
     background-color: #EAEAEA;
 }
 
 .info {
-    /* color: #6397DC; */
     border-color: #6397DC;
     background-color: #6397DC;
 }
 
 .warning {
-    /* color: #F9DD3A; */
     border-color: #F9DD3A;
     background-color: #F9EAAD;
 }
 
-.messege {
+.message {
     padding: .3rem;
     padding-left: 0;
     font-weight: 500;
