@@ -7,6 +7,8 @@ from config import DevEnvConfig
 
 app = Flask(__name__, template_folder='templates', static_folder='static')
 app.config.from_object(DevEnvConfig)
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = 1800
+app.config['JWT_REFRESH_TOKEN_EXPIRES'] = 604800
 
 cors = CORS(support_credentials=True)
 cors.init_app(app)

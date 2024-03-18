@@ -2,7 +2,7 @@ from datetime import datetime
 
 from flask import request, jsonify
 from flask_cors import cross_origin
-from flask_jwt_extended import create_access_token, jwt_required, get_jwt
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt, create_refresh_token, verify_jwt_in_request, get_jwt_identity
 from app import app, login_manager
 from helpers import generate_hash
 from models import User, db
@@ -28,7 +28,8 @@ def login():
             email=email, password=generate_hash(password)).first()
         if user:
             access_token = create_access_token(identity=[email])
-            return jsonify(access_token=access_token, id=user.id), 200
+            refresh_token = create_refresh_token(identity=[email])
+            return jsonify(access_token=access_token, refresh_token=refresh_token, id=user.id), 200
         else:
             return jsonify(message='Invalid username or password'), 401
     return jsonify(message='Method Not Allowed'), 405
@@ -72,3 +73,13 @@ def register_user():
 #     return {"message": "Successfully logged out"}, 200
 
 
+@app.route('/refresh_token', methods=['POST'])
+@jwt_required(refresh=True)
+def refresh():
+    try:
+        verify_jwt_in_request(refresh=True)
+        current_user = get_jwt_identity()
+        access_token = create_access_token(identity=current_user)
+        return jsonify(access_token=access_token), 200
+    except:
+        return jsonify(message="Refresh token is invalid or expired"), 401
