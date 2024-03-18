@@ -42,8 +42,8 @@ export default function UserProfile({ }) {
             })
             .catch((err) => {
                 showMessage({ msg: "Session Expired", msgType: "info" })
-                clearStorage();
-                navigate("/login")
+                // clearStorage();
+                // navigate("/login")
             })
     }, [])
 

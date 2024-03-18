@@ -10,7 +10,7 @@ const api = axios.create({
 api.interceptors.request.use(
     (config) => {
         const token = sessionStorage.getItem("access_token")
-        if (token) {
+        if (token && !config?.url?.includes("refresh_token")) {
             config.headers['Authorization'] = `Bearer ${token}`;
         }
         return config
@@ -19,6 +19,42 @@ api.interceptors.request.use(
         return Promise.reject(error)
     }
 )
+
+let isRefreshing = false;
+api.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        const status = error.response ? error.response.status : null;
+        const originalRequest = error.config;
+        if (status === 401) {
+            if (!isRefreshing) {
+                isRefreshing = true;
+                api.post('/refresh_token', {}, {
+                    headers: {
+                        'Authorization': `Bearer ${sessionStorage.getItem("refresh_token")}`
+                    }
+                }).then(refreshTokenResponse => {
+                    const newAccessToken = refreshTokenResponse.data.access_token;
+                    sessionStorage.setItem("access_token", newAccessToken);
+                    return api(originalRequest);
+                }).then(retryResponse => {
+                    isRefreshing = false;
+                    return retryResponse;
+                }).catch(refreshError => {
+                    console.error('Refresh token failed:', refreshError);
+                    isRefreshing = false;
+                    throw refreshError;
+                });
+            } else {
+                new Promise((resolve) => setTimeout(resolve, 1000));
+                const retryResponse = api(originalRequest);
+                return retryResponse;
+            }
+        } else {
+            return Promise.reject(error);
+        }
+    }
+);
 
 export const register_user = (newUser) => {
     return api.post("register", newUser)
@@ -33,6 +69,7 @@ export const register_user = (newUser) => {
 export const get_token_login = (email, password) => {
     return api.post("login", { email, password })
         .then((res) => {
+            sessionStorage.setItem("refresh_token", res.data.refresh_token)
             sessionStorage.setItem("access_token", res.data.access_token);
             sessionStorage.setItem("id", res.data.id)
             return res.data.id;
