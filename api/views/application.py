@@ -7,7 +7,7 @@ from helpers import jwt_decoder
 from flask_jwt_extended import  jwt_required, get_jwt, get_jwt_identity
 
 from app import app
-from models import User, db, Product, UserProduct
+from models import User, db, Product, UserProduct, ProfileImages
 
 
 @app.route('/user_profile/<user_id>', methods=['GET', 'PUT', 'DELETE'])
@@ -20,6 +20,8 @@ def get_course_by_id(user_id):
             products_info = [Product.query.get(user_product.product_id).product_to_dict() for user_product in
                              user_product_ids]
             user_info = user.user_to_dict()
+            profile_image = ProfileImages.query.filter_by(user_id=user_id).first()
+            user_info = {**user_info, **profile_image.get_image_path()}
 
             return jsonify({'user_info': user_info, 'products_info': products_info}), 200
         else:
@@ -39,6 +41,12 @@ def get_course_by_id(user_id):
                 user.email = new_email
                 user.phone = new_phone
                 user.gender = new_gender
+
+                profile_image  = data.get("profile_image")
+                if profile_image:
+                    new_profile_image = ProfileImages(user_id=user_id, image_path=profile_image)
+
+                db.session.add(new_profile_image)
                 db.session.commit()
                 return jsonify({'message': 'User info updated successfully'}), 200
             return jsonify(message='User not found'), 404
@@ -176,7 +184,6 @@ def get_product_bu_user_id(user_id):
         return jsonify({'products': products_dict}), 200
     else:
         return jsonify(message="User not found"), 404
-
 
 
 

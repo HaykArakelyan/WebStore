@@ -112,3 +112,14 @@ class Image(db.Model):
     img_id = db.Column(db.Integer, primary_key=True)
     product_id = db.Column(db.Integer, db.ForeignKey('products.product_id'))
     img_path = db.Column(db.String(50), nullable=False, unique=True)  # Add nullable and unique constraints
+
+class ProfileImages(db.Model):
+    __tablename__ = 'profile_images'
+    profile_image_id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    image_path = db.Column(db.String(255), nullable=False, unique=True)
+
+    def get_image_path(self):
+        return {
+            "profile_image": self.image_path
+        }
