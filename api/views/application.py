@@ -20,8 +20,10 @@ def get_course_by_id(user_id):
             products_info = [Product.query.get(user_product.product_id).product_to_dict() for user_product in
                              user_product_ids]
             user_info = user.user_to_dict()
-            profile_image = ProfileImages.query.filter_by(user_id=user_id).first()
-            user_info = {**user_info, **profile_image.get_image_path()}
+            profile_image_obj = ProfileImages.query.filter_by(user_id=user_id).first()
+            if profile_image_obj:
+                profile_image = profile_image_obj.get_image_path()
+                user_info = {**user_info, **profile_image}
 
             return jsonify({'user_info': user_info, 'products_info': products_info}), 200
         else:
@@ -42,11 +44,14 @@ def get_course_by_id(user_id):
                 user.phone = new_phone
                 user.gender = new_gender
 
-                profile_image  = data.get("profile_image")
-                if profile_image:
-                    new_profile_image = ProfileImages(user_id=user_id, image_path=profile_image)
-
-                db.session.add(new_profile_image)
+                profile_image_url = data.get("profile_image")
+                if profile_image_url:
+                    profile_image = ProfileImages.query.filter_by(user_id=user_id).first()
+                    if profile_image:
+                        profile_image.image_path = profile_image_url
+                    else:   
+                        new_profile_image = ProfileImages(user_id=user_id, image_path=profile_image)
+                        db.session.add(new_profile_image)
                 db.session.commit()
                 return jsonify({'message': 'User info updated successfully'}), 200
             return jsonify(message='User not found'), 404
