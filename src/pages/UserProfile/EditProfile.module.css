@@ -31,3 +31,9 @@
     display: flex;
     justify-content: center;
 }
+
+.imageControls {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}

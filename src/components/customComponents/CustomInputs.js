@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useRef, useEffect } from 'react'
 import styles from "./Custominputs.module.css"
 import CustomIcon from './CustomIcon'
 
@@ -11,11 +11,21 @@ export default function CustomInputs({
     onIconClick = null,
     iconSize = null,
     iconStyle = null,
+    inputContainerRef = null,
     value,
     parentStyle
 }) {
 
     const inputRef = useRef(null);
+
+    useEffect(() => {
+        if (inputContainerRef) {
+            inputContainerRef.current = {
+                click: () => inputRef.current?.click(),
+            };
+        }
+    }, [inputContainerRef]);
+
 
     const handleIconClick = (e) => {
         e.stopPropagation()
@@ -29,13 +39,15 @@ export default function CustomInputs({
     }
 
     return (
-        <div className={styles.container} style={parentStyle}>
+        <div className={styles.container} style={parentStyle} ref={inputContainerRef}>
             <input
                 ref={inputRef}
                 type={type}
                 placeholder={placeholder}
                 className={styles.input}
-                onChange={(e) => onChange(e.target.value)}
+                onChange={(e) =>
+                    onChange(type === "file" ? e.target.files[0] : e.target.value)
+                }
                 style={style}
                 value={value}
                 onKeyDown={handleKeyDown}

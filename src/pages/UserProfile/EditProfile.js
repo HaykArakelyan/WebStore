@@ -1,8 +1,12 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import styles from './EditProfile.module.css'
 import CustomInputs from '../../components/customComponents/CustomInputs'
 import CustomButton from '../../components/customComponents/CustomButton'
-import { update_user } from '../../CustomTools/Requests'
+import { storage } from '../../Firebase/firebase'
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
+import { isNullOrUndefined } from '../../CustomTools/CustomTools'
+import CustomImage from '../../components/customComponents/CustomImage'
+import { useMessageBox } from '../../components/Messages/MessageBox'
 
 export default function EditProfile({ user, closeModal }) {
 
@@ -14,16 +18,40 @@ export default function EditProfile({ user, closeModal }) {
 
     const [newGender, setnewGender] = useState(user.gender)
 
-    const [newImageurl, setNewImageUrl] = useState(user.imageUrl)
+    const [newImageUrl, setNewImageUrl] = useState(user.profile_image)
+    const [newImageObject, setNewImageObject] = useState(null)
+
+    const fileInputRef = useRef(null)
+
+    const { showMessage } = useMessageBox()
+
+    const uploadImageToFB = () => {
+        if (!newImageObject) {
+            return Promise.resolve(newImageUrl)
+        }
+
+        const imageRef = ref(storage, `images/${sessionStorage.getItem("id")}/avatar/${newImageObject?.name}`)
+        return uploadBytes(imageRef, newImageObject)
+            .then(() => getDownloadURL(imageRef))
+            .catch(() => {
+                showMessage({ msg: "Something Went Wrong", msgType: "error" })
+            })
+    }
 
     const handleSaveChangesClick = () => {
-        closeModal({
-            first_name: newFirstName,
-            last_name: newLastName,
-            email: newEmail,
-            phone: newPhone,
-            gender: newGender
-        })
+        uploadImageToFB()
+            .then(fbImageUrl => {
+                closeModal({
+                    first_name: newFirstName,
+                    last_name: newLastName,
+                    email: newEmail,
+                    phone: newPhone,
+                    gender: newGender,
+                    profile_image: fbImageUrl
+                })
+            }).catch(() => {
+                showMessage({ msg: "Something Went Wrong", msgType: "error" })
+            })
     }
 
     return (
@@ -58,6 +86,43 @@ export default function EditProfile({ user, closeModal }) {
                 <div className={styles.inputBox}>
                     <label className={styles.inputLabel}>Phone</label>
                     <CustomInputs value={newPhone} onChange={setNewPhone} />
+                </div>
+            </div>
+
+            <div className={styles.imageField}>
+                <div className={styles.inputBox}>
+                    <label className={styles.inputLabel}>Image</label>
+                    <CustomInputs
+                        type={"file"}
+                        inputContainerRef={fileInputRef}
+                        parentStyle={{ display: "none" }}
+                        onChange={(image) => {
+                            if (image?.type.startsWith('image/')) {
+                                setNewImageObject(image)
+                                const url = URL.createObjectURL(image)
+                                setNewImageUrl(url)
+                            }
+                        }}
+                    />
+
+                    <div className={styles.imageControls}>
+                        {!isNullOrUndefined(newImageUrl) &&
+                            <CustomImage
+                                url={newImageUrl}
+                                name={"new image"}
+                                style={{
+                                    width: "2.5rem",
+                                    height: "2.5rem"
+                                }}
+                            />
+                        }
+                        <CustomButton
+                            onClick={() => {
+                                fileInputRef?.current?.click()
+                            }}
+                            text={"Choose Image"}
+                        />
+                    </div>
                 </div>
             </div>
 

@@ -23,10 +23,11 @@ export default function UserProfile({ }) {
         phone: "",
         gender: "",
         age: "",
+        profile_image: ""
     })
     const userId = sessionStorage.getItem("id")
 
-    const [imageUrl, setImageUrl] = useState("")
+    // const [imageUrl, setImageUrl] = useState("")
     const [userProducts, setUserProducts] = useState([])
     const [userCart, setUserCart] = useState([])
 
@@ -36,7 +37,7 @@ export default function UserProfile({ }) {
         get_user_by_id(userId)
             .then((res) => {
                 setUser(res.user_info)
-                setImageUrl(res.user_info.img)
+                // setImageUrl(res.user_info.profile_image)
                 setUserProducts([...userProducts, ...res.products_info])
                 setUserCart([])
             })
@@ -47,16 +48,13 @@ export default function UserProfile({ }) {
             })
     }, [])
 
-
     const [isModalHidden, setIsModalHidden] = useState(true)
     const [modalElement, setModalElement] = useState()
 
     const hasImage = (image) => {
-        if (image === "" || image) {
-            return false
-        }
-        return true
+        return image !== "" && image !== undefined && image !== null;
     }
+
 
     const handleEditbuttonClick = () => {
         setModalElement(
@@ -116,7 +114,6 @@ export default function UserProfile({ }) {
                 showMessage({ msg: "Error Occured While Adding a Product", msgType: "error" })
             })
     }
-
     return (
         <div className={styles.container}>
             <div className={styles.content}>
@@ -126,8 +123,8 @@ export default function UserProfile({ }) {
                         <img
                             title={"It's you dude"}
                             alt={"Your image"}
-                            src={hasImage(imageUrl) ?
-                                imageUrl : user.gender == "Male" ?
+                            src={hasImage(user.profile_image) ?
+                                user.profile_image : user.gender == "Male" ?
                                     male_image : female_image}
                         />
                     </div>
