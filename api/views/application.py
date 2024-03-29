@@ -8,17 +8,15 @@ from helpers import get_user
 from models import User, db, Product, UserProduct, ProfileImages, Cart, ProductImage, Review, Report, UserRates
 
 #change URL delete ID from reuqest
-@app.route('/user_profile/<user_id>', methods=['GET', 'PUT', 'DELETE'])
+@app.route('/user_profile', methods=['GET', 'PUT', 'DELETE'])
 @jwt_required()
-def get_user_by_id(user_id):
+def get_user_by_id():
     user = get_user()
     if request.method == 'GET':
         if user:
-            # Get products owned by the user
             user_products = Product.query.filter_by(owner_id=user.id).all()
             products_info = [product.product_to_dict() for product in user_products]
 
-            # Get product IDs associated with the user in the cart
             user_cart_products = db.session.query(Cart).join(UserProduct).filter(UserProduct.user_id == user.id).all()
             cart_products_info = []
             for cart_item in user_cart_products:
@@ -26,7 +24,6 @@ def get_user_by_id(user_id):
                 product = Product.query.get(user_product.product_id)
                 cart_product_info = product.product_to_dict()
 
-                # Fetch reviews for cart item
                 user_prods = UserProduct.query.filter_by(product_id=product.product_id).all()
                 user_prod_ids = [user_prod.user_prod_id for user_prod in user_prods]
                 reviews = Review.query.filter(Review.user_prod_id.in_(user_prod_ids)).all()
@@ -34,7 +31,6 @@ def get_user_by_id(user_id):
 
                 cart_products_info.append(cart_product_info)
 
-            # Fetch reviews for each product
             for product_info in products_info:
                 product_id = product_info["product_id"]
                 user_prods = UserProduct.query.filter_by(product_id=product_id).all()
@@ -254,9 +250,9 @@ def get_all_products():
     return jsonify({'products_info_list': products_info_list}), 200
 
 
-@app.route('/get_products/<int:user_id>')
+@app.route('/get_products')
 @jwt_required()
-def get_product_by_user_id(user_id):
+def get_products():
     user = get_user()
     if not user:
         return jsonify(message="User not found"), 404
@@ -275,9 +271,9 @@ def get_product_by_user_id(user_id):
     return jsonify({'products': products_list}), 200
 
 # Delete user_id from request
-@app.route('/add_to_cart/<int:user_id>', methods=['POST'])
+@app.route('/add_to_cart', methods=['POST'])
 @jwt_required()
-def add_to_cart(user_id):
+def add_to_cart():
     data = request.json
     product_id = data.get("product_id")
     if not product_id:
@@ -307,9 +303,9 @@ def add_to_cart(user_id):
     return jsonify(message="Item added to cart successfully"), 200
 
 #Delete user_id from request
-@app.route('/get_from_cart/<int:user_id>', methods=['GET'])
+@app.route('/get_from_cart', methods=['GET'])
 @jwt_required()
-def get_from_cart(user_id):
+def get_from_cart():
     user = get_user()
     if not user:
         return jsonify(message="User not found"), 404
