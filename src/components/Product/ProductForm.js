@@ -70,7 +70,7 @@ export default function ProductForm({ p = null, updateProduct = null, onSubmit, 
                         {/* TODO: Maybe changed to dropdown menu */}
                         <CustomInputs
                             value={product.brand}
-                            placeholder={"Ex: electronics"}
+                            placeholder={"Ex: apple"}
                             onChange={(e) => {
                                 handleProductEdit({ ...product, brand: e })
                             }}

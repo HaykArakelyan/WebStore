@@ -11,7 +11,7 @@ import ProductForm from '../../components/Product/ProductForm'
 import PaginationControl from '../../components/PaginationControl/PaginationControl'
 
 import { isNullOrUndefined } from '../../CustomTools/CustomTools'
-import { delete_user_product, edit_product, get_products_by_userId, add_product } from '../../CustomTools/Requests'
+import { delete_product, edit_product, get_products, add_product } from '../../CustomTools/Requests'
 import Product from '../../components/Product/Product'
 import CustomInputs from '../../components/customComponents/CustomInputs'
 import { faX } from '@fortawesome/free-solid-svg-icons';
@@ -20,8 +20,6 @@ import Loader from '../../components/Loader/Loader'
 import CustomButton from '../../components/customComponents/CustomButton'
 import { useMessageBox } from '../../components/Messages/MessageBox'
 
-
-const userId = sessionStorage.getItem("id")
 
 export default function UserProducts() {
 
@@ -46,7 +44,7 @@ export default function UserProducts() {
 
 
     useEffect(() => {
-        get_products_by_userId(userId)
+        get_products()
             .then((res) => {
                 setProducts(res.products)
                 setFilteredProductList(res.products)
@@ -134,7 +132,7 @@ export default function UserProducts() {
     }
 
     const handleDeleteProduct = (deletedProduct) => {
-        delete_user_product(deletedProduct.product_id)
+        delete_product(deletedProduct.product_id)
             .then((res) => {
                 setIsModalHidden(true)
                 setProducts((prevProductsState) => {

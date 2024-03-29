@@ -10,7 +10,7 @@ import CustomButton from '../../components/customComponents/CustomButton'
 import CustomModal from '../../components/customComponents/CustomModal'
 import { AnimatePresence } from 'framer-motion'
 import EditProfile from './EditProfile'
-import { delete_user_by_id, update_user, get_user_by_id, add_product } from '../../CustomTools/Requests'
+import { delete_user, update_user, get_user, add_product } from '../../CustomTools/Requests'
 import ProductForm from '../../components/Product/ProductForm'
 import { useMessageBox } from '../../components/Messages/MessageBox'
 
@@ -25,19 +25,16 @@ export default function UserProfile({ }) {
         age: "",
         profile_image: ""
     })
-    const userId = sessionStorage.getItem("id")
 
-    // const [imageUrl, setImageUrl] = useState("")
     const [userProducts, setUserProducts] = useState([])
     const [userCart, setUserCart] = useState([])
 
     const { showMessage } = useMessageBox()
 
     useEffect(() => {
-        get_user_by_id(userId)
+        get_user()
             .then((res) => {
                 setUser(res.user_info)
-                // setImageUrl(res.user_info.profile_image)
                 setUserProducts([...userProducts, ...res.products_info])
                 setUserCart([])
             })
@@ -68,7 +65,6 @@ export default function UserProfile({ }) {
 
     const handleSaveButtonClick = (updatedUser) => {
         update_user(
-            user.id,
             updatedUser,
         ).then((msg) => {
             showMessage({ msg: "Credentials Updated", msgType: "success" })
@@ -82,7 +78,7 @@ export default function UserProfile({ }) {
     const handleDeleteProfile = () => {
         const answer = prompt("You will lose forever access to your account. Type 'Delete' to continue the process... ", "")
         if (answer === "Delete") {
-            delete_user_by_id(user.id)
+            delete_user(user.id)
                 .then(() => {
                     localStorage.removeItem("access_token")
                     navigate('/login')

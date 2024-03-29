@@ -3,14 +3,11 @@ import { Link, useNavigate } from 'react-router-dom'
 import styles from './Header.module.css'
 import CustomButton from '../customComponents/CustomButton'
 import { clearStorage, isAuth } from '../../CustomTools/CustomTools'
-import { get_products_by_userId } from '../../CustomTools/Requests'
-import CustomImage from '../customComponents/CustomImage'
 
 import logo from '../../assets/logo/logo_removed_bg.png'
 export default function Header() {
   const navigate = useNavigate()
 
-  const userId = sessionStorage.getItem("id")
   const [isUserAuth, setIsUserAuth] = useState(isAuth());
   const [userProducts, setUserProducts] = useState([])
 
@@ -20,7 +17,7 @@ export default function Header() {
 
   useEffect(() => {
     if (isUserAuth) {
-      // navigate(`/user-profile/${userId}`, { replace: true })
+      // navigate("/user-profile", { replace: true })
     }
   }, [])
 
@@ -62,7 +59,7 @@ export default function Header() {
           <div className={styles.profileButtons}>
             <CustomButton
               text={'My Profile'}
-              onClick={() => navigate(`/user-profile/${userId}`)}
+              onClick={() => navigate(`/user-profile`)}
             />
             <CustomButton
               text={"Sign Out"}

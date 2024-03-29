@@ -41,9 +41,7 @@ api.interceptors.response.use(
                     isRefreshing = false;
                     return retryResponse;
                 }).catch(refreshError => {
-                    console.error('Refresh token failed:', refreshError);
                     isRefreshing = false;
-                    throw refreshError;
                 });
             } else {
                 new Promise((resolve) => setTimeout(resolve, 1000));
@@ -80,8 +78,8 @@ export const get_token_login = (email, password) => {
 };
 
 
-export const get_user_by_id = (id) => {
-    return api.get(`user_profile/${id}`)
+export const get_user = () => {
+    return api.get(`user_profile`)
         .then((res) => {
             return res.data
         })
@@ -91,7 +89,7 @@ export const get_user_by_id = (id) => {
 }
 
 
-export const delete_user_by_id = (id) => {
+export const delete_user = (id) => {
     return api.delete(`user_profile/${id}`)
         .then((res) => {
             return res.data
@@ -101,8 +99,8 @@ export const delete_user_by_id = (id) => {
         })
 }
 
-export const update_user = (id, updatedUser) => {
-    return api.put(`user_profile/${id}`, updatedUser)
+export const update_user = (updatedUser) => {
+    return api.put(`/user_profile`, updatedUser)
         .then((res) => {
             return res.data
         })
@@ -126,13 +124,13 @@ export const edit_product = (productId, updatedtProduct) => {
         .catch((err) => Promise.reject(err))
 }
 
-export const get_products_by_userId = (userId) => {
-    return api.get(`/get_products/${userId}`)
+export const get_products = () => {
+    return api.get(`/get_products`)
         .then((res) => res.data)
         .catch((err) => Promise.reject(err))
 }
 
-export const delete_user_product = (productId) => {
+export const delete_product = (productId) => {
     return api.delete(`edit_product/${productId}`)
         .then((res) => res.data)
         .catch((err) => Promise.reject(err))

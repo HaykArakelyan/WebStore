@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import styles from "./Login.module.css"
 import CustomInputs from '../../components/customComponents/CustomInputs'
 import CustomButton from '../../components/customComponents/CustomButton'
-import CustomCheckbox from '../../components/customComponents/CustomCheckbox'
 import { motion } from 'framer-motion'
 import { routeVariants } from '../../Navigation/RouteVariants'
 import { isAuth, } from '../../CustomTools/CustomTools'
@@ -23,17 +22,15 @@ export default function Login() {
 
   useEffect(() => {
     if (isAuth()) {
-      navigate(`/user-profile/${sessionStorage.getItem('id')}`)
+      navigate(`/user-profile`)
     }
   }, [isAuth()])
 
   const handleLoginClick = () => {
     get_token_login(login, passwd)
-      .then(userId => {
-        if (userId) {
-          showMessage({ msg: "Login Successful", msgType: "success" })
-          navigate(`/user-profile/${userId}`, { replace: true })
-        }
+      .then(() => {
+        showMessage({ msg: "Login Successful", msgType: "success" })
+        navigate(`/user-profile`, { replace: true })
       })
       .catch((err) => {
         showMessage({ msg: "Invalid Credentials", msgType: "error" })
