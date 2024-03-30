@@ -7,7 +7,6 @@ from app import app
 from helpers import get_user
 from models import User, db, Product, UserProduct, ProfileImages, Cart, ProductImage, Review, Report, UserRates
 
-#change URL delete ID from reuqest
 @app.route('/user_profile', methods=['GET', 'PUT', 'DELETE'])
 @jwt_required()
 def get_user_by_id():
@@ -38,7 +37,6 @@ def get_user_by_id():
                 reviews = Review.query.filter(Review.user_prod_id.in_(user_prod_ids)).all()
                 product_info["reviews"] = [review.review_to_dict() for review in reviews]
 
-            # Fetch user info
             user_info = user.user_to_dict()
             profile_image_obj = ProfileImages.query.filter_by(user_id=user.id).first()
             if profile_image_obj:
@@ -81,47 +79,36 @@ def get_user_by_id():
 
     elif request.method == 'DELETE':
         if user:
-            # Delete user's profile image if it exists
             user_profile_img = ProfileImages.query.filter_by(user_id=user.id).first()
 
             if user_profile_img:
                 db.session.delete(user_profile_img)
 
-            # Get user's products and their associated user_prod_ids
             user_products = Product.query.filter_by(owner_id=user.id).all()
 
             user_prod_ids = [user_prod.user_prod_id for user_prod in UserProduct.query.filter_by(user_id=user.id).all()]
 
-            # Delete reviews associated with user_prod_ids
             Review.query.filter(Review.user_prod_id.in_(user_prod_ids)).delete(synchronize_session=False)
 
-            # Get user_prod_ids associated with cart items
             user_prod_ids_in_cart = [cart_item.user_prod_id for cart_item in
                                      Cart.query.filter(Cart.user_prod_id.in_(user_prod_ids)).all()]
 
-            # Delete cart items associated with the user_prod_ids
             Cart.query.filter(Cart.user_prod_id.in_(user_prod_ids_in_cart)).delete(synchronize_session=False)
 
-            # Delete entries from the user_prod table only if associated with cart items
             UserProduct.query.filter(UserProduct.user_prod_id.in_(user_prod_ids_in_cart)).delete(
                 synchronize_session=False)
 
-            # Delete user's products and associated images
             for product in user_products:
 
-                # Delete product images if they exist
                 product_images = ProductImage.query.filter_by(product_id=product.product_id).all()
 
                 for image in product_images:
                     db.session.delete(image)
 
-                # Delete product itself
                 db.session.delete(product)
 
-            # Delete user from the database
             db.session.delete(user)
 
-            # Commit all changes
             db.session.commit()
             return jsonify({'message': 'User and associated data deleted successfully'}), 200
         else:
@@ -214,40 +201,30 @@ def edit_product(product_id):
 
 @app.route('/dashboard/products', methods=['GET'])
 def get_all_products():
-    # Initialize an empty list to store product information
-    products_info_list = []
+    products_list = []
 
-    # Query all products from the database
     products = Product.query.all()
 
-    # Check if products are found
     if not products:
         return jsonify(message="Products not found"), 404
 
-    # Loop through each product
     for product in products:
-        # Get basic product information
         product_info = product.product_to_dict()
 
-        # Query product images
         prod_images = ProductImage.query.filter_by(product_id=product.product_id).all()
 
-        # Query user product ids associated with the product
         user_prods = UserProduct.query.filter_by(product_id=product.product_id).all()
         user_prod_ids = [user_prod.user_prod_id for user_prod in user_prods]
 
-        # Query reviews associated with the user product ids
         reviews = Review.query.filter(Review.user_prod_id.in_(user_prod_ids)).all()
 
-        # Add reviews to product information
         product_info["reviews"] = [review.review_to_dict() for review in reviews]
+        product_info["images"] = prod_images
 
-        # Append product information and images to the list
-        products_info_list.append(
-            {'product_info': product_info, 'product_images': [prod_img.img_path for prod_img in prod_images]})
+        products_list.append(product_info)
 
-    # Return the list of product information
-    return jsonify({'products_info_list': products_info_list}), 200
+    return jsonify({'products': products_list}), 200
+
 
 
 @app.route('/get_products')
@@ -270,7 +247,6 @@ def get_products():
         product["reviews"] = [i.review_to_dict() for i in reviews]
     return jsonify({'products': products_list}), 200
 
-# Delete user_id from request
 @app.route('/add_to_cart', methods=['POST'])
 @jwt_required()
 def add_to_cart():
@@ -291,18 +267,16 @@ def add_to_cart():
     if not user_prod:
         user_prod = UserProduct(user_id=user.id, product_id=product_id)
         db.session.add(user_prod)
-        db.session.commit()  # Commit the user_product addition
+        db.session.commit()
 
-    # Retrieve or add the cart item
     cart_item = Cart.query.filter_by(user_prod_id=user_prod.user_prod_id).first()
     if not cart_item:
         cart_item = Cart(user_prod_id=user_prod.user_prod_id)
         db.session.add(cart_item)
-        db.session.commit()  # Commit the cart item addition
+        db.session.commit()
 
     return jsonify(message="Item added to cart successfully"), 200
 
-#Delete user_id from request
 @app.route('/get_from_cart', methods=['GET'])
 @jwt_required()
 def get_from_cart():
@@ -320,7 +294,6 @@ def get_from_cart():
         product = Product.query.get(user_product)
         product_info = product.product_to_dict()
 
-        # Fetch reviews for cart item
         user_prods = UserProduct.query.filter_by(product_id=product.product_id).all()
         user_prod_ids = [user_prod.user_prod_id for user_prod in user_prods]
         reviews = Review.query.filter(Review.user_prod_id.in_(user_prod_ids)).all()
@@ -338,32 +311,26 @@ def add_review(product_id):
     user_id = data.get("user_id")
     text = data.get("text")
 
-    # Check if product_id is provided
     if not product_id:
         return jsonify(message="Product ID is required"), 400
 
-    # Check if product exists
     prod = Product.query.get(product_id)
     if not prod:
         return jsonify(message="Product does not exist"), 404
 
-    # Check if user exists
     user = User.query.filter_by(id=user_id).first()
     if not user:
         return jsonify(message="User not found"), 404
 
-    # Check if user is trying to review their own product
     if user.id == prod.owner_id:
         return jsonify(message="You can't add a review to your own product"), 400
 
-    # Add or retrieve user_product entry
     user_prod = UserProduct.query.filter_by(user_id=user_id, product_id=product_id).first()
     if not user_prod:
         user_prod = UserProduct(user_id=user_id, product_id=product_id)
         db.session.add(user_prod)
         db.session.commit()
 
-    # Create and add the review
     review_item = Review(user_prod_id=user_prod.user_prod_id, comment=text, posted_at=datetime.utcnow())
     db.session.add(review_item)
     db.session.commit()
