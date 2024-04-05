@@ -6,6 +6,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from app import app
 from helpers import get_user
 from models import User, db, Product, UserProduct, ProfileImages, Cart, ProductImage, Review, Report, UserRates
+from hashlib import sha256
 
 @app.route('/user_profile', methods=['GET', 'PUT', 'DELETE'])
 @jwt_required()
@@ -41,7 +42,7 @@ def get_user_by_id():
             profile_image_obj = ProfileImages.query.filter_by(user_id=user.id).first()
             if profile_image_obj:
                 profile_image = profile_image_obj.get_image_path()
-                user_info = {**user_info, **profile_image}
+                user_info = {**user_info, **profile_image, "user_id": sha256(str(user.id).encode('utf-8')).hexdigest()}
 
             return jsonify(
                 {'user_info': user_info, 'products_info': products_info, "cart_products_info": cart_products_info}), 200
@@ -199,7 +200,7 @@ def edit_product(product_id):
         return jsonify(message="Invalid request method"), 405
 
 
-@app.route('/dashboard/products', methods=['GET'])
+@app.route('/products', methods=['GET'])
 def get_all_products():
     products_list = []
 
