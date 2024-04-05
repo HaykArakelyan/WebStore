@@ -1,0 +1,79 @@
+.container {
+    width: 80%;
+    margin: auto;
+}
+
+.content {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    background-color: #C5C6C7;
+    padding-top: 1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    border-radius: 1rem;
+}
+
+.productImages {
+    padding: 1rem 1rem;
+}
+
+.productInfo {
+    padding: 0 1rem 0;
+    width: 100%;
+}
+
+.labelBox {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 1rem;
+    gap: .5rem;
+}
+
+.productTitle {
+    font-size: 2rem;
+    padding: 1rem;
+    border-bottom: 1px solid;
+    text-align: center;
+    text-wrap: wrap;
+}
+
+.componentLabel {
+    font-size: 1.5rem;
+    align-self: center;
+}
+
+.productPriceDiscountStock,
+.productBrandAndCategory {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.productPrice {
+    padding: 1rem;
+    font-size: 1.5rem;
+    background-color: white;
+    border-radius: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+
+
+.productStock,
+.productDiscount,
+.productCategory,
+.productBrand {
+    background-color: white;
+    border-radius: 1rem;
+    padding: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.buttons {
+    padding: 1rem 0;
+    display: flex;
+    justify-content: space-around;
+}

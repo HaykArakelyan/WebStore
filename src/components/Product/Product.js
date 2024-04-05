@@ -3,12 +3,32 @@ import styles from './Product.module.css'
 import SlickSlider from '../Slider/SlickSlider'
 import StarCounter from '../Icons/StarCounter'
 import CustomButton from '../customComponents/CustomButton'
+import { add_product_to_cart } from '../../CustomTools/Requests'
+import { useNavigate } from 'react-router-dom'
 
-export default function Product({ product, currentUserProduct = false, onEditButtonClick, onDeleteButtonClick }) {
+export default function Product({
+    product,
+    currentUserProduct = false,
+    onEditButtonClick,
+    onDeleteButtonClick,
+}) {
+
+    const navigate = useNavigate()
+
+    const handleAddToCart = () => {
+        add_product_to_cart(product)
+            .then((res) => console.log(res))
+            .catch((err) => console.log(123))
+    }
+
+    const handleViewFullProductButtonClick = () => {
+        navigate(`/product/${product.product_id}`, { state: { product } })
+    }
+
     return (
         <div className={styles.container}>
             <div className={styles.productImageSlider}>
-                <SlickSlider images={product.images} />
+                {product?.images?.length > 0 ? <SlickSlider images={product.images} /> : null}
             </div>
 
             <div className={styles.productInfo}>
@@ -17,6 +37,7 @@ export default function Product({ product, currentUserProduct = false, onEditBut
                 </label>
 
                 <label className={styles.productDescription}>
+                    {/* TODO: Remove replace function */}
                     {product.description.replace('...', "")}
                 </label>
 
@@ -43,12 +64,12 @@ export default function Product({ product, currentUserProduct = false, onEditBut
                     <div className={styles.cartButtons}>
                         <CustomButton
                             text={"View Full Product"}
-                            onClick={() => console.log("Navigate to Full Produtc Page")}
+                            onClick={() => handleViewFullProductButtonClick()}
                         />
 
                         <CustomButton
                             text={"Add to Cart"}
-                            onClick={() => console.log("Added to Cart")}
+                            onClick={() => handleAddToCart()}
                         />
                     </div>
                     :
