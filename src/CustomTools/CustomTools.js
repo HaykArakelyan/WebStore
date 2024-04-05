@@ -72,3 +72,12 @@ export const filteredProducts = (products, condition) => {
     }
     return products.filter(p => p.title.toLowerCase().includes(condition.toLowerCase()))
 }
+
+
+export const isObjectValid = (obj) => {
+    if (!Object.values(obj).some(element => isNullOrUndefined(element))) {
+        return true
+    } else {
+        return false
+    }
+}

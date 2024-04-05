@@ -9,7 +9,6 @@ export default function Header() {
   const navigate = useNavigate()
 
   const [isUserAuth, setIsUserAuth] = useState(isAuth());
-  const [userProducts, setUserProducts] = useState([])
 
   useEffect(() => {
     setIsUserAuth(isAuth())
@@ -40,18 +39,28 @@ export default function Header() {
           <ul className={styles.ul}>
             <li><Link to={'/'} className={styles.a}>Home</Link></li>
             <li><Link to={'/dashboard'} className={styles.a}>Dashboard</Link></li>
-            {isUserAuth &&
-              <li>
-                <Link
-                  to={'/my-products'}
-                  state={{
-                    products: userProducts
-                  }}
-                  className={styles.a}
-                >
-                  My Products
-                </Link>
-              </li>
+            {isUserAuth ?
+              <>
+                <li>
+                  <Link
+                    to={'/my-products'}
+                    className={styles.a}
+                  >
+                    My Products
+                  </Link>
+                </li>
+
+                <li>
+                  <Link
+                    to={'/my-cart'}
+                    className={styles.a}
+                  >
+                    My Cart
+                  </Link>
+                </li>
+              </>
+              :
+              null
             }
           </ul>
         </div>

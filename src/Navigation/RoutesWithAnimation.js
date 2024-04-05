@@ -12,6 +12,8 @@ import {
 import Dashboard from '../pages/Dashboard/Dashboard'
 import UserProfile from '../pages/UserProfile/UserProfile'
 import UserProducts from '../pages/UserProducts/UserProducts'
+import UserCart from '../pages/UserCart/UserCart'
+import ProductPage from '../pages/Product/ProductPage'
 
 
 export default function RoutesWithAnimation() {
@@ -25,6 +27,8 @@ export default function RoutesWithAnimation() {
             <Route exact path='/dashboard' element={<Dashboard />}></Route>
             <Route exact path='/user-profile' element={<UserProfile />}></Route>
             <Route exact path='/my-products' element={<UserProducts />} ></Route>
+            <Route exact path='/my-cart' element={< UserCart />}></Route>
+            <Route exact path='/product/:id' element={<ProductPage />}></Route>
         </Routes>
     )
 }

@@ -125,13 +125,25 @@ export const edit_product = (productId, updatedtProduct) => {
 }
 
 export const get_products = () => {
-    return api.get(`/get_products`)
+    return api.get(`/products`)
         .then((res) => res.data)
         .catch((err) => Promise.reject(err))
 }
 
 export const delete_product = (productId) => {
     return api.delete(`edit_product/${productId}`)
+        .then((res) => res.data)
+        .catch((err) => Promise.reject(err))
+}
+
+export const get_user_cart = () => {
+    return api.get('/get_from_cart')
+        .then((res) => res.data)
+        .catch((err) => Promise.reject(err))
+}
+
+export const add_product_to_cart = (product) => {
+    return api.post('/add_to_cart', product)
         .then((res) => res.data)
         .catch((err) => Promise.reject(err))
 }

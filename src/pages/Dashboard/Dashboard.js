@@ -11,6 +11,8 @@ import PaginationControl from '../../components/PaginationControl/PaginationCont
 
 import { faX } from '@fortawesome/free-solid-svg-icons';
 import Loader from '../../components/Loader/Loader';
+import { get_products } from '../../CustomTools/Requests';
+import tempImage from './temp-image.png'//TODO: Temp
 
 export default function Dashboard() {
     const [products, setProducts] = useState([])
@@ -35,18 +37,25 @@ export default function Dashboard() {
 
 
     useEffect(() => {
-        axios.request('https://dummyjson.com/products')
+        // axios.request('https://dummyjson.com/products')
+        //     .then((res) => {
+        //         setProducts(res.data.products)
+        //         setFilteredProductList(res.data.products)
+        //     })
+        //     .catch((err) => {
+        //         if (err.code === "ERR_NETWORK") {
+        //             setErrorMessege("No Internet Connection")
+        //         } else {
+        //             setErrorMessege("Something Went Wrong")
+        //         }
+        //     })
+
+        get_products()
             .then((res) => {
-                setProducts(res.data.products)
-                setFilteredProductList(res.data.products)
+                setProducts(res.products)
+                setFilteredProductList(res.products)
             })
-            .catch((err) => {
-                if (err.code === "ERR_NETWORK") {
-                    setErrorMessege("No Internet Connection")
-                } else {
-                    setErrorMessege("Something Went Wrong")
-                }
-            })
+            .catch(err => console.log(err))
         setIsFethcing(false)
     }, [])
 
@@ -99,7 +108,7 @@ export default function Dashboard() {
                 <div className={styles.products}>
                     {currentData.map((e) =>
                         <CustomCard
-                            key={e.id}
+                            key={e.product_id}
                             p={e}
                             onClick={() => handleCardClick(e)}
                         />
@@ -127,7 +136,7 @@ export default function Dashboard() {
                     {!isModalHidden ?
                         <CustomModal
                             onCloseModal={setIsModalHidden}
-                            element={() => <Product product={activeProduct} />}
+                            element={() => <Product product={{ ...activeProduct, images: [tempImage] }} />}
                         /> : null
                     }
                 </AnimatePresence>
