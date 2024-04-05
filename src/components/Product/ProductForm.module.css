@@ -21,10 +21,12 @@
 }
 
 .inputBox {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
     background-color: gray;
     padding: 1rem;
     border-radius: 1rem;
-    flex: 1;
 }
 
 .inputLabel {
@@ -35,4 +37,17 @@
 .postProduct {
     display: flex;
     justify-content: center;
+}
+
+.imageControls {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.productImages {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 1rem;
 }

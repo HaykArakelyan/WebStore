@@ -12,6 +12,7 @@ export default function CustomInputs({
     iconSize = null,
     iconStyle = null,
     inputContainerRef = null,
+    multiple = false,
     value,
     parentStyle
 }) {
@@ -45,12 +46,19 @@ export default function CustomInputs({
                 type={type}
                 placeholder={placeholder}
                 className={styles.input}
-                onChange={(e) =>
-                    onChange(type === "file" ? e.target.files[0] : e.target.value)
-                }
+                onChange={(e) => {
+                    if (type === "file" && multiple) {
+                        onChange(e.target.files);
+                    } else if (type === "file") {
+                        onChange(e.target.files[0]);
+                    } else {
+                        onChange(e.target.value);
+                    }
+                }}
                 style={style}
                 value={value}
                 onKeyDown={handleKeyDown}
+                multiple={type === "file" && multiple}
             />
             {icon && onIconClick ?
                 <CustomIcon

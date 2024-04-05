@@ -1,8 +1,12 @@
-import React, { useEffect, useState } from 'react'
-import styles from './ProductForm.module.css'
-
-import CustomInputs from '../customComponents/CustomInputs'
+import { isNullOrUndefined, isObjectValid } from '../../CustomTools/CustomTools'
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
+import { storage } from '../../Firebase/firebase'
+import { useMessageBox } from '../../components/Messages/MessageBox'
 import CustomButton from '../customComponents/CustomButton'
+import CustomImage from '../customComponents/CustomImage'
+import CustomInputs from '../customComponents/CustomInputs'
+import React, { useEffect, useState, useRef } from 'react'
+import styles from './ProductForm.module.css'
 
 
 export default function ProductForm({ p = null, updateProduct = null, onSubmit, newProduct = false }) {
@@ -16,14 +20,17 @@ export default function ProductForm({ p = null, updateProduct = null, onSubmit, 
                 discountPercentage: "",
                 stock: "",
                 category: "",
-                brand: ""
-                // images: []
+                brand: "",
+                images: []
             }
     )
 
-    const handleProductEdit = (value) => {
-        setProduct(value)
-    }
+    const fileInputRef = useRef(null)
+    const [newImagesObjects, setNewImagesObjects] = useState([])
+    const [newImagesUrls, setNewImagesUrls] = useState(product.images)
+
+    const { showMessage } = useMessageBox()
+
 
     useEffect(() => {
         if (p) {
@@ -31,24 +38,67 @@ export default function ProductForm({ p = null, updateProduct = null, onSubmit, 
         }
     }, [p])
 
-    const handleSubmitButtockClick = () => {
-        if (product.price < 0 ||
+    const handleProductEdit = (value) => {
+        setProduct(value)
+    }
+
+    const handleRemoveImageClick = (indexToRemove) => {
+        setNewImagesUrls(prevUrls => prevUrls.filter((url, index) => index !== indexToRemove));
+        setNewImagesObjects(prevImagesObjects => prevImagesObjects.filter((image, index) => index !== indexToRemove));
+    };
+
+    const handleSubmitButtonClick = () => {
+        if (
+            product.price < 0 ||
             product.stock < 0 ||
             product.discountPercentage > 100 ||
             product.discountPercentage < 0
         ) {
-            console.log("Invalid Data!")
-            return
+            console.log("Invalid Data!");
+            return;
         }
-        else {
-            onSubmit({
-                ...product,
-                price: parseFloat(product.price),
-                discountPercentage: parseFloat(product.discountPercentage),
-                stock: parseFloat(product.stock)
-            })
+
+        const newProduct = {
+            ...product,
+            price: parseFloat(product.price),
+            discountPercentage: parseFloat(product.discountPercentage),
+            stock: parseFloat(product.stock)
+        };
+
+        if (isObjectValid(newProduct)) {
+            uploadImagesAndSubmit(newProduct);
+        } else {
+            console.log("Invalid Data");
         }
-    }
+    };
+
+    const uploadImagesAndSubmit = async (newProduct) => {
+        try {
+            const imageUrls = await uploadImagesToFirebase();
+            newProduct.images = imageUrls; // Assuming 'images' is the key in newProduct where image URLs are stored
+            onSubmit(newProduct); // Send the complete data including image URLs to API call
+        } catch (error) {
+            showMessage({ msg: "Something Went Wrong", msgType: "error" });
+        }
+    };
+
+    const uploadImagesToFirebase = async () => {
+        const imageUrls = [];
+
+        for (const imageObject of newImagesObjects) {
+            const imageRef = ref(storage, `images/${sessionStorage.getItem("id")}/products/${imageObject?.name}`);
+            try {
+                await uploadBytes(imageRef, imageObject);
+                const downloadURL = await getDownloadURL(imageRef);
+                imageUrls.push(downloadURL);
+            } catch (error) {
+                showMessage({ msg: "Error uploading image", msgType: "error" });
+                throw error; // Propagate the error to the caller
+            }
+        }
+
+        return imageUrls;
+    };
 
     return (
         <div className={styles.container}>
@@ -142,13 +192,60 @@ export default function ProductForm({ p = null, updateProduct = null, onSubmit, 
                         }}
                     />
                 </div>
+                <div className={styles.inputBox}>
+                    <label className={styles.inputLabel}>Image</label>
+                    <CustomInputs
+                        type={"file"}
+                        inputContainerRef={fileInputRef}
+                        parentStyle={{ display: "none" }}
+                        multiple
+                        onChange={(imagesFiles) => {
+                            const images = Array.from(imagesFiles).filter(file => file.type.startsWith('image/'));
+                            const totalImages = newImagesObjects.length + images.length;
+                            if (totalImages <= 5) {
+                                setNewImagesObjects(prevImagesObjects => [...prevImagesObjects, ...images]);
+                                const urls = images.map(image => URL.createObjectURL(image));
+                                setNewImagesUrls(prevUrls => [...prevUrls, ...urls]);
+                            } else {
+                                showMessage({ msg: "You can only upload up to 5 images.", msgType: "warning" });
+                            }
+                        }}
+                    />
+
+                    <div className={styles.imageControls}>
+                        <div className={styles.productImages}>
+                            {newImagesUrls.map((newImageUrl, index) => (
+                                <div key={index} onClick={() => handleRemoveImageClick(index)}>
+                                    <CustomImage
+                                        url={newImageUrl}
+                                        name={"new image"}
+                                        style={{
+                                            width: "2.5rem",
+                                            height: "2.5rem"
+                                        }}
+                                    />
+                                </div>
+                            ))}
+                        </div>
+
+                        <CustomButton
+                            onClick={() => {
+                                fileInputRef?.current?.click()
+                            }}
+                            text={"Choose Image"}
+                        />
+                    </div>
+                </div>
             </div>
+
+
+
 
 
             <div className={styles.postProduct}>
                 <CustomButton
                     text={newProduct ? "Post Product" : "Update Product"}
-                    onClick={handleSubmitButtockClick}
+                    onClick={handleSubmitButtonClick}
                 />
             </div>
 
