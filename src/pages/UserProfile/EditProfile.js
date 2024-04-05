@@ -29,7 +29,7 @@ export default function EditProfile({ user, closeModal }) {
         if (!newImageObject) {
             return Promise.resolve(newImageUrl)
         }
-
+        // TODO: Remove id from application (maybe we could use id's hash)
         const imageRef = ref(storage, `images/${sessionStorage.getItem("id")}/avatar/${newImageObject?.name}`)
         return uploadBytes(imageRef, newImageObject)
             .then(() => getDownloadURL(imageRef))

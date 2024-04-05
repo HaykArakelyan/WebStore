@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import styles from './UserProducts.module.css'
-import { useLocation } from 'react-router-dom'
 import CustomCard from '../../components/customComponents/CustomCard'
 
 import { AnimatePresence } from 'framer-motion'
@@ -179,7 +178,7 @@ export default function UserProducts() {
 
     const startIndex = currentPage * ITEMS_PER_PAGE;
     const endIndex = startIndex + ITEMS_PER_PAGE;
-    const currentData = filteredProductList.slice(startIndex, endIndex);
+    const currentData = filteredProductList.length > ITEMS_PER_PAGE ? filteredProductList.slice(startIndex, endIndex) : filteredProductList;
 
     return (
         <div className={styles.container}>
