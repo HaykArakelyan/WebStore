@@ -125,7 +125,7 @@ export const edit_product = (productId, updatedtProduct) => {
 }
 
 export const get_products = () => {
-    return api.get(`/products`)
+    return api.get(`/get_products`)
         .then((res) => res.data)
         .catch((err) => Promise.reject(err))
 }
