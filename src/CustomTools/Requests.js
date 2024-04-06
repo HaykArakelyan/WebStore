@@ -130,6 +130,13 @@ export const get_products = () => {
         .catch((err) => Promise.reject(err))
 }
 
+
+export const get_all_products = () => {
+    return api.get(`/products`)
+        .then((res) => res.data)
+        .catch((err) => Promise.reject(err))
+}
+
 export const delete_product = (productId) => {
     return api.delete(`edit_product/${productId}`)
         .then((res) => res.data)

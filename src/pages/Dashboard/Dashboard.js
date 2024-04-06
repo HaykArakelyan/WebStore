@@ -1,18 +1,16 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react'
-import styles from './Dashboard.module.css'
-import CustomCard from '../../components/customComponents/CustomCard';
 import { AnimatePresence } from 'framer-motion';
-import CustomModal from '../../components/customComponents/CustomModal';
-import Product from '../../components/Product/Product';
-import CustomInputs from '../../components/customComponents/CustomInputs';
+import React, { useEffect, useState } from 'react';
 import { filteredProducts } from '../../CustomTools/CustomTools';
 import PaginationControl from '../../components/PaginationControl/PaginationControl';
-
+import Product from '../../components/Product/Product';
+import CustomInputs from '../../components/customComponents/CustomInputs';
+import CustomModal from '../../components/customComponents/CustomModal';
+import styles from './Dashboard.module.css';
+import CustomCard from '../../components/customComponents/CustomCard';
 import { faX } from '@fortawesome/free-solid-svg-icons';
+import { get_all_products } from '../../CustomTools/Requests';
 import Loader from '../../components/Loader/Loader';
-import { get_products } from '../../CustomTools/Requests';
-import tempImage from './temp-image.png'//TODO: Temp
+import tempImage from './temp-image.png'; //TODO: Temp
 
 export default function Dashboard() {
     const [products, setProducts] = useState([])
@@ -50,8 +48,9 @@ export default function Dashboard() {
         //         }
         //     })
 
-        get_products()
+        get_all_products()
             .then((res) => {
+                // console.log(res)
                 setProducts(res.products)
                 setFilteredProductList(res.products)
             })
