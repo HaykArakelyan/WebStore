@@ -36,7 +36,7 @@ export default function UserProfile({ }) {
             .then((res) => {
                 setUser(res.user_info)
                 setUserProducts([...userProducts, ...res.products_info])
-                setUserCart([])
+                setUserCart([...userCart, ...res.cart_products_info])
             })
             .catch((err) => {
                 showMessage({ msg: "Session Expired", msgType: "info" })
@@ -255,10 +255,8 @@ export default function UserProfile({ }) {
                                 if (i < 2) {
                                     return (
                                         <div className={styles.productBox} key={i}>
-                                            <div
-                                                className={styles.product}
-                                            >
-                                                <img src={e.images[0]} className={styles.productImage} />
+                                            <div className={styles.product}>
+                                                {/* <img src={e.images[0]} className={styles.productImage} /> */}
                                                 <span className={styles.productDescription}>
                                                     {makeStringShorter(e.description, 41)}
                                                 </span>
