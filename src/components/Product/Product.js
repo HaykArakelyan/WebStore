@@ -5,7 +5,7 @@ import StarCounter from '../Icons/StarCounter'
 import CustomButton from '../customComponents/CustomButton'
 import { add_product_to_cart } from '../../CustomTools/Requests'
 import { useNavigate } from 'react-router-dom'
-
+import { useMessageBox } from '../../components/Messages/MessageBox'
 export default function Product({
     product,
     currentUserProduct = false,
@@ -14,11 +14,16 @@ export default function Product({
 }) {
 
     const navigate = useNavigate()
+    const { showMessage } = useMessageBox()
 
     const handleAddToCart = () => {
         add_product_to_cart(product)
-            .then((res) => console.log(res))
-            .catch((err) => console.log(123))
+            .then((res) => {
+                showMessage({ msg: "Added to Cart ", msgType: "success" })
+            })
+            .catch((err) => {
+                showMessage({ msg: "Somethig Went Wrong", msgType: "warning" })
+            })
     }
 
     const handleViewFullProductButtonClick = () => {
