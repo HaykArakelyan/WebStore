@@ -264,6 +264,9 @@ def add_to_cart():
     if not user:
         return jsonify(message="User not found"), 404
 
+    if prod.owner_id == user.id:
+        return jsonify(message="You can not add own product into your cart"), 404
+
     user_prod = UserProduct.query.filter_by(user_id=user.id, product_id=product_id).first()
     if not user_prod:
         user_prod = UserProduct(user_id=user.id, product_id=product_id)
@@ -276,8 +279,8 @@ def add_to_cart():
         db.session.add(cart_item)
         db.session.commit()
 
-    return jsonify(message="Item added to cart successfully"), 200
-
+        return jsonify(message="Item added to cart successfully"), 200
+    return jsonify(message="Product already in cart"), 400
 @app.route('/get_from_cart', methods=['GET'])
 @jwt_required()
 def get_from_cart():
