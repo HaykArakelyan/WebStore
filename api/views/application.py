@@ -1,9 +1,12 @@
+import base64
+import os
 from datetime import datetime
 
 from flask import request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from app import app
+import helpers
 from helpers import get_user
 from models import User, db, Product, UserProduct, ProfileImages, Cart, ProductImage, Review, Report, UserRates
 from hashlib import sha256
@@ -43,7 +46,6 @@ def get_user_by_id():
             if profile_image_obj:
                 profile_image = profile_image_obj.get_image_path()
                 user_info = {**user_info, **profile_image, "user_id": sha256(str(user.id).encode('utf-8')).hexdigest()}
-
             return jsonify(
                 {'user_info': user_info, 'products_info': products_info, "cart_products_info": cart_products_info}), 200
         else:
@@ -55,6 +57,7 @@ def get_user_by_id():
         new_email = data.get('email')
         new_phone = data.get('phone')
         new_gender = data.get('gender')
+        profile_image_base64 = data.get("profile_image")
         if not data:
             return jsonify(message='Bad request'), 400
 
@@ -67,8 +70,15 @@ def get_user_by_id():
         user.phone = new_phone
         user.gender = new_gender
 
-        profile_image_url = data.get("profile_image")
-        if profile_image_url:
+        s3 = helpers.create_session().resource('s3')
+        if profile_image_base64:
+            profile_image_data = base64.b64decode(profile_image_base64)
+            s3_key = f"images/{sha256(str(user.id).encode('utf-8')).hexdigest()}/avatar/profile_image.png"
+
+            s3.Object(os.getenv('S3_BUCKET_NAME'), s3_key).put(Body=profile_image_data, ContentType='image/png')
+
+            profile_image_url = f"https://{os.getenv('DOMAIN_NAME')}/{sha256(str(user.id).encode('utf-8')).hexdigest()}/avatar/profile_image.png"
+
             profile_image = ProfileImages.query.filter_by(user_id=user.id).first()
             if profile_image:
                 profile_image.image_path = profile_image_url
@@ -77,7 +87,6 @@ def get_user_by_id():
                 db.session.add(new_profile_image)
         db.session.commit()
         return jsonify({'message': 'User info updated successfully'}), 200
-
     elif request.method == 'DELETE':
         if user:
             user_profile_img = ProfileImages.query.filter_by(user_id=user.id).first()
@@ -161,7 +170,6 @@ def edit_product(product_id):
     user = get_user()
     if not user:
         return jsonify(message="You are not authorized to edit this product"), 403
-
     if request.method == 'PUT':
 
         data = request.json
