@@ -2,9 +2,7 @@ import React, { useState, useRef } from 'react'
 import styles from './EditProfile.module.css'
 import CustomInputs from '../../components/customComponents/CustomInputs'
 import CustomButton from '../../components/customComponents/CustomButton'
-import { storage } from '../../Firebase/firebase'
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
-import { isNullOrUndefined } from '../../CustomTools/CustomTools'
+import { isNullOrUndefined, parseBase64 } from '../../CustomTools/CustomTools'
 import CustomImage from '../../components/customComponents/CustomImage'
 import { useMessageBox } from '../../components/Messages/MessageBox'
 
@@ -19,39 +17,22 @@ export default function EditProfile({ user, closeModal }) {
     const [newGender, setnewGender] = useState(user.gender)
 
     const [newImageUrl, setNewImageUrl] = useState(user.profile_image)
-    const [newImageObject, setNewImageObject] = useState(null)
+    const [newImageBase64, setNewImageBase64] = useState(null)
 
     const fileInputRef = useRef(null)
 
     const { showMessage } = useMessageBox()
 
-    const uploadImageToFB = () => {
-        if (!newImageObject) {
-            return Promise.resolve(newImageUrl)
-        }
-        // TODO: Remove id from application (maybe we could use id's hash)
-        const imageRef = ref(storage, `images/${sessionStorage.getItem("id")}/avatar/${newImageObject?.name}`)
-        return uploadBytes(imageRef, newImageObject)
-            .then(() => getDownloadURL(imageRef))
-            .catch(() => {
-                showMessage({ msg: "Something Went Wrong", msgType: "error" })
-            })
-    }
-
     const handleSaveChangesClick = () => {
-        uploadImageToFB()
-            .then(fbImageUrl => {
-                closeModal({
-                    first_name: newFirstName,
-                    last_name: newLastName,
-                    email: newEmail,
-                    phone: newPhone,
-                    gender: newGender,
-                    profile_image: fbImageUrl
-                })
-            }).catch(() => {
-                showMessage({ msg: "Something Went Wrong", msgType: "error" })
-            })
+        closeModal({
+            first_name: newFirstName,
+            last_name: newLastName,
+            email: newEmail,
+            phone: newPhone,
+            gender: newGender,
+            profile_image: newImageUrl,
+            profile_image_base64: newImageBase64
+        })
     }
 
     return (
@@ -98,9 +79,13 @@ export default function EditProfile({ user, closeModal }) {
                         parentStyle={{ display: "none" }}
                         onChange={(image) => {
                             if (image?.type.startsWith('image/')) {
-                                setNewImageObject(image)
-                                const url = URL.createObjectURL(image)
-                                setNewImageUrl(url)
+                                parseBase64(image, showMessage)
+                                    .then(base64Image => {
+                                        setNewImageBase64(base64Image)
+                                    })
+                                    .catch(error => {
+                                        showMessage({ msg: error, msgType: "error" })
+                                    });
                             }
                         }}
                     />
