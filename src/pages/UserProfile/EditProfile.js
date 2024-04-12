@@ -17,6 +17,7 @@ export default function EditProfile({ user, closeModal }) {
     const [newGender, setnewGender] = useState(user.gender)
 
     const [newImageUrl, setNewImageUrl] = useState(user.profile_image)
+    const [newImageBlob, setNewImageBlob] = useState(user.profile_image)
     const [newImageBase64, setNewImageBase64] = useState(null)
 
     const fileInputRef = useRef(null)
@@ -82,6 +83,9 @@ export default function EditProfile({ user, closeModal }) {
                                 parseBase64(image, showMessage)
                                     .then(base64Image => {
                                         setNewImageBase64(base64Image)
+                                        const newImageBlob = URL.createObjectURL(image)
+                                        setNewImageBlob(newImageBlob)
+                                        setNewImageUrl(newImageBlob)
                                     })
                                     .catch(error => {
                                         showMessage({ msg: error, msgType: "error" })
@@ -91,9 +95,9 @@ export default function EditProfile({ user, closeModal }) {
                     />
 
                     <div className={styles.imageControls}>
-                        {!isNullOrUndefined(newImageUrl) &&
+                        {!isNullOrUndefined(newImageBlob) &&
                             <CustomImage
-                                url={newImageUrl}
+                                url={newImageBlob}
                                 name={"new image"}
                                 style={{
                                     width: "2.5rem",
