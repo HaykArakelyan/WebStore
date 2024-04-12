@@ -94,14 +94,16 @@ export default function UserProducts() {
     const handleOpenEditProductForm = (activeProduct) => {
         setModalElement(
             <ProductForm
-                p={activeProduct}
+                p={{ ...activeProduct, images: [tempImage] }}
                 onSubmit={handleEditProductButtonClick}
             />
         )
     }
 
     const isProductValid = (product) => {
-        if (!Object.values(product).some(element => isNullOrUndefined(element))) {
+        if (!Object.values(product).some(element => {
+            return isNullOrUndefined(element)
+        })) {
             return true
         } else {
             console.log("Invalid Data")
@@ -110,13 +112,14 @@ export default function UserProducts() {
     }
 
     const handleEditProductButtonClick = (e) => {
-        if (isProductValid(e)) {
+        // if (isProductValid(e)) {
+        if (true) {
             edit_product(e.product_id, e)
                 .then((res) => {
                     updateProductsOnproductUpdate(e)
                     setModalElement(
                         <Product
-                            product={{ ...e, images: [] }}
+                            product={{ ...e, images: [tempImage] }}
                             onEditButtonClick={handleOpenEditProductForm}
                             userProduct
                         />

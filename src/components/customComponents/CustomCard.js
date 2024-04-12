@@ -1,6 +1,7 @@
 import React from 'react'
 import styles from './CustomCard.module.css'
 import CustomImage from './CustomImage'
+import { makeStringShorter } from "../../CustomTools/CustomTools.js"
 
 import Star from '../Icons/Star'
 
@@ -39,7 +40,7 @@ export default function CustomCard({ p, onClick }) {
                 className={styles.description}
                 title={p.description}
             >
-                {p.description}
+                {makeStringShorter(p.description, 255)}
             </label>
             <div className={styles.bottomCard}>
                 <label className={styles.rating}>

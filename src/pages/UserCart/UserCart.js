@@ -80,7 +80,7 @@ export default function UserCart() {
         setModalElement(
             //TODO: Get Product Images with API
             <Product
-                product={e}
+                product={{ ...e, images: [tempImage] }}
                 onEditButtonClick={() => handleOpenEditProductForm(e)}
                 onDeleteButtonClick={() => handleDeleteProduct(e)}
                 currentUserProduct

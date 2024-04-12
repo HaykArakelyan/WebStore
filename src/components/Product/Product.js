@@ -6,6 +6,7 @@ import CustomButton from '../customComponents/CustomButton'
 import { add_product_to_cart } from '../../CustomTools/Requests'
 import { useNavigate } from 'react-router-dom'
 import { useMessageBox } from '../../components/Messages/MessageBox'
+import { makeStringShorter } from '../../CustomTools/CustomTools'
 export default function Product({
     product,
     currentUserProduct = false,
@@ -42,8 +43,7 @@ export default function Product({
                 </label>
 
                 <label className={styles.productDescription}>
-                    {/* TODO: Remove replace function */}
-                    {product.description.replace('...', "")}
+                    {makeStringShorter(product.description, 255)}
                 </label>
 
                 <div className={styles.productCostAndSale}>
@@ -62,6 +62,16 @@ export default function Product({
                 </label>
                 <div className={styles.reviews}>
                     <label className={styles.reviewTitle}>Reviews</label>
+                    {product.reviews.length > 0 ?
+                        <div>
+                            {/* TODO */}
+                            {product.reviews[0]}
+                        </div>
+                        :
+                        <div>
+                            No Reviews
+                        </div>
+                    }
                 </div>
 
 

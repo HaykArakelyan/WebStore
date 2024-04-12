@@ -108,7 +108,7 @@ export default function Dashboard() {
                     {currentData.map((e) =>
                         <CustomCard
                             key={e.product_id}
-                            p={e}
+                            p={{ ...e, images: [tempImage] }}
                             onClick={() => handleCardClick(e)}
                         />
                     )}
