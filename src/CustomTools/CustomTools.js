@@ -81,3 +81,26 @@ export const isObjectValid = (obj) => {
         return false
     }
 }
+
+export const parseBase64 = (file, onError) => {
+    if (!file || !file.type.startsWith('image/')) {
+        onError({ msg: "Invalid file. Please select an image file.", msgType: "error" })
+        return Promise.reject(new Error("Invalid file"))
+    }
+
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader()
+
+        reader.onload = (e) => {
+            const base64String = e.target.result.split(',')[1]
+            resolve(base64String)
+        };
+
+        reader.onerror = (error) => {
+            onError({ msg: "Error with uploading your image", msgType: "error" })
+            reject(error)
+        }
+
+        reader.readAsDataURL(file);
+    })
+}
