@@ -63,13 +63,13 @@ export default function Product({
     const handleEditProductButtonClick = (e) => {
         // if (isProductValid(e)) {
         if (true) {
-            edit_product(e.product_id, e)
+            edit_product(e.product_id, { ...e, images: e.imagesBase64 })
                 .then((res) => {
                     updateProductList(e)
                     setProductImages(e.images)
                     setModalElement(
                         <Product
-                            product={{ ...e, images: e.imagesBase64 }}
+                            product={e}
                             onEditButtonClick={handleOpenEditProductForm}
                             userProduct
                         />
