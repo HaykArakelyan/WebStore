@@ -9,8 +9,7 @@ import tempImage from './temp-image.png'//TODO: Temp
 import ProductForm from '../../components/Product/ProductForm'
 import PaginationControl from '../../components/PaginationControl/PaginationControl'
 
-import { isNullOrUndefined } from '../../CustomTools/CustomTools'
-import { delete_product, edit_product, get_products, add_product } from '../../CustomTools/Requests'
+import { delete_product, get_products, add_product } from '../../CustomTools/Requests'
 import Product from '../../components/Product/Product'
 import CustomInputs from '../../components/customComponents/CustomInputs'
 import { faX } from '@fortawesome/free-solid-svg-icons';
@@ -78,59 +77,19 @@ export default function UserProducts() {
     const [modalElement, setModalElement] = useState(null)
 
     const handleCardClick = (e) => {
-        setActiveProduct(e)
+        // setActiveProduct(e)
         setModalElement(
             //TODO: Get Product Images with API
             <Product
                 product={{ ...e, images: [tempImage] }}
-                onEditButtonClick={() => handleOpenEditProductForm(e)}
                 onDeleteButtonClick={() => handleDeleteProduct(e)}
                 currentUserProduct
+                setIsModalHidden={setIsModalHidden}
+                setModalElement={setModalElement}
+                updateProductList={updateProductsOnproductUpdate}
             />
         )
         setIsModalHidden(false)
-    }
-
-    const handleOpenEditProductForm = (activeProduct) => {
-        setModalElement(
-            <ProductForm
-                p={{ ...activeProduct, images: [tempImage] }}
-                onSubmit={handleEditProductButtonClick}
-            />
-        )
-    }
-
-    const isProductValid = (product) => {
-        if (!Object.values(product).some(element => {
-            return isNullOrUndefined(element)
-        })) {
-            return true
-        } else {
-            console.log("Invalid Data")
-            return false
-        }
-    }
-
-    const handleEditProductButtonClick = (e) => {
-        // if (isProductValid(e)) {
-        if (true) {
-            edit_product(e.product_id, e)
-                .then((res) => {
-                    updateProductsOnproductUpdate(e)
-                    setModalElement(
-                        <Product
-                            product={{ ...e, images: [tempImage] }}
-                            onEditButtonClick={handleOpenEditProductForm}
-                            userProduct
-                        />
-                    )
-                    showMessage({ msg: "Product Updated", msgType: "success" })
-                })
-                .catch((err) => {
-                    showMessage({ msg: "Error Occured While Updating a Product", msgType: "error" })
-                })
-        }
-
     }
 
     const handleDeleteProduct = (deletedProduct) => {
@@ -215,7 +174,6 @@ export default function UserProducts() {
                         p={{ ...product, images: [tempImage] }}
                         onClick={() => handleCardClick(product, i)}
                     />
-
                 )}
             </div>
 

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styles from './Product.module.css'
 import SlickSlider from '../Slider/SlickSlider'
 import StarCounter from '../Icons/StarCounter'
@@ -7,15 +7,24 @@ import { add_product_to_cart } from '../../CustomTools/Requests'
 import { useNavigate } from 'react-router-dom'
 import { useMessageBox } from '../../components/Messages/MessageBox'
 import { makeStringShorter } from '../../CustomTools/CustomTools'
+import ProductForm from './ProductForm'
+
+import { isNullOrUndefined } from '../../CustomTools/CustomTools'
+import { edit_product } from '../../CustomTools/Requests'
+
 export default function Product({
     product,
     currentUserProduct = false,
-    onEditButtonClick,
     onDeleteButtonClick,
+    setIsModalHidden,
+    setModalElement,
+    updateProductList
 }) {
 
     const navigate = useNavigate()
     const { showMessage } = useMessageBox()
+
+    const [productImages, setProductImages] = useState(product.images)
 
     const handleAddToCart = () => {
         add_product_to_cart(product)
@@ -31,10 +40,54 @@ export default function Product({
         navigate(`/product/${product.product_id}`, { state: { product } })
     }
 
+    const handleOpenEditProductForm = (activeProduct) => {
+        setModalElement(
+            <ProductForm
+                p={{ ...activeProduct, images: [] }}
+                onSubmit={handleEditProductButtonClick}
+            />
+        )
+    }
+
+    const isProductValid = (product) => {
+        if (!Object.values(product).some(element => {
+            return isNullOrUndefined(element)
+        })) {
+            return true
+        } else {
+            console.log("Invalid Data")
+            return false
+        }
+    }
+
+    const handleEditProductButtonClick = (e) => {
+        // if (isProductValid(e)) {
+        if (true) {
+            edit_product(e.product_id, e)
+                .then((res) => {
+                    updateProductList(e)
+                    setProductImages(e.images)
+                    setModalElement(
+                        <Product
+                            product={{ ...e, images: e.images }}
+                            onEditButtonClick={handleOpenEditProductForm}
+                            userProduct
+                        />
+                    )
+                    showMessage({ msg: "Product Updated", msgType: "success" })
+                })
+                .catch((err) => {
+                    showMessage({ msg: "Error Occured While Updating a Product", msgType: "error" })
+                })
+        }
+
+        // }
+    }
+
     return (
         <div className={styles.container}>
             <div className={styles.productImageSlider}>
-                {product?.images?.length > 0 ? <SlickSlider images={product.images} /> : null}
+                {product?.images?.length > 0 ? <SlickSlider images={productImages} /> : null}
             </div>
 
             <div className={styles.productInfo}>
@@ -91,7 +144,8 @@ export default function Product({
                     <div className={styles.controlButtons}>
                         <CustomButton
                             text={"Edit Product"}
-                            onClick={onEditButtonClick}
+                            onClick={() => handleOpenEditProductForm(product)}
+                        // onEditButtonClick()
                         />
 
                         <CustomButton

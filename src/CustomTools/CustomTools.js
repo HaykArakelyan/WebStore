@@ -83,11 +83,6 @@ export const isObjectValid = (obj) => {
 }
 
 export const parseBase64 = (file, onError) => {
-    if (!file || !file.type.startsWith('image/')) {
-        onError({ msg: "Invalid file. Please select an image file.", msgType: "error" })
-        return Promise.reject(new Error("Invalid file"))
-    }
-
     return new Promise((resolve, reject) => {
         const reader = new FileReader()
 

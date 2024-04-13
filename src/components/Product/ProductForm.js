@@ -1,6 +1,4 @@
-import { isNullOrUndefined, isObjectValid } from '../../CustomTools/CustomTools'
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
-import { storage } from '../../Firebase/firebase'
+import { isNullOrUndefined, isObjectValid, parseBase64 } from '../../CustomTools/CustomTools'
 import { useMessageBox } from '../../components/Messages/MessageBox'
 import CustomButton from '../customComponents/CustomButton'
 import CustomImage from '../customComponents/CustomImage'
@@ -26,8 +24,11 @@ export default function ProductForm({ p = null, updateProduct = null, onSubmit, 
     )
 
     const fileInputRef = useRef(null)
-    const [newImagesObjects, setNewImagesObjects] = useState([])
+
     const [newImagesUrls, setNewImagesUrls] = useState(product.images)
+    const [newImagesBlobs, setNewImagesBlobs] = useState(product.images)
+    const [newImagesBase64, setNewImagesBase64] = useState([])
+    const [newImagesObjects, setNewImagesObjects] = useState([])
 
     const { showMessage } = useMessageBox()
 
@@ -43,11 +44,12 @@ export default function ProductForm({ p = null, updateProduct = null, onSubmit, 
     }
 
     const handleRemoveImageClick = (indexToRemove) => {
-        setNewImagesUrls(prevUrls => prevUrls.filter((url, index) => index !== indexToRemove));
-        setNewImagesObjects(prevImagesObjects => prevImagesObjects.filter((image, index) => index !== indexToRemove));
+        setNewImagesBlobs(prevUrls => prevUrls.filter((url, index) => index !== indexToRemove))
+        setNewImagesObjects(prevImagesObject => prevImagesObject.filter((imageObject, index) => index !== indexToRemove))
+
     };
 
-    const handleSubmitButtonClick = () => {
+    const handleSubmitButtonClick = async () => {
         if (
             product.price < 0 ||
             product.stock < 0 ||
@@ -62,43 +64,25 @@ export default function ProductForm({ p = null, updateProduct = null, onSubmit, 
             ...product,
             price: parseFloat(product.price),
             discountPercentage: parseFloat(product.discountPercentage),
-            stock: parseFloat(product.stock)
+            stock: parseFloat(product.stock),
+            images: newImagesBlobs,
+            imagesBase64: await parseImages()
         };
 
-        if (isObjectValid(newProduct)) {
-            uploadImagesAndSubmit(newProduct);
-        } else {
-            console.log("Invalid Data");
-        }
+        onSubmit(newProduct)
     };
 
-    const uploadImagesAndSubmit = async (newProduct) => {
+    const parseImages = () => {
         try {
-            const imageUrls = await uploadImagesToFirebase();
-            newProduct.images = imageUrls; // Assuming 'images' is the key in newProduct where image URLs are stored
-            onSubmit(newProduct); // Send the complete data including image URLs to API call
-        } catch (error) {
-            showMessage({ msg: "Something Went Wrong", msgType: "error" });
+            const base64Promises = newImagesObjects.map((imageFile) => {
+                return parseBase64(imageFile, showMessage);
+            });
+
+            return Promise.all(base64Promises);
+        } catch (err) {
+            throw err;
         }
-    };
-
-    const uploadImagesToFirebase = async () => {
-        const imageUrls = [];
-
-        for (const imageObject of newImagesObjects) {
-            const imageRef = ref(storage, `images/${sessionStorage.getItem("id")}/products/${imageObject?.name}`);
-            try {
-                await uploadBytes(imageRef, imageObject);
-                const downloadURL = await getDownloadURL(imageRef);
-                imageUrls.push(downloadURL);
-            } catch (error) {
-                showMessage({ msg: "Error uploading image", msgType: "error" });
-                throw error; // Propagate the error to the caller
-            }
-        }
-
-        return imageUrls;
-    };
+    }
 
     return (
         <div className={styles.container}>
@@ -201,11 +185,26 @@ export default function ProductForm({ p = null, updateProduct = null, onSubmit, 
                         multiple
                         onChange={(imagesFiles) => {
                             const images = Array.from(imagesFiles).filter(file => file.type.startsWith('image/'));
-                            const totalImages = newImagesObjects.length + images.length;
+                            const totalImages = newImagesBlobs.length + images.length;
+
                             if (totalImages <= 5) {
-                                setNewImagesObjects(prevImagesObjects => [...prevImagesObjects, ...images]);
-                                const urls = images.map(image => URL.createObjectURL(image));
-                                setNewImagesUrls(prevUrls => [...prevUrls, ...urls]);
+                                images.forEach((image) => {
+                                    // parseBase64(image, showMessage)
+                                    //     .then((imageBase64) => {
+                                    //         setNewImagesBase64(prevBase64 => {
+                                    //             const updatedBase64 = Array.isArray(prevBase64) ? prevBase64 : [];
+                                    //             return [...updatedBase64, imageBase64];
+                                    //         });
+                                    //         const imageBlob = URL.createObjectURL(image);
+                                    //         setNewImagesBlobs(prevBlobs => [...prevBlobs, imageBlob]);
+                                    //     })
+                                    //     .catch(error => {
+                                    //         showMessage({ msg: error, msgType: "error" });
+                                    //     });
+                                    setNewImagesObjects(prevImagesObjects => [...prevImagesObjects, image])
+                                    const imageBlob = URL.createObjectURL(image);
+                                    setNewImagesBlobs(prevBlobs => [...prevBlobs, imageBlob]);
+                                });
                             } else {
                                 showMessage({ msg: "You can only upload up to 5 images.", msgType: "warning" });
                             }
@@ -214,7 +213,7 @@ export default function ProductForm({ p = null, updateProduct = null, onSubmit, 
 
                     <div className={styles.imageControls}>
                         <div className={styles.productImages}>
-                            {newImagesUrls.map((newImageUrl, index) => (
+                            {newImagesBlobs.map((newImageUrl, index) => (
                                 <div key={index} onClick={() => handleRemoveImageClick(index)}>
                                     <CustomImage
                                         url={newImageUrl}
