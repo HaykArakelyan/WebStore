@@ -69,7 +69,7 @@ export default function Product({
                     setProductImages(e.images)
                     setModalElement(
                         <Product
-                            product={{ ...e, images: e.images }}
+                            product={{ ...e, images: e.imagesBase64 }}
                             onEditButtonClick={handleOpenEditProductForm}
                             userProduct
                         />
