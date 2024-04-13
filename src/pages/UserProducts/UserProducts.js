@@ -81,7 +81,7 @@ export default function UserProducts() {
         setModalElement(
             //TODO: Get Product Images with API
             <Product
-                product={{ ...e, images: [tempImage] }}
+                product={e}
                 onDeleteButtonClick={() => handleDeleteProduct(e)}
                 currentUserProduct
                 setIsModalHidden={setIsModalHidden}
@@ -171,7 +171,7 @@ export default function UserProducts() {
                     <CustomCard
                         key={i}
                         //TODO: Get Image URLs from Database
-                        p={{ ...product, images: [tempImage] }}
+                        p={product}
                         onClick={() => handleCardClick(product, i)}
                     />
                 )}

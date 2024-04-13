@@ -78,7 +78,7 @@ export default function UserProfile({ }) {
     const handleDeleteProfile = () => {
         const answer = prompt("You will lose forever access to your account. Type 'Delete' to continue the process... ", "")
         if (answer === "Delete") {
-            delete_user(user.id)
+            delete_user()
                 .then(() => {
                     localStorage.removeItem("access_token")
                     navigate('/login')
@@ -102,7 +102,7 @@ export default function UserProfile({ }) {
 
     const handlePostProductButtonClick = (e) => {
 
-        add_product(e)
+        add_product({ ...e, images: e.imagesBase64 })
             .then((res) => {
                 showMessage({ msg: "Product Added", msgType: "success" })
                 setIsModalHidden(true)

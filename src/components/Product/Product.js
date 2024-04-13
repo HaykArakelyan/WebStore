@@ -118,7 +118,7 @@ export default function Product({
                     {product.reviews.length > 0 ?
                         <div>
                             {/* TODO */}
-                            {product.reviews[0]}
+                            {product.reviews[0].comment}
                         </div>
                         :
                         <div>

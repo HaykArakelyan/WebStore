@@ -89,8 +89,8 @@ export const get_user = () => {
 }
 
 
-export const delete_user = (id) => {
-    return api.delete(`user_profile/${id}`)
+export const delete_user = () => {
+    return api.delete(`user_profile`)
         .then((res) => {
             return res.data
         })
