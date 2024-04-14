@@ -8,6 +8,7 @@ import {
     Routes,
     Route,
     useLocation,
+    Navigate,
 } from 'react-router-dom'
 import Dashboard from '../pages/Dashboard/Dashboard'
 import UserProfile from '../pages/UserProfile/UserProfile'
@@ -21,7 +22,7 @@ export default function RoutesWithAnimation() {
 
     return (
         <Routes location={location} key={location.key}>
-            <Route exact path='/' element={<Home />}></Route>
+            <Route exact path='/' element={<Navigate to={"/dashboard"} />}></Route>
             <Route exact path='/login' element={<Login />}></Route>
             <Route exact path='/register' element={<Register />}></Route>
             <Route exact path='/dashboard' element={<Dashboard />}></Route>

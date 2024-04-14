@@ -37,7 +37,7 @@ export default function Header() {
             />
           </div>
           <ul className={styles.ul}>
-            <li><Link to={'/'} className={styles.a}>Home</Link></li>
+            {/* <li><Link to={'/'} className={styles.a}>Home</Link></li> */}
             <li><Link to={'/dashboard'} className={styles.a}>Dashboard</Link></li>
             {isUserAuth ?
               <>
