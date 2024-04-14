@@ -80,7 +80,6 @@ class Product(db.Model):
             'category': self.category,
             'description': self.description,
             'price': self.price,
-            'rating': self.rating,
             'rating_count': self.rating_count,
             'final_rating': self.final_rating,
             'created_at': self.created_at.isoformat() if self.created_at else None,
