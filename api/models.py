@@ -3,11 +3,12 @@ from hashlib import sha256
 
 from flask_login import UserMixin
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.orm import relationship
 from werkzeug.security import generate_password_hash, check_password_hash
 
 # from app import db
 from app import app
-from sqlalchemy.orm import relationship
+
 db = SQLAlchemy(app)
 
 
@@ -24,7 +25,6 @@ class User(db.Model, UserMixin):
     balance = db.Column(db.Integer, nullable=False)
     registered_at = db.Column(db.Date, nullable=False, default=datetime.utcnow)
     products = relationship('Product', backref='owner', cascade="all, delete-orphan")
-
 
     def user_to_dict(self):
         user_dict = {
@@ -61,10 +61,10 @@ class Product(db.Model):
     category = db.Column(db.String(50))
     description = db.Column(db.Text)
     price = db.Column(db.Float)
-    rating = db.Column(db.Integer)
+    rating = db.Column(db.Integer, default=0)
     rating_count = db.Column(db.Integer, default=0)
     final_rating = db.Column(db.Float, default=5)
-    created_at = db.Column(db.TIMESTAMP,  default=datetime.utcnow)
+    created_at = db.Column(db.TIMESTAMP, default=datetime.utcnow)
     owner_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete="CASCADE"))
 
     user_prods = relationship('UserProduct', backref='product', cascade="all, delete-orphan")
@@ -122,13 +122,18 @@ class ProductImage(db.Model):
     __tablename__ = 'product_img'
     img_id = db.Column(db.Integer, primary_key=True)
     product_id = db.Column(db.Integer, db.ForeignKey('products.product_id', ondelete="CASCADE"))
-    img_path = db.Column(db.String(50), nullable=False, unique=True)  # Add nullable and unique constraints
+    img_path = db.Column(db.String(255), nullable=False)  # Add nullable and unique constraints
+
+    def image_path(self):
+        return self.img_path
+
+
 
 class ProfileImages(db.Model):
     __tablename__ = 'profile_images'
     profile_image_id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete="CASCADE"))
-    image_path = db.Column(db.String(255), nullable=False, unique=True)
+    image_path = db.Column(db.String(255), nullable=False)
 
     def get_image_path(self):
         return {
@@ -148,4 +153,3 @@ class UserRates(db.Model):
     user_id = db.Column(db.Integer)
     product_id = db.Column(db.Integer, db.ForeignKey('products.product_id', ondelete="CASCADE"))
     rating = db.Column(db.Integer)
-

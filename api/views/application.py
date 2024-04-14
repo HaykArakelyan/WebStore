@@ -1,7 +1,9 @@
 import base64
+import hashlib
 import os
 from datetime import datetime
 
+import boto3
 from flask import request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
@@ -32,6 +34,12 @@ def get_user_by_id():
                 reviews = Review.query.filter(Review.user_prod_id.in_(user_prod_ids)).all()
                 cart_product_info["reviews"] = [review.review_to_dict() for review in reviews]
 
+                prod_images = ProductImage.query.filter_by(product_id=product.product_id).all()
+                prod_images_dict = [img.image_path() for img in prod_images]
+                cart_product_info["images"] = prod_images_dict
+
+
+
                 cart_products_info.append(cart_product_info)
 
             for product_info in products_info:
@@ -40,6 +48,11 @@ def get_user_by_id():
                 user_prod_ids = [user_prod.user_prod_id for user_prod in user_prods]
                 reviews = Review.query.filter(Review.user_prod_id.in_(user_prod_ids)).all()
                 product_info["reviews"] = [review.review_to_dict() for review in reviews]
+
+                prod_images = ProductImage.query.filter_by(product_id=product_id).all()
+                prod_images_dict = [img.image_path() for img in prod_images]
+                product_info["images"] = prod_images_dict
+
 
             user_info = user.user_to_dict()
             profile_image_obj = ProfileImages.query.filter_by(user_id=user.id).first()
@@ -57,7 +70,8 @@ def get_user_by_id():
         new_email = data.get('email')
         new_phone = data.get('phone')
         new_gender = data.get('gender')
-        profile_image_base64 = data.get("profile_image")
+        profile_image_base64 = data.get("profile_image_base64")
+
         if not data:
             return jsonify(message='Bad request'), 400
 
@@ -70,20 +84,17 @@ def get_user_by_id():
         user.phone = new_phone
         user.gender = new_gender
 
-        s3 = helpers.create_session().resource('s3')
         if profile_image_base64:
+            s3 = helpers.create_session().resource('s3')
             profile_image_data = base64.b64decode(profile_image_base64)
             s3_key = f"images/{sha256(str(user.id).encode('utf-8')).hexdigest()}/avatar/profile_image.png"
-
             s3.Object(os.getenv('S3_BUCKET_NAME'), s3_key).put(Body=profile_image_data, ContentType='image/png')
-
-            profile_image_url = f"https://{os.getenv('DOMAIN_NAME')}/{sha256(str(user.id).encode('utf-8')).hexdigest()}/avatar/profile_image.png"
-
+            profile_image_public_url = f"https://{os.getenv('DOMAIN_NAME')}/images/{sha256(str(user.id).encode('utf-8')).hexdigest()}/avatar/profile_image.png"
             profile_image = ProfileImages.query.filter_by(user_id=user.id).first()
             if profile_image:
-                profile_image.image_path = profile_image_url
+                profile_image.image_path = profile_image_public_url
             else:
-                new_profile_image = ProfileImages(user_id=user.id, image_path=profile_image_url)
+                new_profile_image = ProfileImages(user_id=user.id, image_path=profile_image_public_url)
                 db.session.add(new_profile_image)
         db.session.commit()
         return jsonify({'message': 'User info updated successfully'}), 200
@@ -93,33 +104,25 @@ def get_user_by_id():
 
             if user_profile_img:
                 db.session.delete(user_profile_img)
-
             user_products = Product.query.filter_by(owner_id=user.id).all()
-
             user_prod_ids = [user_prod.user_prod_id for user_prod in UserProduct.query.filter_by(user_id=user.id).all()]
-
             Review.query.filter(Review.user_prod_id.in_(user_prod_ids)).delete(synchronize_session=False)
-
             user_prod_ids_in_cart = [cart_item.user_prod_id for cart_item in
                                      Cart.query.filter(Cart.user_prod_id.in_(user_prod_ids)).all()]
-
             Cart.query.filter(Cart.user_prod_id.in_(user_prod_ids_in_cart)).delete(synchronize_session=False)
-
             UserProduct.query.filter(UserProduct.user_prod_id.in_(user_prod_ids_in_cart)).delete(
                 synchronize_session=False)
 
             for product in user_products:
-
                 product_images = ProductImage.query.filter_by(product_id=product.product_id).all()
-
                 for image in product_images:
                     db.session.delete(image)
-
                 db.session.delete(product)
-
             db.session.delete(user)
-
             db.session.commit()
+            user_hash = hashlib.sha256(str(user.id).encode('utf-8')).hexdigest()
+            s3_folder_prefix = f"images/{user_hash}"
+            helpers.delete_objects_in_folder(os.getenv('S3_BUCKET_NAME'), s3_folder_prefix)
             return jsonify({'message': 'User and associated data deleted successfully'}), 200
         else:
             return jsonify({'message': 'User not found'}), 404
@@ -131,7 +134,6 @@ def get_user_by_id():
 @jwt_required()
 def add_product():
     if request.method == "POST":
-
         data = request.json
         user = get_user()
 
@@ -149,6 +151,7 @@ def add_product():
         description = data.get("description")
         price = data.get("price")
 
+        list_data = data.get("images")
         product = Product(
             title=title,
             discountPercentage=discount_percentage,
@@ -161,7 +164,10 @@ def add_product():
         )
         db.session.add(product)
         db.session.commit()
-        return jsonify(message="Product added successfully"), 200
+        if list_data:
+            helpers.upload_product_images(product, user, list_data)
+        db.session.commit()
+        return jsonify(message="Product and images added successfully"), 200
 
 
 @app.route('/edit_product/<int:product_id>', methods=['PUT', 'DELETE'])
@@ -171,7 +177,6 @@ def edit_product(product_id):
     if not user:
         return jsonify(message="You are not authorized to edit this product"), 403
     if request.method == 'PUT':
-
         data = request.json
         if not data:
             return jsonify(message="No data provided"), 400
@@ -192,6 +197,14 @@ def edit_product(product_id):
         product.description = data.get("description", product.description)
         product.price = data.get("price", product.price)
         db.session.commit()
+        list_data = data.get("images")
+        if list_data:
+            user_hash = helpers.hash_user_id(user.id)
+            product_hash = helpers.hash_product_id(product.product_id)
+            s3_folder_prefix = f"images/{user_hash}/products/{product_hash}"
+            helpers.delete_objects_in_folder(os.getenv('S3_BUCKET_NAME'), s3_folder_prefix)
+            helpers.upload_product_images(product, user, list_data)
+            db.session.commit()
         return jsonify(message="Product updated successfully"), 200
 
     elif request.method == 'DELETE':
@@ -203,6 +216,10 @@ def edit_product(product_id):
 
         db.session.delete(product)
         db.session.commit()
+        user_hash = helpers.hash_user_id(user.id)
+        product_hash = helpers.hash_product_id(product.product_id)
+        s3_folder_prefix = f"images/{user_hash}/products/{product_hash}"
+        helpers.delete_objects_in_folder(os.getenv('S3_BUCKET_NAME'), s3_folder_prefix)
         return jsonify(message="Product deleted successfully"), 200
     else:
         return jsonify(message="Invalid request method"), 405
@@ -221,6 +238,7 @@ def get_all_products():
         product_info = product.product_to_dict()
 
         prod_images = ProductImage.query.filter_by(product_id=product.product_id).all()
+        prod_images_dict = [img.image_path() for img in prod_images]
 
         user_prods = UserProduct.query.filter_by(product_id=product.product_id).all()
         user_prod_ids = [user_prod.user_prod_id for user_prod in user_prods]
@@ -228,7 +246,7 @@ def get_all_products():
         reviews = Review.query.filter(Review.user_prod_id.in_(user_prod_ids)).all()
 
         product_info["reviews"] = [review.review_to_dict() for review in reviews]
-        product_info["images"] = prod_images
+        product_info["images"] = prod_images_dict
 
         products_list.append(product_info)
 
@@ -254,6 +272,11 @@ def get_products():
         user_prod_ids = [i.user_prod_id for i in user_prods]
         reviews = Review.query.filter(Review.user_prod_id.in_(user_prod_ids)).all()
         product["reviews"] = [i.review_to_dict() for i in reviews]
+
+        prod_images = ProductImage.query.filter_by(product_id=product_id).all()
+        prod_images_dict = [img.image_path() for img in prod_images]
+
+        product["images"] = prod_images_dict
     return jsonify({'products': products_list}), 200
 
 @app.route('/add_to_cart', methods=['POST'])
@@ -321,7 +344,7 @@ def get_from_cart():
 def add_review(product_id):
     data = request.json
     user_id = data.get("user_id")
-    text = data.get("text")
+    text = data.get("reviews")
 
     if not product_id:
         return jsonify(message="Product ID is required"), 400
@@ -333,9 +356,6 @@ def add_review(product_id):
     user = User.query.filter_by(id=user_id).first()
     if not user:
         return jsonify(message="User not found"), 404
-
-    if user.id == prod.owner_id:
-        return jsonify(message="You can't add a review to your own product"), 400
 
     user_prod = UserProduct.query.filter_by(user_id=user_id, product_id=product_id).first()
     if not user_prod:
