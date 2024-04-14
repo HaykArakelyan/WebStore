@@ -71,9 +71,10 @@ export default function Product({
                         <Product
                             product={e}
                             onEditButtonClick={handleOpenEditProductForm}
-                            userProduct
+                            currentUserProduct
                         />
                     )
+                    setIsModalHidden(true)
                     showMessage({ msg: "Product Updated", msgType: "success" })
                 })
                 .catch((err) => {
@@ -143,7 +144,6 @@ export default function Product({
                             <CustomButton
                                 text={"Edit Product"}
                                 onClick={() => handleOpenEditProductForm(product)}
-                            // onEditButtonClick()
                             />
 
                             <CustomButton
