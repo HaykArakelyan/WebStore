@@ -35,22 +35,8 @@ export default function Dashboard() {
 
 
     useEffect(() => {
-        // axios.request('https://dummyjson.com/products')
-        //     .then((res) => {
-        //         setProducts(res.data.products)
-        //         setFilteredProductList(res.data.products)
-        //     })
-        //     .catch((err) => {
-        //         if (err.code === "ERR_NETWORK") {
-        //             setErrorMessege("No Internet Connection")
-        //         } else {
-        //             setErrorMessege("Something Went Wrong")
-        //         }
-        //     })
-
         get_all_products()
             .then((res) => {
-                // console.log(res)
                 setProducts(res.products)
                 setFilteredProductList(res.products)
             })
@@ -108,7 +94,7 @@ export default function Dashboard() {
                     {currentData.map((e) =>
                         <CustomCard
                             key={e.product_id}
-                            p={{ ...e, images: [tempImage] }}
+                            p={e}
                             onClick={() => handleCardClick(e)}
                         />
                     )}
@@ -135,7 +121,7 @@ export default function Dashboard() {
                     {!isModalHidden ?
                         <CustomModal
                             onCloseModal={setIsModalHidden}
-                            element={() => <Product product={{ ...activeProduct, images: [tempImage] }} />}
+                            element={() => <Product product={activeProduct} />}
                         /> : null
                     }
                 </AnimatePresence>

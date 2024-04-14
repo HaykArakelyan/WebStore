@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 
 import male_image from '../../assets/user_image_male.jpg'
 import female_image from '../../assets/user_image_female.jpg'
-import { clearStorage, makeFirstUpper, makeStringShorter } from '../../CustomTools/CustomTools'
+import { clearStorage, isAuth, makeFirstUpper, makeStringShorter } from '../../CustomTools/CustomTools'
 import CustomButton from '../../components/customComponents/CustomButton'
 import CustomModal from '../../components/customComponents/CustomModal'
 import { AnimatePresence } from 'framer-motion'
@@ -80,9 +80,11 @@ export default function UserProfile({ }) {
         if (answer === "Delete") {
             delete_user()
                 .then(() => {
-                    localStorage.removeItem("access_token")
                     navigate('/login')
                     showMessage({ msg: "Account Deleted", msgType: "success" })
+                })
+                .then(() => {
+                    localStorage.removeItem("access_token")
                 })
                 .catch((err) => {
                     showMessage({ msg: "Something went wrong", msgType: "error" })
@@ -105,6 +107,7 @@ export default function UserProfile({ }) {
         add_product({ ...e, images: e.imagesBase64 })
             .then((res) => {
                 showMessage({ msg: "Product Added", msgType: "success" })
+                setUserProducts(prevProducts => [...prevProducts, e])
                 setIsModalHidden(true)
             }).catch((err) => {
                 showMessage({ msg: "Error Occured While Adding a Product", msgType: "error" })

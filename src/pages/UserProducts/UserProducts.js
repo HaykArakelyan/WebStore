@@ -128,7 +128,7 @@ export default function UserProducts() {
     }
 
     const handlePostProductButtonClick = (e) => {
-        add_product(e)
+        add_product({ ...e, images: e.imagesBase64 })
             .then((res) => {
                 setIsModalHidden(true)
                 setIsNewProductAdded(true)
@@ -171,7 +171,7 @@ export default function UserProducts() {
                     <CustomCard
                         key={i}
                         //TODO: Get Image URLs from Database
-                        p={product}
+                        p={{ ...product, images: [tempImage] }}
                         onClick={() => handleCardClick(product, i)}
                     />
                 )}
