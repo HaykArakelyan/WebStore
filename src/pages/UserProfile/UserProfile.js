@@ -221,13 +221,7 @@ export default function UserProfile({ }) {
                 <div className={styles.contentRight}>
                     <div
                         className={styles.userProducts}
-                        onClick={() => navigate('/my-products',
-                            {
-                                state: {
-                                    products: userProducts
-                                }
-                            })
-                        }
+                        onClick={() => navigate('/my-products')}
                     >
                         <span className={styles.userProductsTitle}>My Products</span>
                         {userProducts && userProducts.length === 0 ?
@@ -237,8 +231,7 @@ export default function UserProfile({ }) {
                                     return (
                                         <div className={styles.productBox} key={i}>
                                             <div className={styles.product}>
-                                                {/* TODO: Back should return product images */}
-                                                {/* <img src={e.images[0]} className={styles.productImage} /> */}
+                                                <img src={e.images[0]} className={styles.productImage} />
                                                 <span className={styles.productDescription}>
                                                     {makeStringShorter(e.description, 41)}
                                                 </span>
@@ -249,7 +242,7 @@ export default function UserProfile({ }) {
                             })
                         }
                     </div>
-                    {/* TODO: Add limitations to the list */}
+
                     <div className={styles.userProducts}>
                         <span className={styles.userProductsTitle}>My Cart</span>
                         {userCart && userCart.length === 0 ?
@@ -259,7 +252,7 @@ export default function UserProfile({ }) {
                                     return (
                                         <div className={styles.productBox} key={i}>
                                             <div className={styles.product}>
-                                                {/* <img src={e.images[0]} className={styles.productImage} /> */}
+                                                <img src={e.images[0]} className={styles.productImage} />
                                                 <span className={styles.productDescription}>
                                                     {makeStringShorter(e.description, 41)}
                                                 </span>

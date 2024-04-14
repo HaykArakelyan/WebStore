@@ -72,14 +72,11 @@ export default function UserProducts() {
 
 
     const [isModalHidden, setIsModalHidden] = useState(true);
-    const [activeProduct, setActiveProduct] = useState(null);
 
     const [modalElement, setModalElement] = useState(null)
 
     const handleCardClick = (e) => {
-        // setActiveProduct(e)
         setModalElement(
-            //TODO: Get Product Images with API
             <Product
                 product={e}
                 onDeleteButtonClick={() => handleDeleteProduct(e)}

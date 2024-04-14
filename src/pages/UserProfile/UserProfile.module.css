@@ -153,6 +153,7 @@
 .productImage {
     width: 4rem;
     object-fit: cover;
+    border-radius: 1rem;
 }
 
 .productDescription {

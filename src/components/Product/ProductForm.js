@@ -25,9 +25,7 @@ export default function ProductForm({ p = null, updateProduct = null, onSubmit, 
 
     const fileInputRef = useRef(null)
 
-    const [newImagesUrls, setNewImagesUrls] = useState(product.images)
     const [newImagesBlobs, setNewImagesBlobs] = useState(product.images)
-    const [newImagesBase64, setNewImagesBase64] = useState([])
     const [newImagesObjects, setNewImagesObjects] = useState([])
 
     const { showMessage } = useMessageBox()
@@ -65,7 +63,7 @@ export default function ProductForm({ p = null, updateProduct = null, onSubmit, 
             price: parseFloat(product.price),
             discountPercentage: parseFloat(product.discountPercentage),
             stock: parseFloat(product.stock),
-            images: newImagesBlobs,
+            images: [...newImagesBlobs, product.images], //TODO: Fix this to render the images when goes to prev modal
             imagesBase64: await parseImages()
         };
 
@@ -189,18 +187,6 @@ export default function ProductForm({ p = null, updateProduct = null, onSubmit, 
 
                             if (totalImages <= 5) {
                                 images.forEach((image) => {
-                                    // parseBase64(image, showMessage)
-                                    //     .then((imageBase64) => {
-                                    //         setNewImagesBase64(prevBase64 => {
-                                    //             const updatedBase64 = Array.isArray(prevBase64) ? prevBase64 : [];
-                                    //             return [...updatedBase64, imageBase64];
-                                    //         });
-                                    //         const imageBlob = URL.createObjectURL(image);
-                                    //         setNewImagesBlobs(prevBlobs => [...prevBlobs, imageBlob]);
-                                    //     })
-                                    //     .catch(error => {
-                                    //         showMessage({ msg: error, msgType: "error" });
-                                    //     });
                                     setNewImagesObjects(prevImagesObjects => [...prevImagesObjects, image])
                                     const imageBlob = URL.createObjectURL(image);
                                     setNewImagesBlobs(prevBlobs => [...prevBlobs, imageBlob]);

@@ -84,6 +84,7 @@ export default function UserCart() {
                 onEditButtonClick={() => handleOpenEditProductForm(e)}
                 onDeleteButtonClick={() => handleDeleteProduct(e)}
                 currentUserProduct
+                userCartProduct
             />
         )
         setIsModalHidden(false)

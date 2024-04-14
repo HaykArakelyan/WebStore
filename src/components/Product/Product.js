@@ -18,7 +18,8 @@ export default function Product({
     onDeleteButtonClick,
     setIsModalHidden,
     setModalElement,
-    updateProductList
+    updateProductList,
+    userCartProduct = false
 }) {
 
     const navigate = useNavigate()
@@ -43,7 +44,7 @@ export default function Product({
     const handleOpenEditProductForm = (activeProduct) => {
         setModalElement(
             <ProductForm
-                p={{ ...activeProduct, images: [] }}
+                p={activeProduct}
                 onSubmit={handleEditProductButtonClick}
             />
         )
@@ -61,8 +62,7 @@ export default function Product({
     }
 
     const handleEditProductButtonClick = (e) => {
-        // if (isProductValid(e)) {
-        if (true) {
+        if (isProductValid(e)) {
             edit_product(e.product_id, { ...e, images: e.imagesBase64 })
                 .then((res) => {
                     updateProductList(e)
@@ -80,8 +80,6 @@ export default function Product({
                     showMessage({ msg: "Error Occured While Updating a Product", msgType: "error" })
                 })
         }
-
-        // }
     }
 
     return (
@@ -140,19 +138,33 @@ export default function Product({
                             onClick={() => handleAddToCart()}
                         />
                     </div>
-                    :
-                    <div className={styles.controlButtons}>
-                        <CustomButton
-                            text={"Edit Product"}
-                            onClick={() => handleOpenEditProductForm(product)}
-                        // onEditButtonClick()
-                        />
+                    : userCartProduct ?
+                        <div className={styles.controlButtons}>
+                            <CustomButton
+                                text={"Edit Product"}
+                                onClick={() => handleOpenEditProductForm(product)}
+                            // onEditButtonClick()
+                            />
 
-                        <CustomButton
-                            text={"Delete Product"}
-                            onClick={onDeleteButtonClick}
-                        />
-                    </div>
+                            <CustomButton
+                                text={"Delete Product"}
+                                onClick={onDeleteButtonClick}
+                            />
+                        </div>
+                        :
+
+                        <div className={styles.controlButtons}>
+                            <CustomButton
+                                text={"View Full Product"}
+                                onClick={() => console.log("View Full Product")}
+                            />
+
+                            <CustomButton
+                                text={"Delete From Cart"}
+                                onClick={() => console.log("Delete From Cart")}
+                            />
+                        </div>
+
                 }
             </div>
         </div>
