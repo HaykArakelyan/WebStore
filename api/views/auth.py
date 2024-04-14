@@ -3,7 +3,7 @@ from datetime import datetime
 from flask import request, jsonify
 from flask_cors import cross_origin
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt, create_refresh_token, verify_jwt_in_request, get_jwt_identity
-from app import app, login_manager
+from app import app, login_manager, jwt
 from helpers import generate_hash
 from models import User, db
 
@@ -65,12 +65,18 @@ def register_user():
         return jsonify(message='Method Not Allowed'), 405
 
 #TODO update logout
-# @app.route("/logout", methods=["POST"])
-# @jwt_required()
-# def post(BLOCKLIST=None):
-#     jti = get_jwt()["jti"]
-#     BLOCKLIST.add(jti)
-#     return {"message": "Successfully logged out"}, 200
+BLOCKLIST=set()
+@app.route("/logout", methods=["POST"])
+@jwt_required()
+def logout():
+    jti = get_jwt()["jti"]
+    BLOCKLIST.add(jti)
+    return {"message": "Successfully logged out"}, 200
+
+@jwt.token_in_blocklist_loader
+def check_if_token_in_blacklist(jwt_header, jwt_payload):
+    jti = jwt_payload['jti']
+    return jti in BLOCKLIST
 
 
 @app.route('/refresh_token', methods=['POST'])
