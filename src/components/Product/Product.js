@@ -30,7 +30,7 @@ export default function Product({
     const handleAddToCart = () => {
         add_product_to_cart(product)
             .then((res) => {
-                showMessage({ msg: "Added to Cart ", msgType: "success" })
+                showMessage({ msg: "Added to Saves ", msgType: "success" })
             })
             .catch((err) => {
                 showMessage({ msg: "Somethig Went Wrong", msgType: "warning" })
