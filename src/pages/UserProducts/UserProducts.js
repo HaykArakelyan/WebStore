@@ -167,8 +167,7 @@ export default function UserProducts() {
                 {currentData.map((product, i) =>
                     <CustomCard
                         key={i}
-                        //TODO: Get Image URLs from Database
-                        p={{ ...product, images: [tempImage] }}
+                        p={product}
                         onClick={() => handleCardClick(product, i)}
                     />
                 )}
