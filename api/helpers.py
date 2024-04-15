@@ -29,12 +29,12 @@ def create_session():
 
     AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
     AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
-    AWS_SESSION_TOKEN = os.getenv('AWS_SESSION_TOKEN')
+    # AWS_SESSION_TOKEN = os.getenv('AWS_SESSION_TOKEN')
 
     session = boto3.Session(
         aws_access_key_id=AWS_ACCESS_KEY_ID,
         aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
-        aws_session_token=AWS_SESSION_TOKEN
+        # aws_session_token=AWS_SESSION_TOKEN
     )
 
     return session
@@ -59,7 +59,7 @@ def upload_product_images(product, user, list_data):
         s3_client.put_object(Bucket=os.getenv('S3_BUCKET_NAME'), Key=s3_key, Body=decoded_image,
                              ContentType='image/png')
 
-        product_image_url = f"https://{os.getenv('DOMAIN_NAME')}/{s3_key}"
+        product_image_url = f"{os.getenv('DOMAIN_NAME')}/{s3_key}"
 
         new_product_image = ProductImage(product_id=product.product_id, img_path=product_image_url)
         db.session.add(new_product_image)

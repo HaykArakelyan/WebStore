@@ -3,15 +3,15 @@ import hashlib
 import os
 from datetime import datetime
 
-import boto3
 from flask import request, jsonify
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required
 
 from app import app
 import helpers
 from helpers import get_user
 from models import User, db, Product, UserProduct, ProfileImages, Cart, ProductImage, Review, Report, UserRates
 from hashlib import sha256
+
 
 @app.route('/user_profile', methods=['GET', 'PUT', 'DELETE'])
 @jwt_required()
@@ -38,8 +38,6 @@ def get_user_by_id():
                 prod_images_dict = [img.image_path() for img in prod_images]
                 cart_product_info["images"] = prod_images_dict
 
-
-
                 cart_products_info.append(cart_product_info)
 
             for product_info in products_info:
@@ -52,7 +50,6 @@ def get_user_by_id():
                 prod_images = ProductImage.query.filter_by(product_id=product_id).all()
                 prod_images_dict = [img.image_path() for img in prod_images]
                 product_info["images"] = prod_images_dict
-
 
             user_info = user.user_to_dict()
             profile_image_obj = ProfileImages.query.filter_by(user_id=user.id).first()
@@ -89,7 +86,7 @@ def get_user_by_id():
             profile_image_data = base64.b64decode(profile_image_base64)
             s3_key = f"images/{sha256(str(user.id).encode('utf-8')).hexdigest()}/avatar/profile_image.png"
             s3.Object(os.getenv('S3_BUCKET_NAME'), s3_key).put(Body=profile_image_data, ContentType='image/png')
-            profile_image_public_url = f"https://{os.getenv('DOMAIN_NAME')}/images/{sha256(str(user.id).encode('utf-8')).hexdigest()}/avatar/profile_image.png"
+            profile_image_public_url = f"{os.getenv('DOMAIN_NAME')}/images/{sha256(str(user.id).encode('utf-8')).hexdigest()}/avatar/profile_image.png"
             profile_image = ProfileImages.query.filter_by(user_id=user.id).first()
             if profile_image:
                 profile_image.image_path = profile_image_public_url
@@ -253,7 +250,6 @@ def get_all_products():
     return jsonify({'products': products_list}), 200
 
 
-
 @app.route('/get_products')
 @jwt_required()
 def get_products():
@@ -278,6 +274,7 @@ def get_products():
 
         product["images"] = prod_images_dict
     return jsonify({'products': products_list}), 200
+
 
 @app.route('/add_to_cart', methods=['POST'])
 @jwt_required()
@@ -312,6 +309,8 @@ def add_to_cart():
 
         return jsonify(message="Item added to cart successfully"), 200
     return jsonify(message="Product already in cart"), 400
+
+
 @app.route('/get_from_cart', methods=['GET'])
 @jwt_required()
 def get_from_cart():
