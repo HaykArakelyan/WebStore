@@ -243,10 +243,13 @@ export default function UserProfile({ }) {
                         }
                     </div>
 
-                    <div className={styles.userProducts}>
+                    <div
+                        className={styles.userProducts}
+                        onClick={() => navigate('/my-saves')}
+                    >
                         <span className={styles.userProductsTitle}>My Cart</span>
                         {userCart && userCart.length === 0 ?
-                            <span className={styles.userEmptyList}>The Cart is Empty...</span> :
+                            <span className={styles.userEmptyList}>No Saved Products</span> :
                             userCart.map((e, i) => {
                                 if (i < 2) {
                                     return (
