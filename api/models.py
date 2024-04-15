@@ -62,7 +62,7 @@ class Product(db.Model):
     description = db.Column(db.Text)
     price = db.Column(db.Float)
     rating = db.Column(db.Integer, default=0)
-    rating_count = db.Column(db.Integer, default=0)
+    rating_count = db.Column(db.Integer, default=1)
     final_rating = db.Column(db.Float, default=5)
     created_at = db.Column(db.TIMESTAMP, default=datetime.utcnow)
     owner_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete="CASCADE"))
@@ -81,7 +81,7 @@ class Product(db.Model):
             'description': self.description,
             'price': self.price,
             'rating_count': self.rating_count,
-            'final_rating': self.final_rating,
+            'rating': self.final_rating,
             'created_at': self.created_at.isoformat() if self.created_at else None,
             'owner_id': self.owner_id
         }
