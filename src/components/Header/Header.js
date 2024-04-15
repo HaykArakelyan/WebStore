@@ -52,10 +52,10 @@ export default function Header() {
 
                 <li>
                   <Link
-                    to={'/my-cart'}
+                    to={'/my-saves'}
                     className={styles.a}
                   >
-                    My Cart
+                    My Saves
                   </Link>
                 </li>
               </>

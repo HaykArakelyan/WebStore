@@ -28,7 +28,7 @@ export default function RoutesWithAnimation() {
             <Route exact path='/dashboard' element={<Dashboard />}></Route>
             <Route exact path='/user-profile' element={<UserProfile />}></Route>
             <Route exact path='/my-products' element={<UserProducts />} ></Route>
-            <Route exact path='/my-cart' element={< UserCart />}></Route>
+            <Route exact path='/my-saves' element={< UserCart />}></Route>
             <Route exact path='/product/:id' element={<ProductPage />}></Route>
         </Routes>
     )
