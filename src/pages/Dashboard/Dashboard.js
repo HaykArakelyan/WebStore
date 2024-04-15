@@ -10,7 +10,6 @@ import CustomCard from '../../components/customComponents/CustomCard';
 import { faX } from '@fortawesome/free-solid-svg-icons';
 import { get_all_products } from '../../CustomTools/Requests';
 import Loader from '../../components/Loader/Loader';
-import tempImage from './temp-image.png'; //TODO: Temp
 
 export default function Dashboard() {
     const [products, setProducts] = useState([])

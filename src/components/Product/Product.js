@@ -156,7 +156,7 @@ export default function Product({
                         <div className={styles.controlButtons}>
                             <CustomButton
                                 text={"View Full Product"}
-                                onClick={() => console.log("View Full Product")}
+                                onClick={() => handleViewFullProductButtonClick()}
                             />
 
                             <CustomButton

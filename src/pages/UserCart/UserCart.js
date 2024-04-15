@@ -5,7 +5,6 @@ import CustomCard from '../../components/customComponents/CustomCard'
 import { AnimatePresence } from 'framer-motion'
 import CustomModal from '../../components/customComponents/CustomModal'
 
-import tempImage from './temp-image.png'//TODO: Temp
 import ProductForm from '../../components/Product/ProductForm'
 import PaginationControl from '../../components/PaginationControl/PaginationControl'
 
@@ -78,9 +77,8 @@ export default function UserCart() {
     const handleCardClick = (e) => {
         setActiveProduct(e)
         setModalElement(
-            //TODO: Get Product Images with API
             <Product
-                product={{ ...e, images: [tempImage] }}
+                product={e}
                 onEditButtonClick={() => handleOpenEditProductForm(e)}
                 onDeleteButtonClick={() => handleDeleteProduct(e)}
                 currentUserProduct
@@ -207,8 +205,7 @@ export default function UserCart() {
                 {currentData.map((product, i) =>
                     <CustomCard
                         key={i}
-                        //TODO: Get Image URLs from Database
-                        p={{ ...product, images: [tempImage] }}
+                        p={product}
                         onClick={() => handleCardClick(product, i)}
                     />
 
