@@ -139,7 +139,7 @@ export default function Product({
                             onClick={() => handleAddToCart()}
                         />
                     </div>
-                    : userCartProduct ?
+                    : !userCartProduct ?
                         <div className={styles.controlButtons}>
                             <CustomButton
                                 text={"Edit Product"}
