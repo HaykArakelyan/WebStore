@@ -154,3 +154,26 @@ export const add_product_to_cart = (product) => {
         .then((res) => res.data)
         .catch((err) => Promise.reject(err))
 }
+
+export const add_review = (productId, review) => {
+    return api.post(`/add_review/${productId}`, review)
+        .then((res) => res.data)
+        .catch((err) => Promise.reject(err))
+}
+
+export const get_product_by_id = (productId) => {
+    return api.get(`/product/${productId}`)
+        .then((res) => res.data)
+        .catch((err) => Promise.reject(err))
+}
+
+export const delete_from_cart_by_id = (product_id) => {
+    return api.delete(`/delete_from_cart/${product_id}`,)
+        .then((res) => res.data)
+        .catch((err) => Promise.reject(err))
+}
+export const add_rating = (productId, rating) => {
+    return api.post(`/product/${productId}`, rating)
+        .then((res) => res.data)
+        .catch((err) => Promise.reject(err))
+}

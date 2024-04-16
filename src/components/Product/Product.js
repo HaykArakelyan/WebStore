@@ -30,7 +30,7 @@ export default function Product({
     const handleAddToCart = () => {
         add_product_to_cart(product)
             .then((res) => {
-                showMessage({ msg: "Added to Saves ", msgType: "success" })
+                showMessage({ msg: "Added to Saves", msgType: "success" })
             })
             .catch((err) => {
                 showMessage({ msg: "Somethig Went Wrong", msgType: "warning" })
@@ -161,7 +161,7 @@ export default function Product({
 
                             <CustomButton
                                 text={"Delete From Cart"}
-                                onClick={() => console.log("Delete From Cart")}
+                                onClick={() => onDeleteButtonClick()}
                             />
                         </div>
 

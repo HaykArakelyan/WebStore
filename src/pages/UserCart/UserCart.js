@@ -9,13 +9,12 @@ import ProductForm from '../../components/Product/ProductForm'
 import PaginationControl from '../../components/PaginationControl/PaginationControl'
 
 import { isNullOrUndefined } from '../../CustomTools/CustomTools'
-import { delete_product, edit_product, get_products, add_product, get_user_cart } from '../../CustomTools/Requests'
+import { edit_product, delete_from_cart_by_id, get_user_cart } from '../../CustomTools/Requests'
 import Product from '../../components/Product/Product'
 import CustomInputs from '../../components/customComponents/CustomInputs'
 import { faX } from '@fortawesome/free-solid-svg-icons';
 import { filteredProducts } from '../../CustomTools/CustomTools'
 import Loader from '../../components/Loader/Loader'
-import CustomButton from '../../components/customComponents/CustomButton'
 import { useMessageBox } from '../../components/Messages/MessageBox'
 
 export default function UserCart() {
@@ -68,19 +67,16 @@ export default function UserCart() {
         setCurrentPage(0)
     }, [products, searchQuery])
 
-
     const [isModalHidden, setIsModalHidden] = useState(true);
-    const [activeProduct, setActiveProduct] = useState(null);
 
     const [modalElement, setModalElement] = useState(null)
 
     const handleCardClick = (e) => {
-        setActiveProduct(e)
         setModalElement(
             <Product
                 product={e}
-                onEditButtonClick={() => handleOpenEditProductForm(e)}
-                onDeleteButtonClick={() => handleDeleteProduct(e)}
+                onDeleteButtonClick={() => handleDeleteFromCartButton(e)}
+                setIsModalHidden={setIsModalHidden}
                 currentUserProduct
                 userCartProduct
             />
@@ -88,90 +84,19 @@ export default function UserCart() {
         setIsModalHidden(false)
     }
 
-    const handleOpenEditProductForm = (activeProduct) => {
-        setModalElement(
-            <ProductForm
-                p={activeProduct}
-                onSubmit={handleEditProductButtonClick}
-            />
-        )
-    }
-
-    const isProductValid = (product) => {
-        if (!Object.values(product).some(element => isNullOrUndefined(element))) {
-            return true
-        } else {
-            console.log("Invalid Data")
-            return false
-        }
-    }
-
-    const handleEditProductButtonClick = (e) => {
-        if (isProductValid(e)) {
-            edit_product(e.product_id, e)
-                .then((res) => {
-                    updateProductsOnproductUpdate(e)
-                    setModalElement(
-                        <Product
-                            product={{ ...e, images: [] }}
-                            onEditButtonClick={handleOpenEditProductForm}
-                            userProduct
-                        />
-                    )
-                    showMessage({ msg: "Product Updated", msgType: "success" })
-                })
-                .catch((err) => {
-                    showMessage({ msg: "Error Occured While Updating a Product", msgType: "error" })
-                })
-        }
-
-    }
-
-    const handleDeleteProduct = (deletedProduct) => {
-        delete_product(deletedProduct.product_id)
+    const handleDeleteFromCartButton = (removedProduct) => {
+        delete_from_cart_by_id(parseInt(removedProduct.product_id))
             .then((res) => {
-                setIsModalHidden(true)
+                showMessage({ msg: "Removed From Cart Successfuly", msgType: "success" })
                 setProducts((prevProductsState) => {
-                    return prevProductsState.filter((product => product != deletedProduct))
+                    return prevProductsState.filter((product => product != removedProduct))
                 })
-                showMessage({ msg: "Product Deleted", msgType: "success" })
+                setIsModalHidden(true)
             })
             .catch((err) => {
-                showMessage({ msg: "Error Occured While Deleting a Product", msgType: "error" })
+                showMessage({ msg: err.message, msgType: "error" })
             })
     }
-
-    const updateProductsOnproductUpdate = (updatedProduct) => {
-        setProducts((prevProductsState) => {
-            return prevProductsState.map((product) => {
-                if (product.product_id === updatedProduct.product_id) {
-                    return updatedProduct
-                } else {
-                    return product
-                }
-            })
-        })
-    }
-
-    // const handleAddproductButtonClick = () => {
-    //     setModalElement(
-    //         <ProductForm
-    //             onSubmit={handlePostProductButtonClick}
-    //             newProduct
-    //         />)
-    //     setIsModalHidden(false)
-    // }
-
-    // const handlePostProductButtonClick = (e) => {
-    //     add_product(e)
-    //         .then((res) => {
-    //             setIsModalHidden(true)
-    //             setIsNewProductAdded(true)
-    //             showMessage({ msg: "Product Added", msgType: "success" })
-    //         }).catch((err) => {
-    //             showMessage({ msg: "Error Occured While Adding a Product", msgType: "error" })
-    //         })
-    // }
 
     const startIndex = currentPage * ITEMS_PER_PAGE;
     const endIndex = startIndex + ITEMS_PER_PAGE;
@@ -180,14 +105,6 @@ export default function UserCart() {
     return (
         <div className={styles.container}>
             <div className={styles.controls}>
-
-                {/* <div className={styles.addProduct}>
-                    <CustomButton
-                        text={"Add Product"}
-                        onClick={handleAddproductButtonClick}
-                    />
-                </div> */}
-
                 <div className={styles.searchBox}>
                     <CustomInputs
                         placeholder={"Search"}
