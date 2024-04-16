@@ -42,9 +42,8 @@ export default function SlickSlider({ images }) {
                     {...settings}
                     ref={sliderRef}
                     className={styles.slider}
-
                 >
-                    {images.map((i) =>
+                    {images?.map((i) =>
                         <div key={i} className={styles.productImageContainer}>
                             <img src={i} className={styles.productImage} />
                         </div>
