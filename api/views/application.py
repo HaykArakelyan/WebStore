@@ -311,7 +311,7 @@ def add_to_cart():
     return jsonify(message="Product already in cart"), 400
 
 
-@app.route('/get_from_cart', methods=['GET', 'DELETE'])
+@app.route('/get_from_cart', methods=['GET'])
 @jwt_required()
 def get_from_cart():
     user = get_user()
@@ -340,33 +340,33 @@ def get_from_cart():
             cart_products_info.append(product_info)
 
         return jsonify({'products': cart_products_info}), 200
-    elif request.method == 'DELETE':
-        data = request.json
-        product_id_to_delete = data.get('product_id')
-        if not product_id_to_delete:
-            return jsonify(message="Product ID to delete not provided"), 400
 
-        # Get the user_prod_id associated with the product_id and the user
-        user_prod_id_to_delete = UserProduct.query.filter_by(user_id=user.id, product_id=product_id_to_delete).first()
-        if not user_prod_id_to_delete:
-            return jsonify(message="Product not found in user's cart"), 404
+@app.route('/delete_from_cart/<int:product_id>', methods=['DELETE'])
+@jwt_required()
+def delete_from_cart(product_id):
+    user = get_user()
+    product_id_to_delete = product_id
+    if not product_id_to_delete:
+        return jsonify(message="Product ID to delete not provided"), 400
 
-        # Find the cart item associated with the user_prod_id
-        cart_item_to_delete = Cart.query.filter_by(user_prod_id=user_prod_id_to_delete.user_prod_id).first()
-        if not cart_item_to_delete:
-            return jsonify(message="Product not found in cart"), 404
+    # Get the user_prod_id associated with the product_id and the user
+    user_prod_id_to_delete = UserProduct.query.filter_by(user_id=user.id, product_id=product_id_to_delete).first()
+    if not user_prod_id_to_delete:
+        return jsonify(message="Product not found in user's cart"), 404
 
-        # Delete the cart item
-        db.session.delete(cart_item_to_delete)
-        db.session.commit()
+    # Find the cart item associated with the user_prod_id
+    cart_item_to_delete = Cart.query.filter_by(user_prod_id=user_prod_id_to_delete.user_prod_id).first()
+    if not cart_item_to_delete:
+        return jsonify(message="Product not found in cart"), 404
 
-        # Delete the user_prod_id from the user_prod table
-        db.session.delete(user_prod_id_to_delete)
-        db.session.commit()
+    # Delete the cart item
+    db.session.delete(cart_item_to_delete)
+    db.session.commit()
+    # Delete the user_prod_id from the user_prod table
+    db.session.delete(user_prod_id_to_delete)
+    db.session.commit()
 
-        return jsonify(message="Product removed from cart successfully"), 200
-
-
+    return jsonify(message="Product removed from cart successfully"), 200
 
 @app.route('/add_review/<int:product_id>', methods=['POST'])
 @jwt_required()
