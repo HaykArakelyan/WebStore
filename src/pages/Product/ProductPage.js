@@ -1,18 +1,31 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './ProductPage.module.css'
 import { useParams, useLocation } from 'react-router-dom'
 import SlickSlider from '../../components/Slider/SlickSlider'
 import { isAuth, makeFirstUpper } from '../../CustomTools/CustomTools'
 import CustomButton from '../../components/customComponents/CustomButton'
-import { add_product_to_cart } from '../../CustomTools/Requests'
+import { add_product_to_cart, add_rating, add_review, get_product_by_id } from '../../CustomTools/Requests'
 import { useMessageBox } from '../../components/Messages/MessageBox'
+import { AnimatePresence } from 'framer-motion'
+import CustomModal from '../../components/customComponents/CustomModal'
+import Review from '../Review/Review'
 
 export default function ProductPage() {
 
     const location = useLocation()
-    const product = location?.state?.product
+    const [product, setProduct] = useState({})
     const { id } = useParams()
     const { showMessage } = useMessageBox()
+
+    useEffect(() => {
+        get_product_by_id(id)
+            .then((product) => {
+                setProduct(product.products_info)
+            })
+            .catch((err) => {
+                showMessage({ msg: "Unable to Get The Requested Product", msgType: "error" })
+            })
+    }, [])
 
     const handleAddToCart = () => {
         if (isAuth()) {
@@ -22,6 +35,37 @@ export default function ProductPage() {
         } else {
 
         }
+    }
+
+    const handleSendReview = (message) => {
+        add_review((product.product_id), { reviews: message.reviews })
+            .then((res) => {
+                add_rating(id, { rating: parseInt(message.rating) })
+                    .then((res) => {
+                        showMessage({ msg: "Review Added Successfully", msgType: "success" })
+                        setIsModalHidden(true)
+                    })
+                    .catch((err) => {
+                        showMessage({ msg: "Unable to Add Review", msgType: "error" })
+                    })
+            })
+            .catch((err) => {
+                console.log(err)
+                showMessage({ msg: "Unable to Add Review", msgType: "error" })
+            })
+    }
+
+    const [isModalHidden, setIsModalHidden] = useState(true)
+    const [modalElement, setModalElement] = useState(null)
+
+    const handleAddReviewButtonClick = () => {
+        setModalElement(
+            <Review
+                onSubmit={handleSendReview}
+                reviews={product.reviews}
+            />
+        )
+        setIsModalHidden(false)
     }
 
     return (
@@ -74,14 +118,14 @@ export default function ProductPage() {
                         <div className={styles.labelBox}>
                             <label className={styles.componentLabel}>Category</label>
                             <div className={styles.productCategory}>
-                                {makeFirstUpper(product.category)}
+                                {product.category && makeFirstUpper(product.category)}
                             </div>
                         </div>
 
                         <div className={styles.labelBox}>
                             <label className={styles.componentLabel}>Brand</label>
                             <div className={styles.productBrand}>
-                                {makeFirstUpper(product.brand)}
+                                {product.brand && makeFirstUpper(product.brand)}
                             </div>
                         </div>
                     </div>
@@ -97,11 +141,27 @@ export default function ProductPage() {
                         />
 
                         <CustomButton
-                            text={"Give a Feedback"}
+                            text={"Add Review"}
+                            onClick={() => handleAddReviewButtonClick()}
                         />
                     </div>
                 </div>
             </div>
+
+            <AnimatePresence
+                initial={false}
+                mode='wait'
+            >
+                {!isModalHidden ?
+                    <CustomModal
+                        onCloseModal={setIsModalHidden}
+                        element={() =>
+                            modalElement
+                        }
+                    /> :
+                    null
+                }
+            </AnimatePresence>
         </div>
     )
 }

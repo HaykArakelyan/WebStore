@@ -1,7 +1,10 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import styles from './CustomDropdown.module.css'
 
 export default function CustomDropdown({ options = [], selectedValue, onSelect }) {
+
+    const selectRef = useRef()
+
     return (
         <div
             className={styles.container}
@@ -10,7 +13,13 @@ export default function CustomDropdown({ options = [], selectedValue, onSelect }
             <select
                 className={styles.selectBox}
                 value={selectedValue}
-                onChange={onSelect}
+                onChange={(e) => {
+                    onSelect(e.target.value)
+                    if (selectRef.current) {
+                        selectRef.current.blur()
+                    }
+                }}
+                ref={selectRef}
             >
                 {options.map((o, i) =>
                     <option

@@ -1,6 +1,7 @@
 .container {
     width: 80%;
     margin: auto;
+    padding-top: 1rem;
 }
 
 .content {
