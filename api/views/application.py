@@ -311,40 +311,73 @@ def add_to_cart():
     return jsonify(message="Product already in cart"), 400
 
 
-@app.route('/get_from_cart', methods=['GET'])
+@app.route('/get_from_cart', methods=['GET', 'DELETE'])
 @jwt_required()
 def get_from_cart():
     user = get_user()
     if not user:
         return jsonify(message="User not found"), 404
+    if request.method == 'GET':
+        user_prods = {user_prod.user_prod_id: user_prod.product_id for user_prod in
+                      UserProduct.query.filter_by(user_id=user.id).all()}
+        product_ids = [user_prods[cart_item.user_prod_id] for cart_item in
+                       Cart.query.filter(Cart.user_prod_id.in_(list(user_prods.keys()))).all()]
 
-    user_prods = {user_prod.user_prod_id: user_prod.product_id for user_prod in
-                  UserProduct.query.filter_by(user_id=user.id).all()}
-    product_ids = [user_prods[cart_item.user_prod_id] for cart_item in
-                   Cart.query.filter(Cart.user_prod_id.in_(list(user_prods.keys()))).all()]
+        cart_products_info = []
+        for user_product in product_ids:
+            product = Product.query.get(user_product)
+            product_info = product.product_to_dict()
 
-    cart_products_info = []
-    for user_product in product_ids:
-        product = Product.query.get(user_product)
-        product_info = product.product_to_dict()
+            user_prods = UserProduct.query.filter_by(product_id=product.product_id).all()
+            user_prod_ids = [user_prod.user_prod_id for user_prod in user_prods]
+            reviews = Review.query.filter(Review.user_prod_id.in_(user_prod_ids)).all()
+            product_info["reviews"] = [review.review_to_dict() for review in reviews]
 
-        user_prods = UserProduct.query.filter_by(product_id=product.product_id).all()
-        user_prod_ids = [user_prod.user_prod_id for user_prod in user_prods]
-        reviews = Review.query.filter(Review.user_prod_id.in_(user_prod_ids)).all()
-        product_info["reviews"] = [review.review_to_dict() for review in reviews]
+            prod_images = ProductImage.query.filter_by(product_id=product.product_id).all()
+            prod_images_dict = [img.image_path() for img in prod_images]
+            product_info["images"] = prod_images_dict
 
-        cart_products_info.append(product_info)
+            cart_products_info.append(product_info)
 
-    return jsonify({'products': cart_products_info}), 200
+        return jsonify({'products': cart_products_info}), 200
+    elif request.method == 'DELETE':
+        data = request.json
+        product_id_to_delete = data.get('product_id')
+        if not product_id_to_delete:
+            return jsonify(message="Product ID to delete not provided"), 400
+
+        # Get the user_prod_id associated with the product_id and the user
+        user_prod_id_to_delete = UserProduct.query.filter_by(user_id=user.id, product_id=product_id_to_delete).first()
+        if not user_prod_id_to_delete:
+            return jsonify(message="Product not found in user's cart"), 404
+
+        # Find the cart item associated with the user_prod_id
+        cart_item_to_delete = Cart.query.filter_by(user_prod_id=user_prod_id_to_delete.user_prod_id).first()
+        if not cart_item_to_delete:
+            return jsonify(message="Product not found in cart"), 404
+
+        # Delete the cart item
+        db.session.delete(cart_item_to_delete)
+        db.session.commit()
+
+        # Delete the user_prod_id from the user_prod table
+        db.session.delete(user_prod_id_to_delete)
+        db.session.commit()
+
+        return jsonify(message="Product removed from cart successfully"), 200
+
 
 
 @app.route('/add_review/<int:product_id>', methods=['POST'])
 @jwt_required()
 def add_review(product_id):
     data = request.json
-    user_id = data.get("user_id")
     text = data.get("reviews")
 
+    user = get_user()
+    user_id = user.id
+    if not user:
+        return jsonify(message="User not found"), 404
     if not product_id:
         return jsonify(message="Product ID is required"), 400
 
@@ -393,10 +426,8 @@ def add_report(product_id):
     report_item = Report(user_prod_id=user_prod.user_prod_id, report_text=report_text)
     db.session.add(report_item)
     db.session.commit()
-    return jsonify(message="Item added to cart successfully"), 200
+    return jsonify(message="Report sent to admins successfully"), 200
 
-
-# TODO: Get Reports ????
 
 
 @app.route('/product/<int:product_id>', methods=['GET', 'POST'])
@@ -406,14 +437,17 @@ def get_product_by_id(product_id):
     if not prod:
         return jsonify(message="product does not exist"), 404
     if request.method == 'GET':
-        prod_image = ProductImage.query.filter_by(product_id=product_id).all()
+        prod_images = ProductImage.query.filter_by(product_id=product_id).all()
         products_info = prod.product_to_dict()
 
         user_prods = UserProduct.query.filter_by(product_id=product_id).all()
         user_prod_ids = [i.user_prod_id for i in user_prods]
         reviews = Review.query.filter(Review.user_prod_id.in_(user_prod_ids)).all()
         products_info["reviews"] = [i.review_to_dict() for i in reviews]
-        return jsonify({'products_info': products_info, 'product_image': prod_image}), 200
+
+        prod_images_dict = [img.image_path() for img in prod_images]
+        products_info["images"] = prod_images_dict
+        return jsonify({'products_info': products_info}), 200
     elif request.method == 'POST':
         data = request.json
         rating = data.get("rating")
