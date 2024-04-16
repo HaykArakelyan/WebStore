@@ -1,5 +1,5 @@
 .container {
-    width: 80%;
+    width: 60%;
     margin: auto;
     padding-top: 1rem;
 }
@@ -28,7 +28,7 @@
     display: flex;
     flex-direction: column;
     padding: 1rem 1rem;
-    gap: .5rem;
+    gap: 1rem;
 }
 
 .productTitle {
@@ -39,9 +39,16 @@
     text-wrap: wrap;
 }
 
-.componentLabel {
-    font-size: 1.5rem;
+.productRating {
+    display: flex;
+    justify-content: space-between;
     align-self: center;
+    font-size: 1.2rem;
+}
+
+.productDescription {
+    align-self: center;
+    text-align: center;
 }
 
 .productPriceDiscountStock,
@@ -50,31 +57,31 @@
     justify-content: space-evenly;
 }
 
-.productPrice {
-    padding: 1rem;
-    font-size: 1.5rem;
-    background-color: white;
+.box {
+    /* background-color: white; */
     border-radius: 1rem;
     display: flex;
-    align-items: center;
-}
-
-
-
-.productStock,
-.productDiscount,
-.productCategory,
-.productBrand {
-    background-color: white;
-    border-radius: 1rem;
     padding: 1rem;
-    display: flex;
     justify-content: center;
     align-items: center;
+    font-weight: bold;
+}
+
+.box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    background-color: #d2d2d4;
+    border: 1px solid #5042A8;
+    padding: 1rem;
+    border-radius: 1rem;
+    margin-top: 1rem;
 }
 
 .buttons {
     padding: 1rem 0;
     display: flex;
     justify-content: space-around;
+    align-self: flex-end;
 }

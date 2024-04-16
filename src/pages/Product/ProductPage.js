@@ -9,6 +9,7 @@ import { useMessageBox } from '../../components/Messages/MessageBox'
 import { AnimatePresence } from 'framer-motion'
 import CustomModal from '../../components/customComponents/CustomModal'
 import Review from '../Review/Review'
+import StarCounter from '../../components/Icons/StarCounter'
 
 export default function ProductPage() {
 
@@ -82,51 +83,50 @@ export default function ProductPage() {
                     </div>
 
                     <div className={styles.labelBox}>
-                        <label className={styles.componentLabel}>About This Item</label>
+                        <div className={styles.productRating}>
+                            <StarCounter rating={product?.rating} />
+                            <span>{product.rating_count} review(s)</span>
+                        </div>
+
                         <div className={styles.productDescription}>
                             {product.description}
                         </div>
                     </div>
 
-                    <div className={styles.productPriceDiscountStock}>
-                        <div className={styles.labelBox}>
-                            <label className={styles.componentLabel}>Price</label>
-                            <div className={styles.productPrice}>
-                                ${product.price}
-                            </div>
-                        </div>
-
-                        {!product.discountPercentage !== 0 &&
-                            <div className={styles.labelBox}>
-                                <label className={styles.componentLabel}>Save</label>
-                                <div className={styles.productDiscount}>
-                                    {product.discountPercentage + 10}%
-                                </div>
-                            </div>
-                        }
-
-                        <div className={styles.labelBox}>
-                            <label className={styles.componentLabel}>In Stock</label>
-                            <div className={styles.productStock}>
-                                {product.stock}
-                            </div>
+                    <div className={styles.box}>
+                        <label className={styles.componentLabel}>Price:</label>
+                        <div className={styles.productPrice}>
+                            ${product.price}
                         </div>
                     </div>
 
-                    <div className={styles.productBrandAndCategory}>
-
-                        <div className={styles.labelBox}>
-                            <label className={styles.componentLabel}>Category</label>
-                            <div className={styles.productCategory}>
-                                {product.category && makeFirstUpper(product.category)}
+                    {!product.discountPercentage !== 0 &&
+                        <div className={styles.box}>
+                            <label className={styles.componentLabel}>Sale:</label>
+                            <div className={styles.productDiscount}>
+                                {product.discountPercentage + 10}%
                             </div>
                         </div>
+                    }
 
-                        <div className={styles.labelBox}>
-                            <label className={styles.componentLabel}>Brand</label>
-                            <div className={styles.productBrand}>
-                                {product.brand && makeFirstUpper(product.brand)}
-                            </div>
+                    <div className={styles.box}>
+                        <label className={styles.componentLabel}>In Stock:</label>
+                        <div className={styles.productStock}>
+                            {product.stock}
+                        </div>
+                    </div>
+
+                    <div className={styles.box}>
+                        <label className={styles.componentLabel}>Category:</label>
+                        <div className={styles.productCategory}>
+                            {product.category && makeFirstUpper(product.category)}
+                        </div>
+                    </div>
+
+                    <div className={styles.box}>
+                        <label className={styles.componentLabel}>Brand:</label>
+                        <div className={styles.productBrand}>
+                            {product.brand && makeFirstUpper(product.brand)}
                         </div>
                     </div>
 

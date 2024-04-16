@@ -20,12 +20,12 @@
     width: 100%;
     height: 2rem;
     transition: 0.3s;
+    color: #7850ad;
+    background-color: #d2d2d4;
 }
 
 .input::placeholder {
-    background-image: linear-gradient(270deg, rgb(80, 54, 227), rgb(237, 92, 155));
-    background-clip: text;
-    color: transparent;
+    color: #7850ad;
 }
 
 .input[type="number"]::-webkit-outer-spin-button,

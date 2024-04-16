@@ -85,7 +85,6 @@ export default function Dashboard() {
                         onIconClick={() => setSearchQuery("")}
                         parentStyle={{ gap: "1rem" }}
                         iconStyle={{ padding: " 0.5rem .7rem 0.5rem" }}
-
                     />
                 </div>
 

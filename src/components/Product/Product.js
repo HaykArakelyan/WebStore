@@ -115,12 +115,15 @@ export default function Product({
                 <div className={styles.reviews}>
                     <label className={styles.reviewTitle}>Reviews</label>
                     {product.reviews.length > 0 ?
-                        <div>
-                            {/* TODO */}
-                            {product.reviews[0].comment}
+                        <div className={styles.reviewsList}>
+                            {product.reviews.map((review, index) =>
+                                <div className={styles.review} key={index}>
+                                    {review.comment}
+                                </div>
+                            )}
                         </div>
                         :
-                        <div>
+                        <div className={styles.review}>
                             No Reviews
                         </div>
                     }

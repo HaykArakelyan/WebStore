@@ -27,6 +27,7 @@
     background-color: gray;
     padding: 1rem;
     border-radius: 1rem;
+    border: 1px solid #5042A8;
 }
 
 .inputLabel {

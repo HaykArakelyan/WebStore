@@ -29,15 +29,8 @@ export default function Header() {
     <div className={styles.container}>
       <div className={styles.innerContainer}>
         <div className={styles.navbar}>
-          <div className={styles.logo}>
-            <img
-              src={logo}
-              className={styles.logo}
-              onClick={handleLogoClick}
-            />
-          </div>
           <ul className={styles.ul}>
-            {/* <li><Link to={'/'} className={styles.a}>Home</Link></li> */}
+            <li><Link to={'/'} className={styles.a}>Home</Link></li>
             <li><Link to={'/dashboard'} className={styles.a}>Dashboard</Link></li>
             {isUserAuth ?
               <>
@@ -62,6 +55,8 @@ export default function Header() {
               :
               null
             }
+            <li><Link to={'/contact-us'} className={styles.a}>Contact Us</Link></li>
+            <li><Link to={'/about-us'} className={styles.a}>About Us</Link></li>
           </ul>
         </div>
         {isUserAuth ?

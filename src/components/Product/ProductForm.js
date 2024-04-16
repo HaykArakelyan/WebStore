@@ -63,7 +63,7 @@ export default function ProductForm({ p = null, updateProduct = null, onSubmit, 
             price: parseFloat(product.price),
             discountPercentage: parseFloat(product.discountPercentage),
             stock: parseFloat(product.stock),
-            images: [...newImagesBlobs, product.images], //TODO: Fix this to render the images when goes to prev modal
+            images: [...newImagesBlobs, ...product.images], //TODO: Fix this to render the images when goes to prev modal
             imagesBase64: await parseImages()
         };
 
@@ -99,7 +99,6 @@ export default function ProductForm({ p = null, updateProduct = null, onSubmit, 
 
                     <div className={styles.inputBox}>
                         <label className={styles.inputLabel}>Brand</label>
-                        {/* TODO: Maybe changed to dropdown menu */}
                         <CustomInputs
                             value={product.brand}
                             placeholder={"Ex: apple"}
@@ -152,8 +151,6 @@ export default function ProductForm({ p = null, updateProduct = null, onSubmit, 
 
                     <div className={styles.inputBox}>
                         <label className={styles.inputLabel}>Category</label>
-
-                        {/* TODO: Maybe changed to dropdown menu */}
                         <CustomInputs
                             value={product.category}
                             placeholder={"Ex: electronics"}

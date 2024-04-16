@@ -12,7 +12,8 @@
 }
 
 .modalContainer {
-    background-color: #C5C6C7;
+    border: 1px solid #5042A8;
+    background-color: #c3afde;
     min-height: 70%;
     height: 75%;
     min-width: 60%;

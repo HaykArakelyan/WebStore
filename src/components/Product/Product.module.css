@@ -12,16 +12,14 @@
 }
 
 .productTitle {
-    font-size: 2rem;
-    color: rgb(80, 54, 227);
+    font-size: 2.5rem;
+    color: #7850ad;
     font-weight: bold;
 }
 
 .productDescription {
-    background-image: linear-gradient(270deg, rgb(80, 54, 227), rgb(237, 92, 155));
-    background-clip: text;
-    color: transparent;
-    font-size: 1rem;
+    color: #7850ad;
+    font-size: 1.5rem;
     width: 70%;
     padding-top: 1rem;
     font-weight: bold;
@@ -72,4 +70,21 @@
     justify-content: space-around;
     width: 70%;
     margin-top: auto;
+}
+
+.reviewsList {
+    padding-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    text-align: start;
+    justify-content: center;
+}
+
+.review {
+    border: 1px solid #5042A8;
+    border-radius: 1rem;
+    box-shadow: 1px 3px 3px black;
+    padding: .7rem;
+    font-size: 1.2rem;
 }

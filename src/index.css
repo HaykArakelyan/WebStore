@@ -5,28 +5,10 @@ body {
   font-family: 'Yanone Kaffeesatz', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: linear-gradient(135deg, rgb(252, 3, 3), rgb(247, 227, 2), rgb(80, 54, 227), rgb(237, 92, 155));
-  background-size: 1450% 1450%;
-  background-repeat: no-repeat;
-  animation: gradientBackground 10s ease-in-out infinite;
+  background-color: #020015;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
-}
-
-
-@keyframes gradientBackground {
-  0% {
-    background-position: 0% 50%;
-  }
-
-  50% {
-    background-position: 100% 50%;
-  }
-
-  100% {
-    background-position: 0% 50%;
-  }
 }

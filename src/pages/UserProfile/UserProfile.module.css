@@ -8,7 +8,7 @@
     display: flex;
     margin: auto;
     padding: 1rem;
-    background-color: #C5C6C7;
+    border: 1px solid #5042A8;
     border-radius: 1rem;
     justify-content: space-around;
 }
@@ -19,6 +19,7 @@
     height: 16rem;
     border-radius: 50%;
     object-fit: cover;
+    border: 3.5px solid #5042A8;
 }
 
 .userBio {
@@ -28,7 +29,7 @@
 
 .userName,
 .userEmail {
-    color: white;
+    color: #d2d2d4;
     font-weight: bold;
     margin-top: 1rem;
     padding: 1rem;
@@ -53,7 +54,7 @@
 .nameFields,
 .contactFields,
 .bioFields {
-    color: white;
+    color: #d2d2d4;
     font-weight: bold;
     justify-content: space-between;
     display: flex;
@@ -106,9 +107,7 @@
 
 .contentRight {
     align-items: center;
-    background-clip: text;
-    background-image: linear-gradient(270deg, rgb(80, 54, 227), rgb(237, 92, 155));
-    color: transparent;
+    color: #d2d2d4;
     display: flex;
     flex-direction: column;
     flex: .3;
@@ -121,6 +120,7 @@
     padding-bottom: 1rem;
     text-align: center;
     width: 100%;
+    border-bottom: 1px solid #5042A8;
 }
 
 .userProducts {
@@ -148,6 +148,7 @@
     background-color: gray;
     border-radius: 1rem;
     padding: 1rem;
+    border: 2.5px solid #5042A8;
 }
 
 .productImage {
@@ -162,6 +163,6 @@
     align-items: center;
     font-size: .8rem;
     font-weight: bold;
-    color: white;
+    color: #d2d2d4;
     padding: 0 1rem 0;
 }

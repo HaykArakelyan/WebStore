@@ -63,7 +63,7 @@ export default function Register() {
     const setNewGender = (newGender) => {
         setNewUser({
             ...newUser,
-            gender: newGender.target.value
+            gender: newGender
         })
     }
 
@@ -100,7 +100,7 @@ export default function Register() {
             initial='initial'
             animate='final'
         >
-            <CustomBox style={{ "backgroundColor": "red" }}>
+            <CustomBox>
                 <CustomInputs
                     placeholder={"First Name"}
                     onChange={setNewFirstName}
