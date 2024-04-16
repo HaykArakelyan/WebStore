@@ -447,7 +447,7 @@ def get_product_by_id(product_id):
 
         prod_images_dict = [img.image_path() for img in prod_images]
         products_info["images"] = prod_images_dict
-        return jsonify({'products_info': products_info}), 200
+        return jsonify(products_info=products_info), 200
     elif request.method == 'POST':
         data = request.json
         rating = data.get("rating")
