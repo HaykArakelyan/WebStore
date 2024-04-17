@@ -14,7 +14,8 @@ export default function EditProfile({ user, closeModal }) {
     const [newEmail, setNewEmail] = useState(user.email)
     const [newPhone, setNewPhone] = useState(user.phone)
 
-    const [newGender, setnewGender] = useState(user.gender)
+    const [newGender, setNewGender] = useState(user.gender)
+    const [newAge, setNewAge] = useState(user.age)
 
     const [newImageUrl, setNewImageUrl] = useState(user.profile_image)
     const [newImageBlob, setNewImageBlob] = useState(user.profile_image)
@@ -63,11 +64,11 @@ export default function EditProfile({ user, closeModal }) {
             <div className={styles.detailsField}>
                 <div className={styles.inputBox}>
                     <label className={styles.inputLabel}>Age</label>
-                    <CustomInputs value={newGender} onChange={setnewGender} />
+                    <CustomInputs value={newAge} onChange={setNewAge} />
                 </div>
                 <div className={styles.inputBox}>
-                    <label className={styles.inputLabel}>Phone</label>
-                    <CustomInputs value={newPhone} onChange={setNewPhone} />
+                    <label className={styles.inputLabel}>Gender</label>
+                    <CustomInputs value={newGender} onChange={setNewGender} />
                 </div>
             </div>
 
