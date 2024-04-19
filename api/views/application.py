@@ -2,15 +2,15 @@ import base64
 import hashlib
 import os
 from datetime import datetime
+from hashlib import sha256
 
 from flask import request, jsonify
 from flask_jwt_extended import jwt_required
 
-from app import app
 import helpers
+from app import app
 from helpers import get_user
 from models import User, db, Product, UserProduct, ProfileImages, Cart, ProductImage, Review, Report, UserRates
-from hashlib import sha256
 
 
 @app.route('/user_profile', methods=['GET', 'PUT', 'DELETE'])
@@ -200,7 +200,12 @@ def edit_product(product_id):
             product_hash = helpers.hash_product_id(product.product_id)
             s3_folder_prefix = f"images/{user_hash}/products/{product_hash}"
             helpers.delete_objects_in_folder(os.getenv('S3_BUCKET_NAME'), s3_folder_prefix)
+            delete_iamges = ProductImage.query.filter_by(product_id=product.product_id).all()
+
+            for i in delete_iamges:
+                db.session.delete(i)
             helpers.upload_product_images(product, user, list_data)
+
             db.session.commit()
         return jsonify(message="Product updated successfully"), 200
 
@@ -341,6 +346,7 @@ def get_from_cart():
 
         return jsonify({'products': cart_products_info}), 200
 
+
 @app.route('/delete_from_cart/<int:product_id>', methods=['DELETE'])
 @jwt_required()
 def delete_from_cart(product_id):
@@ -349,24 +355,22 @@ def delete_from_cart(product_id):
     if not product_id_to_delete:
         return jsonify(message="Product ID to delete not provided"), 400
 
-    # Get the user_prod_id associated with the product_id and the user
     user_prod_id_to_delete = UserProduct.query.filter_by(user_id=user.id, product_id=product_id_to_delete).first()
     if not user_prod_id_to_delete:
         return jsonify(message="Product not found in user's cart"), 404
 
-    # Find the cart item associated with the user_prod_id
     cart_item_to_delete = Cart.query.filter_by(user_prod_id=user_prod_id_to_delete.user_prod_id).first()
     if not cart_item_to_delete:
         return jsonify(message="Product not found in cart"), 404
 
-    # Delete the cart item
     db.session.delete(cart_item_to_delete)
     db.session.commit()
-    # Delete the user_prod_id from the user_prod table
+
     db.session.delete(user_prod_id_to_delete)
     db.session.commit()
 
     return jsonify(message="Product removed from cart successfully"), 200
+
 
 @app.route('/add_review/<int:product_id>', methods=['POST'])
 @jwt_required()
@@ -427,7 +431,6 @@ def add_report(product_id):
     db.session.add(report_item)
     db.session.commit()
     return jsonify(message="Report sent to admins successfully"), 200
-
 
 
 @app.route('/product/<int:product_id>', methods=['GET', 'POST'])
