@@ -19,7 +19,8 @@ export default function Product({
     setIsModalHidden,
     setModalElement,
     updateProductList,
-    userCartProduct = false
+    userCartProduct = false,
+    setIsNewProductAdded
 }) {
 
     const navigate = useNavigate()
@@ -79,6 +80,9 @@ export default function Product({
                 })
                 .catch((err) => {
                     showMessage({ msg: "Error Occured While Updating a Product", msgType: "error" })
+                })
+                .finally(() => {
+                    setIsNewProductAdded(true)
                 })
         }
     }

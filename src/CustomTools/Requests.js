@@ -177,3 +177,24 @@ export const add_rating = (productId, rating) => {
         .then((res) => res.data)
         .catch((err) => Promise.reject(err))
 }
+
+export const fetchAndConvertToBase64 = (url) => {
+    const corsProxyUrl = 'https://cors-anywhere.herokuapp.com/';
+    return api.get(corsProxyUrl + url, { responseType: 'blob' })
+        .then((res) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(res.data);
+            return new Promise((resolve, reject) => {
+                reader.onloadend = () => {
+                    const base64String = reader.result;
+                    resolve(base64String.split(',')[1]);
+                };
+                reader.onerror = (error) => {
+                    reject(error);
+                };
+            });
+        })
+        .catch((error) => {
+            return Promise.reject(error);
+        });
+}

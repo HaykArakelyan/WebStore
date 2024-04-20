@@ -83,6 +83,7 @@ export default function UserProducts() {
                 setIsModalHidden={setIsModalHidden}
                 setModalElement={setModalElement}
                 updateProductList={updateProductsOnproductUpdate}
+                setIsNewProductAdded={setIsNewProductAdded}
             />
         )
         setIsModalHidden(false)

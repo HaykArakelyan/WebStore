@@ -5,6 +5,7 @@ import CustomImage from '../customComponents/CustomImage'
 import CustomInputs from '../customComponents/CustomInputs'
 import React, { useEffect, useState, useRef } from 'react'
 import styles from './ProductForm.module.css'
+import { fetchAndConvertToBase64 } from '../../CustomTools/Requests'
 
 
 export default function ProductForm({ p = null, updateProduct = null, onSubmit, newProduct = false }) {
@@ -44,7 +45,6 @@ export default function ProductForm({ p = null, updateProduct = null, onSubmit, 
     const handleRemoveImageClick = (indexToRemove) => {
         setNewImagesBlobs(prevUrls => prevUrls.filter((url, index) => index !== indexToRemove))
         setNewImagesObjects(prevImagesObject => prevImagesObject.filter((imageObject, index) => index !== indexToRemove))
-
     };
 
     const handleSubmitButtonClick = async () => {
@@ -57,29 +57,46 @@ export default function ProductForm({ p = null, updateProduct = null, onSubmit, 
             console.log("Invalid Data!");
             return;
         }
+        const existingImagesBase64 = await parseUrlToBase64(product.images)
+        const newImagesBase64 = await parseImagestoBase64()
 
         const newProduct = {
             ...product,
             price: parseFloat(product.price),
             discountPercentage: parseFloat(product.discountPercentage),
             stock: parseFloat(product.stock),
-            images: [...newImagesBlobs, ...product.images], //TODO: Fix this to render the images when goes to prev modal
-            imagesBase64: await parseImages()
+            images: newImagesBlobs,
+            imagesBase64: [...existingImagesBase64, ...newImagesBase64]
         };
 
         onSubmit(newProduct)
     };
 
-    const parseImages = () => {
+    const parseImagestoBase64 = () => {
         try {
             const base64Promises = newImagesObjects.map((imageFile) => {
-                return parseBase64(imageFile, showMessage);
+                return parseBase64(imageFile, showMessage)
             });
 
-            return Promise.all(base64Promises);
+            return Promise.all(base64Promises)
         } catch (err) {
-            throw err;
+            throw err
         }
+    }
+
+    const parseUrlToBase64 = () => {
+        try {
+            const base64Url = newImagesBlobs.map((url) => {
+                if (!url.startsWith('blob:')) {
+                    return fetchAndConvertToBase64(url)
+                }
+            })
+            return Promise.all(base64Url.filter(url => url != undefined))
+        }
+        catch (err) {
+            throw err
+        }
+
     }
 
     return (
