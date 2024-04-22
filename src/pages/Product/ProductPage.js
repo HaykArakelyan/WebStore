@@ -10,11 +10,12 @@ import { AnimatePresence } from 'framer-motion'
 import CustomModal from '../../components/customComponents/CustomModal'
 import Review from '../Review/Review'
 import StarCounter from '../../components/Icons/StarCounter'
+import CustomImage from '../../components/customComponents/CustomImage'
 
 export default function ProductPage() {
 
-    const location = useLocation()
     const [product, setProduct] = useState({})
+    const [productOwner, setProductOwner] = useState({})
     const { id } = useParams()
     const { showMessage } = useMessageBox()
 
@@ -22,6 +23,7 @@ export default function ProductPage() {
         get_product_by_id(id)
             .then((product) => {
                 setProduct(product.products_info)
+                setProductOwner(product.owner_info)
             })
             .catch((err) => {
                 showMessage({ msg: "Unable to Get The Requested Product", msgType: "error" })
@@ -69,6 +71,26 @@ export default function ProductPage() {
         setIsModalHidden(false)
     }
 
+    const handleCopyEmailToClipboard = () => {
+        navigator.clipboard.writeText(productOwner.email)
+            .then(() => {
+                showMessage({ msg: "Email Copied to Clipboard", msgType: "success" })
+            })
+            .catch((err) => {
+                showMessage({ msg: "Unable to Copy to Clipboard", msgType: "error" })
+            })
+    }
+
+    const handleCopyPhoneToClipboard = () => {
+        navigator.clipboard.writeText(productOwner.phone)
+            .then(() => {
+                showMessage({ msg: "Phone Copied to Clipboard", msgType: "success" })
+            })
+            .catch((err) => {
+                showMessage({ msg: "Unable to Copy to Clipboard", msgType: "error" })
+            })
+    }
+
     return (
         <div className={styles.container}>
             <div className={styles.content}>
@@ -77,6 +99,7 @@ export default function ProductPage() {
                         images={product.images}
                     />
                 </div>
+
                 <div className={styles.productInfo}>
                     <div className={styles.productTitle}>
                         {product.title}
@@ -144,6 +167,51 @@ export default function ProductPage() {
                             text={"Add Review"}
                             onClick={() => handleAddReviewButtonClick()}
                         />
+                    </div>
+                </div>
+
+                <div className={styles.ownerInfo}>
+                    <div className={styles.ownerImage}>
+                        <CustomImage
+                            url={productOwner.profile_image}
+                            style={{ borderRadius: "50%" }}
+                            name={productOwner.first_name + " " + productOwner.last_name}
+                        />
+                    </div>
+
+                    <div className={styles.ownerData}>
+                        <div className={styles.box}>
+                            <label className={styles.boxData}>Name: </label>
+                            <div>
+                                {productOwner.first_name} {productOwner.last_name}
+                            </div>
+                        </div>
+
+                        <div className={styles.box}>
+                            <label className={styles.boxData}>Email: </label>
+                            <div>
+                                {productOwner.email}
+                            </div>
+                        </div>
+
+                        <div className={styles.box}>
+                            <label className={styles.boxData}>Phone: </label>
+                            <div>
+                                {productOwner.phone}
+                            </div>
+                        </div>
+
+                        <div className={styles.copyEmailButton}>
+                            <CustomButton
+                                text={"Copy Email"}
+                                onClick={handleCopyEmailToClipboard}
+                            />
+
+                            <CustomButton
+                                text={"Copy Phone"}
+                                onClick={handleCopyPhoneToClipboard}
+                            />
+                        </div>
                     </div>
                 </div>
             </div>

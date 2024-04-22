@@ -1,13 +1,12 @@
 .container {
-    width: 60%;
+    width: 80%;
     margin: auto;
     padding-top: 1rem;
 }
 
 .content {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
     background-color: #C5C6C7;
     padding-top: 1rem;
     padding-left: 1rem;
@@ -57,15 +56,6 @@
     justify-content: space-evenly;
 }
 
-.box {
-    /* background-color: white; */
-    border-radius: 1rem;
-    display: flex;
-    padding: 1rem;
-    justify-content: center;
-    align-items: center;
-    font-weight: bold;
-}
 
 .box {
     display: flex;
@@ -84,4 +74,22 @@
     display: flex;
     justify-content: space-around;
     align-self: flex-end;
+}
+
+.ownerData {
+    width: 80%;
+    padding-left: 1.5rem;
+}
+
+.ownerInfo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.copyEmailButton {
+    display: flex;
+    justify-content: center;
+    padding: 1rem 0;
+    gap: 1rem;
 }
