@@ -450,7 +450,21 @@ def get_product_by_id(product_id):
 
         prod_images_dict = [img.image_path() for img in prod_images]
         products_info["images"] = prod_images_dict
-        return jsonify(products_info=products_info), 200
+
+        owner = User.query.filter_by(id=prod.owner_id).first()
+        owner_info = owner.user_to_dict()
+
+        profile_image_obj = ProfileImages.query.filter_by(user_id=owner.id).first()
+        if profile_image_obj:
+            profile_image = profile_image_obj.get_image_path()
+            owner_info.update(profile_image)
+
+        # return jsonify(
+        #     {'user_info': user_info, 'products_info': products_info, "cart_products_info": cart_products_info}), 200
+
+
+
+        return jsonify(products_info=products_info, owner_info=owner_info), 200
     elif request.method == 'POST':
         data = request.json
         rating = data.get("rating")
