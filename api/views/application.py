@@ -452,7 +452,7 @@ def get_product_by_id(product_id):
         products_info["images"] = prod_images_dict
 
         owner = User.query.filter_by(id=prod.owner_id).first()
-        owner_info = owner.user_to_dict()
+        owner_info = owner.view_user_to_dict()
 
         profile_image_obj = ProfileImages.query.filter_by(user_id=owner.id).first()
         if profile_image_obj:
