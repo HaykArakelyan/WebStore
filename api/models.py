@@ -24,6 +24,7 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(255), nullable=False)
     balance = db.Column(db.Integer, nullable=False)
     registered_at = db.Column(db.Date, nullable=False, default=datetime.utcnow)
+    # verification_token = db.Column(db.String(100), nullable=True)
     products = relationship('Product', backref='owner', cascade="all, delete-orphan")
 
     def user_to_dict(self):
@@ -37,6 +38,15 @@ class User(db.Model, UserMixin):
             'age': self.age,
             'balance': self.balance,
             'registered_at': self.registered_at
+        }
+        return user_dict
+    def view_user_to_dict(self):
+        user_dict = {
+            'id': self.id,
+            'first_name': self.first_name,
+            'last_name': self.last_name,
+            'email': self.email,
+            'phone': self.phone,
         }
         return user_dict
 
