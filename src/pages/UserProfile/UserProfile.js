@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 
 import male_image from '../../assets/user_image_male.jpg'
 import female_image from '../../assets/user_image_female.jpg'
-import { clearStorage, isAuth, makeFirstUpper, makeStringShorter } from '../../CustomTools/CustomTools'
+import { makeFirstUpper, makeStringShorter, clearStorage } from '../../CustomTools/CustomTools'
 import CustomButton from '../../components/customComponents/CustomButton'
 import CustomModal from '../../components/customComponents/CustomModal'
 import { AnimatePresence } from 'framer-motion'
@@ -13,6 +13,7 @@ import EditProfile from './EditProfile'
 import { delete_user, update_user, get_user, add_product } from '../../CustomTools/Requests'
 import ProductForm from '../../components/Product/ProductForm'
 import { useMessageBox } from '../../components/Messages/MessageBox'
+import { useAuth } from '../../auth/Auth'
 
 export default function UserProfile({ }) {
     const navigate = useNavigate()
@@ -39,9 +40,7 @@ export default function UserProfile({ }) {
                 setUserCart([...userCart, ...res.cart_products_info])
             })
             .catch((err) => {
-                showMessage({ msg: "Session Expired", msgType: "info" })
-                // clearStorage();
-                // navigate("/login")
+                showMessage({ msg: err.message, msgType: "error" })
             })
     }, [])
 
@@ -51,7 +50,6 @@ export default function UserProfile({ }) {
     const hasImage = (image) => {
         return image !== "" && image !== undefined && image !== null;
     }
-
 
     const handleEditbuttonClick = () => {
         setModalElement(
@@ -79,17 +77,16 @@ export default function UserProfile({ }) {
         const answer = prompt("You will lose forever access to your account. Type 'Delete' to continue the process... ", "")
         if (answer === "Delete") {
             delete_user()
-                .then(() => {
-                    navigate('/login')
-                    showMessage({ msg: "Account Deleted", msgType: "success" })
-                })
-                .then(() => {
-                    localStorage.removeItem("access_token")
+                .then((res) => {
+                    showMessage({ msg: res.message, msgType: "success" })
+                    clearStorage()
+                    navigate('/')
                 })
                 .catch((err) => {
                     showMessage({ msg: "Something went wrong", msgType: "error" })
                 })
-
+                .finally(() => {
+                })
         }
     }
 

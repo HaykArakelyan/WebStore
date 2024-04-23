@@ -4,7 +4,7 @@ import CustomInputs from '../../components/customComponents/CustomInputs'
 import CustomButton from '../../components/customComponents/CustomButton'
 import { motion } from 'framer-motion'
 import { routeVariants } from '../../Navigation/RouteVariants'
-import { isAuth, } from '../../CustomTools/CustomTools'
+import { useAuth } from '../../auth/Auth'
 import { Link } from 'react-router-dom'
 
 import { useNavigate } from 'react-router-dom'
@@ -19,12 +19,6 @@ export default function Login() {
   const [passwd, setPasswd] = useState('')
 
   const { showMessage } = useMessageBox()
-
-  useEffect(() => {
-    if (isAuth()) {
-      navigate(`/user-profile`)
-    }
-  }, [isAuth()])
 
   const handleLoginClick = () => {
     get_token_login(login, passwd)
