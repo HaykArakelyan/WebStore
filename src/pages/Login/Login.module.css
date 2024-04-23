@@ -1,22 +1,21 @@
 .innerContainer {
     display: flex;
     justify-content: center;
+    left: 50%;
+    padding: 50px;
     position: absolute;
     top: 50%;
-    left: 50%;
     transform: translate(-50%, -50%);
-    padding: 50px;
 }
 
 .loginBox {
+    border-radius: 10px;
+    border: 1px solid #8e6dba;
+    box-shadow: 100px black;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    border-radius: 10px;
     padding: 50px;
-    /* background-color: #8e6dba; */
-    border: 1px solid #8e6dba;
-    box-shadow: 100px black;
 }
 
 .login:focus {
@@ -27,8 +26,8 @@
     color: white;
     padding-top: 1rem;
     text-align: center;
-    transition: .3s;
     text-decoration: none;
+    transition: .3s;
 }
 
 .linkToReg:hover {

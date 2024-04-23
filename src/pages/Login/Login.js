@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import styles from "./Login.module.css"
 import CustomInputs from '../../components/customComponents/CustomInputs'
 import CustomButton from '../../components/customComponents/CustomButton'
 import { motion } from 'framer-motion'
 import { routeVariants } from '../../Navigation/RouteVariants'
-import { useAuth } from '../../auth/Auth'
 import { Link } from 'react-router-dom'
 
 import { useNavigate } from 'react-router-dom'
@@ -45,11 +44,13 @@ export default function Login() {
             placeholder={"example@gmail.com"}
             onChange={setLogin}
           />
+
           <CustomInputs
             type={"password"}
             placeholder={"MySuperPassword"}
             onChange={setPasswd}
           />
+
           <CustomButton
             text={"Sign In!"}
             onClick={() => handleLoginClick()}

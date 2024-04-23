@@ -2,12 +2,11 @@ import React from 'react'
 import styles from './NotFound.module.css'
 import CustomButton from '../../components/customComponents/CustomButton'
 import { useNavigate } from 'react-router-dom'
-import notFoundImage from './404.png'
+import notFoundImage from '../../assets/default/404.png'
 
 export default function NotFound() {
 
     const navigate = useNavigate()
-
 
     return (
         <div className={styles.container}>

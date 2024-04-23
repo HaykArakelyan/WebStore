@@ -4,9 +4,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 export default function CustomIcon({
     icon,
-    size,
     onClick,
-    style
+    size,
+    style,
 }) {
     return (
         <div className={styles.container} style={style} onClick={onClick}>

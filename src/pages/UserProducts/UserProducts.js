@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import styles from './UserProducts.module.css'
 import CustomCard from '../../components/customComponents/CustomCard'
-
 import { AnimatePresence } from 'framer-motion'
 import CustomModal from '../../components/customComponents/CustomModal'
-
 import ProductForm from '../../components/Product/ProductForm'
 import PaginationControl from '../../components/PaginationControl/PaginationControl'
-
 import { delete_product, get_products, add_product } from '../../CustomTools/Requests'
 import Product from '../../components/Product/Product'
 import CustomInputs from '../../components/customComponents/CustomInputs'
@@ -30,6 +27,9 @@ export default function UserProducts() {
     const [errorMessege, setErrorMessege] = useState("")
     const [isFetching, setIsFethcing] = useState(true)
     const [isNewProductAdded, setIsNewProductAdded] = useState(false)
+
+    const [isModalHidden, setIsModalHidden] = useState(true)
+    const [modalElement, setModalElement] = useState(null)
 
     const { showMessage } = useMessageBox()
 
@@ -69,10 +69,6 @@ export default function UserProducts() {
         setCurrentPage(0)
     }, [products, searchQuery])
 
-
-    const [isModalHidden, setIsModalHidden] = useState(true);
-
-    const [modalElement, setModalElement] = useState(null)
 
     const handleCardClick = (e) => {
         setModalElement(
@@ -163,6 +159,7 @@ export default function UserProducts() {
                     />
                 </div>
             </div>
+
             <div className={styles.userProducts}>
                 {currentData.map((product, i) =>
                     <CustomCard
@@ -173,31 +170,30 @@ export default function UserProducts() {
                 )}
             </div>
 
-            {filteredProductList.length !== 0 ?
-                Math.ceil(filteredProductList.length / ITEMS_PER_PAGE) !== 1 &&
-                <PaginationControl
+            {filteredProductList.length !== 0
+                ? Math.ceil(filteredProductList.length / ITEMS_PER_PAGE) !== 1
+                && <PaginationControl
                     productsLength={products.length}
                     itemsPerPage={ITEMS_PER_PAGE}
                     currentPage={currentPage}
                     setCurrentPage={setCurrentPage}
                     filteredProductList={filteredProductList}
                 />
-                :
-                <div className={styles.productsError}>
+                : <div className={styles.productsError}>
                     <label>{errorMessege}</label>
                 </div>
             }
+
             <AnimatePresence
                 initial={false}
                 mode='wait'
             >
-                {!isModalHidden ?
-                    <CustomModal
+                {!isModalHidden
+                    ? <CustomModal
                         onCloseModal={setIsModalHidden}
                         element={() => modalElement}
                     />
-                    :
-                    null
+                    : null
                 }
             </AnimatePresence>
         </div>

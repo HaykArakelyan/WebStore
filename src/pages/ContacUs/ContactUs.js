@@ -18,6 +18,7 @@ export default function ContactUs() {
             <div className={styles.title}>
                 Contact Us
             </div>
+
             <div className={styles.messageBox}>
                 <div className={styles.messageBoxRow}>
                     <CustomInputs
@@ -25,14 +26,15 @@ export default function ContactUs() {
                         placeholder={"Name"}
                         onChange={setName}
                     />
+                </div>
 
+                <div className={styles.messageBoxRow}>
                     <CustomInputs
                         value={phone}
                         placeholder={"Phone"}
                         onChange={setPhone}
                         type={"number"}
                     />
-
                 </div>
 
                 <div className={styles.messageBoxRow}>
@@ -45,14 +47,12 @@ export default function ContactUs() {
                 </div>
 
                 <div className={styles.messageBoxRow}>
-
                     <CustomInputs
                         value={message}
                         placeholder={"Your Message"}
                         onChange={setMessage}
                     />
                 </div>
-
 
                 <CustomButton
                     text={"Send"}

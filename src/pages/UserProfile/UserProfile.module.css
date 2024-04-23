@@ -4,22 +4,22 @@
 }
 
 .content {
-    width: 80%;
+    border-radius: 1rem;
+    border: 1px solid #5042A8;
     display: flex;
+    justify-content: space-around;
     margin: auto;
     padding: 1rem;
-    border: 1px solid #5042A8;
-    border-radius: 1rem;
-    justify-content: space-around;
+    width: 80%;
 }
 
 
 .userImage img {
-    width: 16rem;
-    height: 16rem;
     border-radius: 50%;
-    object-fit: cover;
     border: 3.5px solid #5042A8;
+    height: 16rem;
+    object-fit: cover;
+    width: 16rem;
 }
 
 .userBio {
@@ -29,36 +29,35 @@
 
 .userName,
 .userEmail {
+    background-color: gray;
+    border-radius: 1rem;
     color: #d2d2d4;
     font-weight: bold;
     margin-top: 1rem;
     padding: 1rem;
-    background-color: gray;
-    border-radius: 1rem;
     text-align: center;
 }
 
 .deleteProile,
 .manageProducts {
     padding: 1rem 0 0;
-
 }
 
 .contentCenter {
     display: flex;
     flex-direction: column;
-    padding: 1rem;
     height: 100%;
+    padding: 1rem;
 }
 
 .nameFields,
 .contactFields,
 .bioFields {
     color: #d2d2d4;
-    font-weight: bold;
-    justify-content: space-between;
     display: flex;
+    font-weight: bold;
     gap: 2rem;
+    justify-content: space-between;
 }
 
 .contactFields {
@@ -73,9 +72,9 @@
 }
 
 .dataBox {
-    padding: 1rem;
     background-color: gray;
     border-radius: 1rem;
+    padding: 1rem;
     text-align: center;
 }
 
@@ -95,8 +94,8 @@
 .genderBlock {
     display: flex;
     flex-direction: column;
-    padding-top: 1rem;
     flex: 1;
+    padding-top: 1rem;
 }
 
 .editInfoField {
@@ -116,23 +115,23 @@
 }
 
 .userProductsTitle {
+    border-bottom: 1px solid #5042A8;
     border-bottom: 1px solid black;
     padding-bottom: 1rem;
     text-align: center;
     width: 100%;
-    border-bottom: 1px solid #5042A8;
 }
 
 .userProducts {
+    cursor: pointer;
     display: flex;
     flex-direction: column;
     width: 100%;
-    cursor: pointer;
 }
 
 .userEmptyList {
-    text-align: center;
     padding: 1rem;
+    text-align: center;
 }
 
 .productBox {
@@ -142,27 +141,27 @@
 }
 
 .product {
-    height: 4rem;
-    display: flex;
-    padding: .5rem;
     background-color: gray;
     border-radius: 1rem;
-    padding: 1rem;
     border: 2.5px solid #5042A8;
+    display: flex;
+    height: 4rem;
+    padding: .5rem;
+    padding: 1rem;
 }
 
 .productImage {
-    width: 4rem;
-    object-fit: cover;
     border-radius: 1rem;
+    object-fit: cover;
+    width: 4rem;
 }
 
 .productDescription {
-    display: flex;
-    justify-content: center;
     align-items: center;
+    color: #d2d2d4;
+    display: flex;
     font-size: .8rem;
     font-weight: bold;
-    color: #d2d2d4;
+    justify-content: center;
     padding: 0 1rem 0;
 }

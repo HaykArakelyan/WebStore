@@ -44,6 +44,7 @@ export default function EditProfile({ user, closeModal }) {
                     <label className={styles.inputLabel}>Name</label>
                     <CustomInputs value={newFirstName} onChange={setNewFirstName} />
                 </div>
+
                 <div className={styles.inputBox}>
                     <label className={styles.inputLabel}>Lastname</label>
                     <CustomInputs value={newLastName} onChange={setNewLastName} />
@@ -55,6 +56,7 @@ export default function EditProfile({ user, closeModal }) {
                     <label className={styles.inputLabel}>Email</label>
                     <CustomInputs value={newEmail} onChange={setNewEmail} />
                 </div>
+
                 <div className={styles.inputBox}>
                     <label className={styles.inputLabel}>Phone</label>
                     <CustomInputs value={newPhone} onChange={setNewPhone} />
@@ -66,6 +68,7 @@ export default function EditProfile({ user, closeModal }) {
                     <label className={styles.inputLabel}>Age</label>
                     <CustomInputs value={newAge} onChange={setNewAge} />
                 </div>
+
                 <div className={styles.inputBox}>
                     <label className={styles.inputLabel}>Gender</label>
                     <CustomInputs value={newGender} onChange={setNewGender} />
@@ -96,8 +99,8 @@ export default function EditProfile({ user, closeModal }) {
                     />
 
                     <div className={styles.imageControls}>
-                        {!isNullOrUndefined(newImageBlob) &&
-                            <CustomImage
+                        {!isNullOrUndefined(newImageBlob)
+                            && <CustomImage
                                 url={newImageBlob}
                                 name={"new image"}
                                 style={{

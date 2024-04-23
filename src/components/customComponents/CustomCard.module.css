@@ -1,16 +1,16 @@
 .container {
     background-color: rgb(142, 109, 186);
-    height: 20rem;
-    color: black;
-    text-align: center;
     border-radius: 1rem;
-    transition: 0.3s;
+    color: black;
     cursor: pointer;
-    overflow: hidden;
     display: flex;
     flex-direction: column;
+    height: 20rem;
     justify-content: space-between;
+    overflow: hidden;
     padding: .8rem;
+    text-align: center;
+    transition: 0.3s;
 }
 
 .container:hover {
@@ -19,9 +19,9 @@
 }
 
 .title {
-    padding-top: 0.3rem;
-    font-weight: bold;
     font-size: 1.3rem;
+    font-weight: bold;
+    padding-top: 0.3rem;
 }
 
 .bottomCard {

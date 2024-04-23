@@ -1,11 +1,11 @@
 .container {
     align-self: center;
     background-color: #a3a2a2;
+    border-radius: 1rem;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
+    margin: 1rem 0;
     padding: 3rem 0;
     width: 40%;
-    border-radius: 1rem;
-    margin: 1rem 0;
 }

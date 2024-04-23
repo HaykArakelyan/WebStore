@@ -41,43 +41,43 @@ ul li:hover {
 }
 
 .a {
-    text-decoration: none;
     color: #d2d2d4;
     font-weight: bold;
-    transition: color 0.3s ease;
-    position: relative;
     padding-bottom: .5rem;
+    position: relative;
+    text-decoration: none;
+    transition: color 0.3s ease;
 }
 
 .a::after {
+    background-color: #fff;
+    bottom: 0;
     content: '';
     display: block;
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 0%;
     height: 2px;
-    background-color: #fff;
+    left: 0;
+    position: absolute;
     transition: width 0.3s ease-out, left 0.3s ease-out;
+    width: 0%;
 }
 
 .a:hover::after {
-    width: 100%;
     left: 0;
+    width: 100%;
 }
 
 .authButtons,
 .profileButtons {
-    width: 15%;
+    align-items: center;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    align-items: center;
+    width: 15%;
 }
 
 .bottomBar {
+    background-color: #5042A8;
+    height: 0.2rem;
     margin-top: 1%;
     width: 100%;
-    height: 0.2rem;
-    background-color: #5042A8;
 }

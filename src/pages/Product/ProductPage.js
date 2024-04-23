@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import styles from './ProductPage.module.css'
-import { useParams, useLocation } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import SlickSlider from '../../components/Slider/SlickSlider'
 import { isAuth, makeFirstUpper } from '../../CustomTools/CustomTools'
 import CustomButton from '../../components/customComponents/CustomButton'
@@ -18,6 +18,9 @@ export default function ProductPage() {
     const [productOwner, setProductOwner] = useState({})
     const { id } = useParams()
     const { showMessage } = useMessageBox()
+
+    const [isModalHidden, setIsModalHidden] = useState(true)
+    const [modalElement, setModalElement] = useState(null)
 
     useEffect(() => {
         get_product_by_id(id)
@@ -57,9 +60,6 @@ export default function ProductPage() {
                 showMessage({ msg: "Unable to Add Review", msgType: "error" })
             })
     }
-
-    const [isModalHidden, setIsModalHidden] = useState(true)
-    const [modalElement, setModalElement] = useState(null)
 
     const handleAddReviewButtonClick = () => {
         setModalElement(
@@ -220,14 +220,12 @@ export default function ProductPage() {
                 initial={false}
                 mode='wait'
             >
-                {!isModalHidden ?
-                    <CustomModal
+                {!isModalHidden
+                    ? <CustomModal
                         onCloseModal={setIsModalHidden}
-                        element={() =>
-                            modalElement
-                        }
-                    /> :
-                    null
+                        element={() => modalElement}
+                    />
+                    : null
                 }
             </AnimatePresence>
         </div>

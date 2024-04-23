@@ -5,10 +5,10 @@
 }
 
 .input {
-    width: 1rem;
     height: 1rem;
     margin: 0;
     padding: 0;
+    width: 1rem;
 }
 
 .input:hover {
@@ -16,6 +16,6 @@
 }
 
 .title {
-    padding-left: .8rem;
     color: white;
+    padding-left: .8rem;
 }

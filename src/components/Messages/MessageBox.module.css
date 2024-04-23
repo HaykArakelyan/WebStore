@@ -1,47 +1,47 @@
 .container {
+    align-items: start;
+    background-color: white;
+    border-left: .3125rem solid;
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+    height: 5rem;
+    justify-content: center;
+    padding-left: 2rem;
     position: fixed;
     right: 0;
     top: 10rem;
     width: 30rem;
-    background-color: white;
-    height: 5rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: start;
-    padding-left: 2rem;
-    border-radius: 1rem;
-    border-left: .3125rem solid;
     z-index: 1002;
 }
 
 .error {
-    border-color: #DD2424;
     background-color: #F6E6E7;
+    border-color: #DD2424;
 }
 
 .success {
-    border-color: #04884C;
     background-color: #CEF1D1;
+    border-color: #04884C;
 }
 
 .note {
-    border-color: #9B9B9B;
     background-color: #EAEAEA;
+    border-color: #9B9B9B;
 }
 
 .info {
-    border-color: #6397DC;
     background-color: #6397DC;
+    border-color: #6397DC;
 }
 
 .warning {
-    border-color: #F9DD3A;
     background-color: #F9EAAD;
+    border-color: #F9DD3A;
 }
 
 .message {
-    padding: .3rem;
-    padding-left: 0;
     font-weight: 500;
+    padding-left: 0;
+    padding: .3rem;
 }

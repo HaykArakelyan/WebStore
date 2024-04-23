@@ -12,24 +12,24 @@
 }
 
 .productTitle {
-    font-size: 2.5rem;
     color: #7850ad;
+    font-size: 2.5rem;
     font-weight: bold;
 }
 
 .productDescription {
     color: #7850ad;
     font-size: 1.5rem;
-    width: 70%;
-    padding-top: 1rem;
     font-weight: bold;
+    padding-top: 1rem;
+    width: 70%;
 }
 
 .productCostAndSale {
     display: flex;
     flex-direction: row;
-    padding-top: 1rem;
     font-weight: bold;
+    padding-top: 1rem;
 }
 
 .productPrice {
@@ -45,9 +45,9 @@
     background-color: rgb(12, 201, 19);
     color: white;
     font-size: 1rem;
-    text-shadow: 1px 1px #444;
-    padding: 2px 6px 2px 6px;
     margin-left: .6rem;
+    padding: 2px 6px 2px 6px;
+    text-shadow: 1px 1px #444;
 }
 
 .reviews {
@@ -55,11 +55,11 @@
 }
 
 .reviewTitle {
+    border-bottom: 1px solid black;
     display: block;
     font-size: 1.5rem;
-    border-bottom: 1px solid black;
-    padding-top: 1rem;
     padding-bottom: .3rem;
+    padding-top: 1rem;
     text-align: center;
 }
 
@@ -68,23 +68,23 @@
     display: flex;
     flex-direction: row;
     justify-content: space-around;
-    width: 70%;
     margin-top: auto;
+    width: 70%;
 }
 
 .reviewsList {
-    padding-top: 1rem;
     display: flex;
     flex-direction: column;
     gap: 2rem;
-    text-align: start;
     justify-content: center;
+    padding-top: 1rem;
+    text-align: start;
 }
 
 .review {
-    border: 1px solid #5042A8;
     border-radius: 1rem;
+    border: 1px solid #5042A8;
     box-shadow: 1px 3px 3px black;
-    padding: .7rem;
     font-size: 1.2rem;
+    padding: .7rem;
 }

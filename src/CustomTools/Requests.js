@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "axios"
 
 
 const BASE_URL = "http://localhost:5000/"
@@ -7,11 +7,12 @@ const api = axios.create({
     baseURL: BASE_URL
 })
 
+
 api.interceptors.request.use(
     (config) => {
         const token = sessionStorage.getItem("access_token")
         if (token && !config?.url?.includes("refresh_token")) {
-            config.headers['Authorization'] = `Bearer ${token}`;
+            config.headers['Authorization'] = `Bearer ${token}`
         }
         return config
     },
@@ -20,39 +21,41 @@ api.interceptors.request.use(
     }
 )
 
-let isRefreshing = false;
+
+let isRefreshing = false
 api.interceptors.response.use(
     (response) => response,
     (error) => {
-        const status = error.response ? error.response.status : null;
-        const originalRequest = error.config;
+        const status = error.response ? error.response.status : null
+        const originalRequest = error.config
         if (status === 401) {
             if (!isRefreshing) {
-                isRefreshing = true;
+                isRefreshing = true
                 api.post('/refresh_token', {}, {
                     headers: {
                         'Authorization': `Bearer ${sessionStorage.getItem("refresh_token")}`
                     }
                 }).then(refreshTokenResponse => {
-                    const newAccessToken = refreshTokenResponse.data.access_token;
-                    sessionStorage.setItem("access_token", newAccessToken);
-                    return api(originalRequest);
+                    const newAccessToken = refreshTokenResponse.data.access_token
+                    sessionStorage.setItem("access_token", newAccessToken)
+                    return api(originalRequest)
                 }).then(retryResponse => {
-                    isRefreshing = false;
-                    return retryResponse;
+                    isRefreshing = false
+                    return retryResponse
                 }).catch(refreshError => {
-                    isRefreshing = false;
-                });
+                    isRefreshing = false
+                })
             } else {
-                new Promise((resolve) => setTimeout(resolve, 1000));
-                const retryResponse = api(originalRequest);
-                return retryResponse;
+                new Promise((resolve) => setTimeout(resolve, 1000))
+                const retryResponse = api(originalRequest)
+                return retryResponse
             }
         } else {
-            return Promise.reject(error);
+            return Promise.reject(error)
         }
     }
-);
+)
+
 
 export const register_user = (newUser) => {
     return api.post("register", newUser)
@@ -64,18 +67,19 @@ export const register_user = (newUser) => {
         })
 }
 
+
 export const get_token_login = (email, password) => {
     return api.post("login", { email, password })
         .then((res) => {
             sessionStorage.setItem("refresh_token", res.data.refresh_token)
-            sessionStorage.setItem("access_token", res.data.access_token);
+            sessionStorage.setItem("access_token", res.data.access_token)
             sessionStorage.setItem("id", res.data.id)
-            return res.data.id;
+            return res.data.id
         })
         .catch((err) => {
             return Promise.reject(err)
-        });
-};
+        })
+}
 
 
 export const get_user = () => {
@@ -99,6 +103,7 @@ export const delete_user = () => {
         })
 }
 
+
 export const update_user = (updatedUser) => {
     return api.put(`/user_profile`, updatedUser)
         .then((res) => {
@@ -109,6 +114,7 @@ export const update_user = (updatedUser) => {
         })
 }
 
+
 export const add_product = (newProduct) => {
     return api.post('add_product', newProduct)
         .then((res) => {
@@ -118,11 +124,13 @@ export const add_product = (newProduct) => {
         })
 }
 
+
 export const edit_product = (productId, updatedtProduct) => {
     return api.put(`edit_product/${productId}`, updatedtProduct)
         .then((res) => res.data)
         .catch((err) => Promise.reject(err))
 }
+
 
 export const get_products = () => {
     return api.get(`/get_products`)
@@ -137,11 +145,13 @@ export const get_all_products = () => {
         .catch((err) => Promise.reject(err))
 }
 
+
 export const delete_product = (productId) => {
     return api.delete(`edit_product/${productId}`)
         .then((res) => res.data)
         .catch((err) => Promise.reject(err))
 }
+
 
 export const get_user_cart = () => {
     return api.get('/get_from_cart')
@@ -149,17 +159,20 @@ export const get_user_cart = () => {
         .catch((err) => Promise.reject(err))
 }
 
+
 export const add_product_to_cart = (product) => {
     return api.post('/add_to_cart', product)
         .then((res) => res.data)
         .catch((err) => Promise.reject(err))
 }
 
+
 export const add_review = (productId, review) => {
     return api.post(`/add_review/${productId}`, review)
         .then((res) => res.data)
         .catch((err) => Promise.reject(err))
 }
+
 
 export const get_product_by_id = (productId) => {
     return api.get(`/product/${productId}`)
@@ -172,29 +185,32 @@ export const delete_from_cart_by_id = (product_id) => {
         .then((res) => res.data)
         .catch((err) => Promise.reject(err))
 }
+
+
 export const add_rating = (productId, rating) => {
     return api.post(`/product/${productId}`, rating)
         .then((res) => res.data)
         .catch((err) => Promise.reject(err))
 }
 
+
 export const fetchAndConvertToBase64 = (url) => {
-    const corsProxyUrl = 'https://cors-anywhere.herokuapp.com/';
+    const corsProxyUrl = 'https://cors-anywhere.herokuapp.com/'
     return api.get(corsProxyUrl + url, { responseType: 'blob' })
         .then((res) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(res.data);
+            const reader = new FileReader()
+            reader.readAsDataURL(res.data)
             return new Promise((resolve, reject) => {
                 reader.onloadend = () => {
-                    const base64String = reader.result;
-                    resolve(base64String.split(',')[1]);
-                };
+                    const base64String = reader.result
+                    resolve(base64String.split(',')[1])
+                }
                 reader.onerror = (error) => {
-                    reject(error);
-                };
-            });
+                    reject(error)
+                }
+            })
         })
         .catch((error) => {
-            return Promise.reject(error);
-        });
+            return Promise.reject(error)
+        })
 }

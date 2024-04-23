@@ -4,7 +4,7 @@ export const routeVariants = {
     },
     final: {
         y: '40vh'
-    }
+    },
 }
 
 
@@ -17,8 +17,9 @@ export const productsAnimation = {
     },
     viewport: {
         once: true
-    }
+    },
 }
+
 
 export const messageBoxVariants = {
     hidden: {
@@ -29,5 +30,5 @@ export const messageBoxVariants = {
     },
     exit: {
         x: '100vh', opacity: 0
-    }
+    },
 }

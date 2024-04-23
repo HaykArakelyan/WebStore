@@ -1,11 +1,14 @@
 import React from 'react'
-
 import { faStar } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-
 import { colorIdentifier } from '../../CustomTools/CustomTools'
 
-export default function Star({ rating, colors, style, partialStar = 0 }) {
+export default function Star({
+    colors,
+    partialStar = 0,
+    rating,
+    style,
+}) {
     return (
         <FontAwesomeIcon
             icon={faStar}

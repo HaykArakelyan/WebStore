@@ -1,6 +1,11 @@
 import styles from './CustomCheckbox.module.css'
 
-export default function CustomCheckbox({ text, onChange, defaultChecked, style }) {
+export default function CustomCheckbox({
+    defaultChecked,
+    onChange,
+    style,
+    text,
+}) {
 
     return (
         <div className={styles.container}>

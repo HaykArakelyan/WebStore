@@ -2,7 +2,11 @@ import React from 'react'
 import { motion } from 'framer-motion';
 import styles from './CustomModal.module.css'
 
-export default function CustomModal({ onCloseModal, element = null }) {
+export default function CustomModal({
+    element = null,
+    onCloseModal,
+}) {
+
     const handleModalClick = (e) => {
         e.stopPropagation()
     }
@@ -31,6 +35,6 @@ export default function CustomModal({ onCloseModal, element = null }) {
             >
                 {element()}
             </div>
-        </motion.div >
+        </motion.div>
     )
 }

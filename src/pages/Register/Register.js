@@ -12,8 +12,7 @@ import CustomDropdown from '../../components/customComponents/CustomDropdown'
 import { register_user } from '../../CustomTools/Requests'
 import { useMessageBox } from '../../components/Messages/MessageBox'
 
-const genders = ["Male", "Female", "Attack helicopter"]
-
+const genders = ["Male", "Female", "Rather Not To Say"]
 
 export default function Register() {
     const navigate = useNavigate()
@@ -32,6 +31,7 @@ export default function Register() {
             first_name: newFirstName
         })
     }
+
     const setNewLastname = (newLastName) => {
         setNewUser({
             ...newUser,
@@ -105,15 +105,18 @@ export default function Register() {
                     placeholder={"First Name"}
                     onChange={setNewFirstName}
                 />
+
                 <CustomInputs
                     placeholder={"Last Name"}
                     onChange={setNewLastname}
                 />
+
                 <CustomInputs
                     placeholder={"Email"}
                     type={"email"}
                     onChange={setNewEmail}
                 />
+
                 <CustomInputs
                     placeholder={"Phone"}
                     type={"tel"}
@@ -126,6 +129,7 @@ export default function Register() {
                         type={"number"}
                         onChange={setNewAge}
                     />
+
                     <CustomDropdown
                         options={genders}
                         selectedValue={newUser.gender}
@@ -142,12 +146,14 @@ export default function Register() {
                     iconSize={"lg"}
                     iconStyle={{ "width": "2rem" }}
                 />
+
                 <CustomInputs
                     placeholder={"Repeat Password"}
                     type={"password"}
                     onChange={isMatching}
                     style={notMatchingStyle}
                 />
+
                 <CustomButton
                     text={"Register"}
                     style={{ "marginTop": ".5rem" }}

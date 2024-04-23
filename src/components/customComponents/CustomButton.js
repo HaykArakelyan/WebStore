@@ -2,10 +2,10 @@ import React from 'react'
 import styles from './CustomButton.module.css'
 
 export default function CustomButton({
-    text,
-    style = null,
+    isDisabled = false,
     onClick,
-    isDisabled = false
+    style = null,
+    text,
 }) {
     return (
         <button

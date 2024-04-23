@@ -8,26 +8,26 @@
 .productInfo {
     display: flex;
     flex-direction: column;
-    padding: 1rem;
     gap: 1rem;
+    padding: 1rem;
 }
 
 .titleAndDesc,
 .priceAndSale,
 .productStats {
     display: flex;
-    justify-content: center;
     gap: 3rem;
+    justify-content: center;
 }
 
 .inputBox {
+    background-color: gray;
+    border-radius: 1rem;
+    border: 1px solid #5042A8;
     display: flex;
     flex-direction: column;
     flex: 1;
-    background-color: gray;
     padding: 1rem;
-    border-radius: 1rem;
-    border: 1px solid #5042A8;
 }
 
 .inputLabel {
@@ -41,9 +41,9 @@
 }
 
 .imageControls {
+    align-items: center;
     display: flex;
     justify-content: space-around;
-    align-items: center;
 }
 
 .productImages {

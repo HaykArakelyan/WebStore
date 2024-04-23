@@ -1,17 +1,14 @@
-/* @import url('https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Pacifico&family=Yanone+Kaffeesatz&display=swap'); */
-
 .container {
-    font-family: "Abril Fatface", serif;
-    font-weight: 400;
-    font-style: normal;
+    align-items: center;
     display: flex;
-    /* flex-direction: column; */
+    font-family: "Abril Fatface", serif;
+    font-style: normal;
+    font-weight: 400;
     height: 100%;
-    width: 80%;
+    justify-content: space-between;
     margin: auto;
     padding-top: 6rem;
-    justify-content: space-between;
-    align-items: center;
+    width: 80%;
 }
 
 .content {
@@ -21,17 +18,17 @@
 
 .slogan {
     color: white;
+    cursor: pointer;
     font-size: 4rem;
     width: 35rem;
-    cursor: pointer;
 }
 
 .message {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    padding-top: 1rem;
     align-items: flex-start;
     color: white;
+    display: flex;
+    flex-direction: column;
     font-size: 2rem;
+    gap: 2rem;
+    padding-top: 1rem;
 }

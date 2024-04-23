@@ -1,7 +1,11 @@
 import React, { useRef } from 'react'
 import styles from './CustomDropdown.module.css'
 
-export default function CustomDropdown({ options = [], selectedValue, onSelect }) {
+export default function CustomDropdown({
+    onSelect,
+    options = [],
+    selectedValue,
+}) {
 
     const selectRef = useRef()
 

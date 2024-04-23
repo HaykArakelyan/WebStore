@@ -8,19 +8,18 @@ import { useNavigate } from 'react-router-dom'
 import { useMessageBox } from '../../components/Messages/MessageBox'
 import { makeStringShorter } from '../../CustomTools/CustomTools'
 import ProductForm from './ProductForm'
-
 import { isNullOrUndefined } from '../../CustomTools/CustomTools'
 import { edit_product } from '../../CustomTools/Requests'
 
 export default function Product({
-    product,
     currentUserProduct = false,
     onDeleteButtonClick,
+    product,
     setIsModalHidden,
+    setIsNewProductAdded,
     setModalElement,
     updateProductList,
     userCartProduct = false,
-    setIsNewProductAdded
 }) {
 
     const navigate = useNavigate()
@@ -90,7 +89,10 @@ export default function Product({
     return (
         <div className={styles.container}>
             <div className={styles.productImageSlider}>
-                {product?.images?.length > 0 ? <SlickSlider images={productImages} /> : null}
+                {product?.images?.length > 0
+                    ? <SlickSlider images={productImages} />
+                    : null
+                }
             </div>
 
             <div className={styles.productInfo}>
@@ -118,24 +120,23 @@ export default function Product({
                 </label>
                 <div className={styles.reviews}>
                     <label className={styles.reviewTitle}>Reviews</label>
-                    {product.reviews.length > 0 ?
-                        <div className={styles.reviewsList}>
+                    {product.reviews.length > 0
+                        ? <div className={styles.reviewsList}>
                             {product.reviews.map((review, index) =>
                                 <div className={styles.review} key={index}>
                                     {review.comment}
                                 </div>
                             )}
                         </div>
-                        :
-                        <div className={styles.review}>
+                        : <div className={styles.review}>
                             No Reviews
                         </div>
                     }
                 </div>
 
 
-                {!currentUserProduct ?
-                    <div className={styles.cartButtons}>
+                {!currentUserProduct
+                    ? <div className={styles.cartButtons}>
                         <CustomButton
                             text={"View Full Product"}
                             onClick={() => handleViewFullProductButtonClick()}
@@ -146,8 +147,8 @@ export default function Product({
                             onClick={() => handleAddToCart()}
                         />
                     </div>
-                    : !userCartProduct ?
-                        <div className={styles.controlButtons}>
+                    : !userCartProduct
+                        ? <div className={styles.controlButtons}>
                             <CustomButton
                                 text={"Edit Product"}
                                 onClick={() => handleOpenEditProductForm(product)}
@@ -158,9 +159,7 @@ export default function Product({
                                 onClick={onDeleteButtonClick}
                             />
                         </div>
-                        :
-
-                        <div className={styles.controlButtons}>
+                        : <div className={styles.controlButtons}>
                             <CustomButton
                                 text={"View Full Product"}
                                 onClick={() => handleViewFullProductButtonClick()}

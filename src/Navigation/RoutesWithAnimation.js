@@ -1,14 +1,12 @@
 import React from 'react'
-
-import Home from '../pages/Home/Home'
-import Login from '../pages/Login/Login'
-import Register from '../pages/Register/Register'
-
 import {
     Routes,
     Route,
     useLocation
 } from 'react-router-dom'
+import Home from '../pages/Home/Home'
+import Login from '../pages/Login/Login'
+import Register from '../pages/Register/Register'
 import Dashboard from '../pages/Dashboard/Dashboard'
 import UserProfile from '../pages/UserProfile/UserProfile'
 import UserProducts from '../pages/UserProducts/UserProducts'

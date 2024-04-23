@@ -2,7 +2,10 @@ import React, { useEffect, useState } from 'react'
 import styles from './CustomPaginator.module.css'
 import CustomButton from './CustomButton'
 
-export default function CustomPaginator({ numberOfPages, handlePageSwitch }) {
+export default function CustomPaginator({
+    handlePageSwitch,
+    numberOfPages,
+}) {
 
     const [pages, setPages] = useState([])
 

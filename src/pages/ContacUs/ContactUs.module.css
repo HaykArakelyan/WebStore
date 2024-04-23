@@ -1,24 +1,25 @@
 .container {
-    width: 80%;
+    align-items: center;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    font-family: "Abril Fatface", serif;
+    font-style: normal;
+    font-weight: 400;
     gap: 1rem;
+    justify-content: center;
     margin: auto;
     padding-top: 5rem;
+    width: 80%;
 }
 
 .title {
-    font-size: 4rem;
     color: #d2d2d4;
+    font-size: 4rem;
     text-align: center;
 }
 
 .messageBox {
     display: flex;
     flex-direction: column;
-    gap: 1rem
+    gap: 1rem;
 }
-
-.messageBoxRow {}

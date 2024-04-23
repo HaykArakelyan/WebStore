@@ -1,15 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import styles from './UserCart.module.css'
 import CustomCard from '../../components/customComponents/CustomCard'
-
 import { AnimatePresence } from 'framer-motion'
 import CustomModal from '../../components/customComponents/CustomModal'
-
-import ProductForm from '../../components/Product/ProductForm'
 import PaginationControl from '../../components/PaginationControl/PaginationControl'
-
-import { isNullOrUndefined } from '../../CustomTools/CustomTools'
-import { edit_product, delete_from_cart_by_id, get_user_cart } from '../../CustomTools/Requests'
+import { delete_from_cart_by_id, get_user_cart } from '../../CustomTools/Requests'
 import Product from '../../components/Product/Product'
 import CustomInputs from '../../components/customComponents/CustomInputs'
 import { faX } from '@fortawesome/free-solid-svg-icons';
@@ -28,6 +23,9 @@ export default function UserCart() {
     const [errorMessege, setErrorMessege] = useState("")
     const [isFetching, setIsFethcing] = useState(true)
     const [isNewProductAdded, setIsNewProductAdded] = useState(false)
+
+    const [isModalHidden, setIsModalHidden] = useState(true)
+    const [modalElement, setModalElement] = useState(null)
 
     const { showMessage } = useMessageBox()
 
@@ -67,9 +65,6 @@ export default function UserCart() {
         setCurrentPage(0)
     }, [products, searchQuery])
 
-    const [isModalHidden, setIsModalHidden] = useState(true);
-
-    const [modalElement, setModalElement] = useState(null)
 
     const handleCardClick = (e) => {
         setModalElement(
@@ -84,6 +79,7 @@ export default function UserCart() {
         setIsModalHidden(false)
     }
 
+
     const handleDeleteFromCartButton = (removedProduct) => {
         delete_from_cart_by_id(parseInt(removedProduct.product_id))
             .then((res) => {
@@ -97,6 +93,7 @@ export default function UserCart() {
                 showMessage({ msg: err.message, msgType: "error" })
             })
     }
+
 
     const startIndex = currentPage * ITEMS_PER_PAGE;
     const endIndex = startIndex + ITEMS_PER_PAGE;
@@ -118,6 +115,7 @@ export default function UserCart() {
                     />
                 </div>
             </div>
+
             <div className={styles.userProducts}>
                 {currentData.map((product, i) =>
                     <CustomCard
@@ -129,17 +127,16 @@ export default function UserCart() {
                 )}
             </div>
 
-            {filteredProductList.length !== 0 ?
-                Math.ceil(filteredProductList.length / ITEMS_PER_PAGE) !== 1 &&
-                <PaginationControl
+            {filteredProductList.length !== 0
+                ? Math.ceil(filteredProductList.length / ITEMS_PER_PAGE) !== 1
+                && <PaginationControl
                     productsLength={products.length}
                     itemsPerPage={ITEMS_PER_PAGE}
                     currentPage={currentPage}
                     setCurrentPage={setCurrentPage}
                     filteredProductList={filteredProductList}
                 />
-                :
-                <div className={styles.productsError}>
+                : <div className={styles.productsError}>
                     <label>{errorMessege}</label>
                 </div>
             }
@@ -147,13 +144,12 @@ export default function UserCart() {
                 initial={false}
                 mode='wait'
             >
-                {!isModalHidden ?
-                    <CustomModal
+                {!isModalHidden
+                    ? <CustomModal
                         onCloseModal={setIsModalHidden}
                         element={() => modalElement}
                     />
-                    :
-                    null
+                    : null
                 }
             </AnimatePresence>
         </div>

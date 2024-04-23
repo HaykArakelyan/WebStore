@@ -13,7 +13,6 @@ import EditProfile from './EditProfile'
 import { delete_user, update_user, get_user, add_product } from '../../CustomTools/Requests'
 import ProductForm from '../../components/Product/ProductForm'
 import { useMessageBox } from '../../components/Messages/MessageBox'
-import { useAuth } from '../../auth/Auth'
 
 export default function UserProfile({ }) {
     const navigate = useNavigate()
@@ -30,6 +29,9 @@ export default function UserProfile({ }) {
     const [userProducts, setUserProducts] = useState([])
     const [userCart, setUserCart] = useState([])
 
+    const [isModalHidden, setIsModalHidden] = useState(true)
+    const [modalElement, setModalElement] = useState()
+
     const { showMessage } = useMessageBox()
 
     useEffect(() => {
@@ -44,12 +46,10 @@ export default function UserProfile({ }) {
             })
     }, [])
 
-    const [isModalHidden, setIsModalHidden] = useState(true)
-    const [modalElement, setModalElement] = useState()
-
     const hasImage = (image) => {
         return image !== "" && image !== undefined && image !== null;
     }
+
 
     const handleEditbuttonClick = () => {
         setModalElement(
@@ -60,6 +60,7 @@ export default function UserProfile({ }) {
         )
         setIsModalHidden(false)
     }
+
 
     const handleSaveButtonClick = (updatedUser) => {
         update_user(
@@ -72,6 +73,7 @@ export default function UserProfile({ }) {
             showMessage({ msg: "Something Went Wrong", msgType: "error" })
         })
     }
+
 
     const handleDeleteProfile = () => {
         const answer = prompt("You will lose forever access to your account. Type 'Delete' to continue the process... ", "")
@@ -90,6 +92,7 @@ export default function UserProfile({ }) {
         }
     }
 
+
     const handleAddProductButtonClick = () => {
         setModalElement(
             <ProductForm
@@ -98,6 +101,7 @@ export default function UserProfile({ }) {
             />)
         setIsModalHidden(false)
     }
+
 
     const handlePostProductButtonClick = (e) => {
 
@@ -110,6 +114,8 @@ export default function UserProfile({ }) {
                 showMessage({ msg: "Error Occured While Adding a Product", msgType: "error" })
             })
     }
+
+
     return (
         <div className={styles.container}>
             <div className={styles.content}>
@@ -119,11 +125,15 @@ export default function UserProfile({ }) {
                         <img
                             title={"It's you dude"}
                             alt={"Your image"}
-                            src={hasImage(user.profile_image) ?
-                                user.profile_image : user.gender == "Male" ?
-                                    male_image : female_image}
+                            src={hasImage(user.profile_image)
+                                ? user.profile_image
+                                : user.gender == "Male"
+                                    ? male_image
+                                    : female_image
+                            }
                         />
                     </div>
+
                     <div className={styles.userBio}>
                         <span className={styles.userName}>
                             {makeFirstUpper(user.first_name)} {makeFirstUpper(user.last_name)}
@@ -132,6 +142,7 @@ export default function UserProfile({ }) {
                             {user.email}
                         </span>
                     </div>
+
                     <div className={styles.manageProducts}>
                         <CustomButton
                             text={"Add Product"}
@@ -139,6 +150,7 @@ export default function UserProfile({ }) {
                             style={{ width: "100%" }}
                         />
                     </div>
+
                     <div className={styles.deleteProile}>
                         <CustomButton
                             text={"Delete Profile"}
@@ -154,14 +166,17 @@ export default function UserProfile({ }) {
                             <label className={styles.dataBoxLabels}>
                                 Name
                             </label>
+
                             <span className={styles.dataBox}>
                                 {makeFirstUpper(user.first_name)}
                             </span>
                         </div>
+
                         <div className={styles.lastNameBlock}>
                             <label className={styles.dataBoxLabels}>
                                 Surname
                             </label>
+
                             <span className={styles.dataBox}>
                                 {makeFirstUpper(user.last_name)}
                             </span>
@@ -173,6 +188,7 @@ export default function UserProfile({ }) {
                             <label className={styles.dataBoxLabels}>
                                 Email
                             </label>
+
                             <span className={styles.dataBox}>
                                 {user.email}
                             </span>
@@ -182,6 +198,7 @@ export default function UserProfile({ }) {
                             <label className={styles.dataBoxLabels}>
                                 Phone
                             </label>
+
                             <span className={styles.dataBox}>
                                 {user.phone}
                             </span>
@@ -193,6 +210,7 @@ export default function UserProfile({ }) {
                             <label className={styles.dataBoxLabels}>
                                 Age
                             </label>
+
                             <span className={styles.dataBox}>
                                 {user.age}
                             </span>
@@ -202,7 +220,8 @@ export default function UserProfile({ }) {
                             <label className={styles.dataBoxLabels}>
                                 Gender
                             </label>
-                            <span key={123} className={styles.dataBox}>
+
+                            <span className={styles.dataBox}>
                                 {makeFirstUpper(user.gender)}
                             </span>
                         </div>
@@ -215,15 +234,16 @@ export default function UserProfile({ }) {
                         />
                     </div>
                 </div>
+
                 <div className={styles.contentRight}>
                     <div
                         className={styles.userProducts}
                         onClick={() => navigate('/my-products')}
                     >
                         <span className={styles.userProductsTitle}>My Products</span>
-                        {userProducts && userProducts.length === 0 ?
-                            <span className={styles.userEmptyList}>The List is Empty...</span> :
-                            userProducts.map((e, i) => {
+                        {userProducts && userProducts.length === 0
+                            ? <span className={styles.userEmptyList}>The List is Empty...</span>
+                            : userProducts.map((e, i) => {
                                 if (i < 2) {
                                     return (
                                         <div className={styles.productBox} key={i}>
@@ -245,9 +265,9 @@ export default function UserProfile({ }) {
                         onClick={() => navigate('/my-saves')}
                     >
                         <span className={styles.userProductsTitle}>My Saves</span>
-                        {userCart && userCart.length === 0 ?
-                            <span className={styles.userEmptyList}>No Saved Products</span> :
-                            userCart.map((e, i) => {
+                        {userCart && userCart.length === 0
+                            ? <span className={styles.userEmptyList}>No Saved Products</span>
+                            : userCart.map((e, i) => {
                                 if (i < 2) {
                                     return (
                                         <div className={styles.productBox} key={i}>
@@ -266,20 +286,18 @@ export default function UserProfile({ }) {
                 </div>
             </div>
 
-
-
             <AnimatePresence
                 initial={false}
                 mode='wait'
             >
-                {!isModalHidden ?
-                    <CustomModal
+                {!isModalHidden
+                    ? <CustomModal
                         onCloseModal={setIsModalHidden}
                         element={() =>
                             modalElement
                         }
-                    /> :
-                    null
+                    />
+                    : null
                 }
             </AnimatePresence>
         </div >

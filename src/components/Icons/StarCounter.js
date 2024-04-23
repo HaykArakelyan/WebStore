@@ -1,8 +1,10 @@
 import React from 'react'
-
 import Star from './Star'
 
-export default function StarCounter({ rating, title }) {
+export default function StarCounter({
+    rating,
+    title,
+}) {
 
     const PARTIAL_STAR = (rating % 1) * 100
 

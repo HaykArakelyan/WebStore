@@ -38,7 +38,7 @@ export const MessageBoxProvider = ({ children }) => {
 
 export default function MessageBox({
     msg,
-    onExit = () => { }
+    onExit = () => { },
 }) {
 
     useEffect(() => {

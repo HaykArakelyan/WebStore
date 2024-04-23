@@ -1,25 +1,25 @@
 .container {
     display: flex;
     flex-direction: column;
-    padding: 1rem;
     gap: 4rem;
+    padding: 1rem;
 }
 
 .nameField,
 .contactField,
 .detailsField {
     display: flex;
-    justify-content: center;
     gap: 4rem;
+    justify-content: center;
 }
 
 .inputBox {
+    background-color: gray;
+    border-radius: 1rem;
     display: flex;
     flex-direction: column;
     flex: 1;
-    background-color: gray;
     padding: 1rem;
-    border-radius: 1rem;
 }
 
 .inputLabel {
@@ -33,7 +33,7 @@
 }
 
 .imageControls {
+    align-items: center;
     display: flex;
     justify-content: space-around;
-    align-items: center;
 }

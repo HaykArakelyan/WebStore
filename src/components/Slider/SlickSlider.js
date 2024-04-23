@@ -8,16 +8,12 @@ import CustomIcon from '../customComponents/CustomIcon';
 import CustomCheckbox from '../customComponents/CustomCheckbox'
 
 
-export default function SlickSlider({ images }) {
+export default function SlickSlider({
+    images,
+}) {
     const sliderRef = useRef(null)
 
     const [isAutoPlayOn, setIsAutoPlayOn] = useState(true)
-
-
-    const handleCheckboxClick = () => {
-        setIsAutoPlayOn(!isAutoPlayOn)
-    }
-
 
     useEffect(() => {
         sliderRef.current.slickPause();
@@ -33,6 +29,10 @@ export default function SlickSlider({ images }) {
         arrows: false,
         autoplaySpeed: 3000,
         fade: true,
+    }
+
+    const handleCheckboxClick = () => {
+        setIsAutoPlayOn(!isAutoPlayOn)
     }
 
     return (
@@ -75,6 +75,6 @@ export default function SlickSlider({ images }) {
                     }}
                 />
             </div>
-        </div >
+        </div>
     )
 }

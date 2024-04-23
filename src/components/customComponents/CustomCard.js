@@ -5,7 +5,11 @@ import { makeStringShorter } from "../../CustomTools/CustomTools.js"
 
 import Star from '../Icons/Star'
 
-export default function CustomCard({ p, onClick }) {
+export default function CustomCard({
+    onClick,
+    p,
+}) {
+
     const colors = {
         lowRank: {
             red: 255,
@@ -21,7 +25,7 @@ export default function CustomCard({ p, onClick }) {
             red: 0,
             green: 255,
             blue: 0
-        }
+        },
     }
 
     return (

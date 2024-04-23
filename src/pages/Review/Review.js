@@ -7,12 +7,13 @@ import CustomButton from '../../components/customComponents/CustomButton'
 
 const ratingValues = [1, 2, 3, 4, 5]
 
-export default function Review({ onSubmit, reviews }) {
+export default function Review({
+    onSubmit,
+}) {
 
     const [rating, setRating] = useState(5)
     const [subject, setSubject] = useState("")
     const [review, setReview] = useState("")
-    // const [allReviews, setAllReviews] = (reviews)
 
 
     return (

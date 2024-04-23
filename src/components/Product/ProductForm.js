@@ -1,4 +1,4 @@
-import { isNullOrUndefined, isObjectValid, parseBase64 } from '../../CustomTools/CustomTools'
+import { parseBase64 } from '../../CustomTools/CustomTools'
 import { useMessageBox } from '../../components/Messages/MessageBox'
 import CustomButton from '../customComponents/CustomButton'
 import CustomImage from '../customComponents/CustomImage'
@@ -8,7 +8,11 @@ import styles from './ProductForm.module.css'
 import { fetchAndConvertToBase64 } from '../../CustomTools/Requests'
 
 
-export default function ProductForm({ p = null, updateProduct = null, onSubmit, newProduct = false }) {
+export default function ProductForm({
+    newProduct = false,
+    onSubmit,
+    p = null,
+}) {
 
     const [product, setProduct] = useState(
         p ? p

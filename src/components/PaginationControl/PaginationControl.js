@@ -3,7 +3,13 @@ import styles from './PaginationControl.module.css'
 import CustomButton from '../customComponents/CustomButton'
 import CustomPaginator from '../customComponents/CustomPaginator'
 
-export default function PaginationControl({ itemsPerPage, productsLength, currentPage, setCurrentPage, filteredProductList }) {
+export default function PaginationControl({
+    currentPage,
+    filteredProductList,
+    itemsPerPage,
+    productsLength,
+    setCurrentPage,
+}) {
 
     const handlePageSwitch = (action, n) => {
         const MAX_PAGE_COUNT = Math.ceil(productsLength / itemsPerPage)
@@ -36,10 +42,12 @@ export default function PaginationControl({ itemsPerPage, productsLength, curren
                 text={"Back"}
                 onClick={() => handlePageSwitch("back")}
             />
+
             <CustomPaginator
                 numberOfPages={Math.ceil(filteredProductList.length / itemsPerPage)}
                 handlePageSwitch={handlePageSwitch}
             />
+
             <CustomButton
                 text={"Next"}
                 onClick={() => handlePageSwitch("next")}

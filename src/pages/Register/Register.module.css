@@ -1,7 +1,7 @@
 .passwdBlock {
+    align-items: center;
     display: flex;
     flex-direction: row;
-    align-items: center;
 }
 
 .passwdBlock:focus {
@@ -9,17 +9,17 @@
 }
 
 .ageAndGender {
-    display: flex;
     align-items: center;
-    gap: 1rem
+    display: flex;
+    gap: 1rem;
 }
 
 .linkToLogin {
     color: white;
-    text-align: center;
     padding-top: 1rem;
-    transition: 0.3s;
+    text-align: center;
     text-decoration: none;
+    transition: 0.3s;
 }
 
 .linkToLogin:hover {

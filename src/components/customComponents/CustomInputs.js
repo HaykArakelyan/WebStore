@@ -3,18 +3,18 @@ import styles from "./Custominputs.module.css"
 import CustomIcon from './CustomIcon'
 
 export default function CustomInputs({
-    type,
-    placeholder,
-    onChange,
-    style,
     icon = null,
-    onIconClick = null,
     iconSize = null,
     iconStyle = null,
     inputContainerRef = null,
     multiple = false,
+    onChange,
+    onIconClick = null,
+    parentStyle,
+    placeholder,
+    style,
+    type,
     value,
-    parentStyle
 }) {
 
     const inputRef = useRef(null);
