@@ -86,7 +86,7 @@ export default function Register() {
         register_user(newUser)
             .then((res) => {
                 showMessage({ msg: "Account created", msgType: "success" })
-                navigate("/login")
+                navigate("/verify-email")
             })
             .catch((err) => {
                 showMessage({ msg: "Invalid Credentials", msgType: "error" })

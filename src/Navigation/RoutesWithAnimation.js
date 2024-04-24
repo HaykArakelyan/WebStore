@@ -16,6 +16,8 @@ import AboutUs from '../pages/AboutUs/AboutUs'
 import ContactUs from '../pages/ContacUs/ContactUs'
 import GuardedRoute from './GuardedRoute'
 import NotFound from '../pages/NotFound/NotFound'
+import RecoverPassword from '../pages/RecoverPassword/RecoverPassword'
+import VerifyEmail from '../pages/VerifyEmail/VerifyEmail'
 
 
 export default function RoutesWithAnimation() {
@@ -39,6 +41,8 @@ export default function RoutesWithAnimation() {
             <Route exact path='/product/:id' element={<ProductPage />} />
             <Route exact path='/about-us' element={<AboutUs />} />
             <Route eaxct path='/contact-us' element={<ContactUs />} />
+            <Route exact path='/recover-password' element={<RecoverPassword />} />
+            <Route exact path='/verify-email' element={<VerifyEmail />} />
             <Route path='*' element={<NotFound />} />
         </Routes>
     )
