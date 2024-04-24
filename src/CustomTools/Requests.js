@@ -214,3 +214,9 @@ export const fetchAndConvertToBase64 = (url) => {
             return Promise.reject(error)
         })
 }
+
+export const recover_password = (email) => {
+    return api.post('/recover_password', email)
+        .then(res => res.data)
+        .catch(err => Promise.reject(err))
+}

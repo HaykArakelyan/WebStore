@@ -22,6 +22,7 @@
     transform: scale(1.2);
 }
 
+.linkToRecover,
 .linkToReg {
     color: white;
     padding-top: 1rem;

@@ -5,9 +5,7 @@ import CustomButton from '../../components/customComponents/CustomButton'
 import { motion } from 'framer-motion'
 import { routeVariants } from '../../Navigation/RouteVariants'
 import { Link } from 'react-router-dom'
-
 import { useNavigate } from 'react-router-dom'
-
 import { get_token_login } from '../../CustomTools/Requests'
 import { useMessageBox } from '../../components/Messages/MessageBox'
 
@@ -56,6 +54,10 @@ export default function Login() {
             onClick={() => handleLoginClick()}
             style={{ marginTop: "8px" }}
           />
+
+          <Link to={"/recover-password"} className={styles.linkToRecover}>
+            Forgot Password?
+          </Link>
 
           <Link to={"/register"} className={styles.linkToReg}>
             Don't have an account yet?
