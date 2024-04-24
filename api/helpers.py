@@ -1,13 +1,47 @@
 import base64
 import hashlib
 import os
+import secrets
 from hashlib import sha256
 
 import boto3
+import resend
 from dotenv import load_dotenv
+from flask import jsonify
 from flask_jwt_extended import decode_token, get_jwt_identity
 
 from models import User, ProductImage, db
+
+
+
+def send_verification_email(email, token, user_firstname):
+    resend.api_key = os.getenv("RESEND_API_KEY")
+    verification_link = f"http://localhost:5000/verify_email?token={token}"
+    params = {"from": "contact.us.capstone@spiffyzone.online",
+              "to": [email],
+              "subject": "Verify Your Email Address",
+              "html": create_html_content(verification_link, user_firstname),
+              }
+    r = resend.Emails.send(params)
+    return jsonify(r)
+
+def create_html_content(verification_link, user_firstname):
+    html_content = f"""
+        <html>
+            <head></head>
+            <body>
+                <p>Dear <strong>{user_firstname}</strong>,</p>
+                <p>Please click the following link to verify your email address:</p>
+                <p><a href="{verification_link}">{verification_link}</a></p>
+                <p>If you didn't request this verification, you can safely ignore this email.</p>
+                <p>Best regards,<br/>Spiffzone Advertisment Company</p>
+            </body>
+        </html>
+        """
+    return html_content
+
+def generate_verification_token():
+    return secrets.token_urlsafe(16)
 
 
 def generate_hash(st):

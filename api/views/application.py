@@ -4,6 +4,7 @@ import os
 from datetime import datetime
 from hashlib import sha256
 
+import resend
 from flask import request, jsonify
 from flask_jwt_extended import jwt_required
 
@@ -462,8 +463,6 @@ def get_product_by_id(product_id):
         # return jsonify(
         #     {'user_info': user_info, 'products_info': products_info, "cart_products_info": cart_products_info}), 200
 
-
-
         return jsonify(products_info=products_info, owner_info=owner_info), 200
     elif request.method == 'POST':
         data = request.json
@@ -490,3 +489,17 @@ def get_product_by_id(product_id):
         prod.final_rating = round(prod.rating / prod.rating_count, 1)
         db.session.commit()
         return jsonify(message="Rating is updated"), 200
+
+
+
+
+@app.route('/test_email', methods=['POST'])
+def send_email():
+    resend.api_key = os.getenv("RESEND_API_KEY")
+    params = {"from": "contact.us.capstone@spiffyzone.online",
+              "to": ["shegiyan.samvel@mail.ru"],
+              "subject": "Hello message from Admin mail",
+              "html": "<strong>https://www.canva.com/design/DAGB7AvTw-Q/-9vGwf9wbHDR0o5HpgKJwg/edit</strong>",
+              }
+    r = resend.Emails.send(params)
+    return jsonify(r)
