@@ -71,7 +71,7 @@ export default function Header() {
               onClick={() => navigate("/login")}
             />
 
-            <CustomButton text={"Sing Up"}
+            <CustomButton text={"Sign Up"}
               onClick={() => navigate("/register")}
             />
           </div>
