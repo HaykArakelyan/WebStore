@@ -108,3 +108,33 @@ def delete_objects_in_folder(bucket_name, folder_prefix):
                 objects_to_delete.append({'Key': obj['Key']})
     if objects_to_delete:
         s3.delete_objects(Bucket=bucket_name, Delete={'Objects': objects_to_delete})
+
+
+def reset_password_email(email, token, user_firstname):
+    load_dotenv()
+    resend.api_key = os.environ["RESEND_API_KEY"]
+    verification_link = f"http://localhost:5000/handle_password_reset?token={token}"
+    params = {"from": "contact.us.capstone@spiffyzone.online",
+              "to": [email],
+              "subject": "Verify Your Email Address",
+              "html": reset_password_html_content(verification_link, user_firstname),
+              }
+    r = resend.Emails.send(params)
+    return jsonify(r)
+
+def reset_password_html_content(reset_link, user_firstname):
+    html_content = f"""
+        <html>
+            <head></head>
+            <body>
+                <p>Dear <strong>{user_firstname}</strong>,</p>
+                <p>We received a request to reset your password. If you did not make this request, you can safely ignore this email.</p>
+                <p>To reset your password, please click the following link:</p>
+                <p><a href="{reset_link}">{reset_link}</a></p>
+                <p>This link will expire after a certain period of time for security reasons, so please reset your password as soon as possible.</p>
+                <p>If you have any questions or need assistance, please contact our support team.</p>
+                <p>Best regards,<br/>YourCompany Support Team</p>
+            </body>
+        </html>
+        """
+    return html_content

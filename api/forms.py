@@ -2,6 +2,9 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, validators, EmailField, IntegerField
 
 from constants import ErrorMessages as em, any_of_in_password
+from flask_wtf import FlaskForm
+from wtforms import PasswordField, SubmitField
+from wtforms.validators import DataRequired, EqualTo, Length
 
 
 class EmailFieldWithAt(StringField):
@@ -29,3 +32,9 @@ class RegisterForm(FlaskForm):
                                                                  message="The password must have at least one character '!', '@', '#', '$', '%', '&', '*', '.'"),
                                                 validators.EqualTo('password_confirm', message=em.password_match)])
     password_confirm = PasswordField('Confirm Password')
+
+
+class PasswordResetForm(FlaskForm):
+    password = PasswordField('New Password', validators=[DataRequired(), Length(min=6)])
+    confirm_password = PasswordField('Confirm New Password', validators=[DataRequired(), EqualTo('password')])
+    submit = SubmitField('Reset Password')

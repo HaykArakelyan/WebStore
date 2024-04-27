@@ -3,9 +3,11 @@ from datetime import datetime
 from flask import request, jsonify, redirect, url_for, render_template
 from flask_cors import cross_origin
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt, create_refresh_token, verify_jwt_in_request, get_jwt_identity
+from werkzeug.security import generate_password_hash
+
+
 from app import app, login_manager, jwt
-from helpers import generate_hash, generate_verification_token, send_verification_email
-from helpers import generate_hash
+from helpers import generate_verification_token, send_verification_email, generate_hash, reset_password_email
 from models import User, db
 
 
@@ -65,7 +67,8 @@ def register_user():
                             password=generate_hash(password),
                             balance=100000,
                             registered_at=datetime.now().strftime("%Y-%m-%d"),
-                            verification_token=generate_verification_token()
+                            verification_token=generate_verification_token(),
+                            reset_pasword_token=generate_verification_token()
                             )
                 db.session.add(user)
                 db.session.commit()
@@ -91,6 +94,51 @@ def verify_email():
     return render_template('verifyEmail/success/verifyEmail.html')
 
 
+
+
+@app.route('/recover_password', methods=['POST'])
+def recover_password():
+    data = request.json
+    if not data or 'email' not in data:
+        return jsonify(message="Invalid request. Email is missing."), 400
+
+    email = data.get("email")
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        return jsonify(message="User not found"), 404
+
+    # Generate a new reset password token
+    user.reset_password_token = None
+    db.session.commit()
+
+    # Send password reset email
+    reset_password_email(email, user.reset_password_token, user.first_name)
+    return jsonify(message='Password reset email sent.'), 200
+
+@app.route('/handle_password_reset', methods=['POST'])
+def reset_password():
+    token = request.args.get('token')
+    if not token:
+        return jsonify(message="Invalid Token"), 400
+    user = User.query.filter_by(reset_pasword_token=token).first()
+    if not user:
+        return jsonify(message="User not found"), 400
+
+    new_password = request.form.get('password')
+    confirm_password = request.form.get('confirmPassword')
+
+    if new_password != confirm_password:
+        return jsonify(message="Passwords do not match."), 400
+
+    if len(new_password) < 6:
+        return jsonify(message="Password must be at least 6 characters long."), 400
+
+    user.password = generate_password_hash(new_password)
+    user.reset_pasword_token = None
+    db.session.commit()
+
+    return jsonify(message='Password reset successfully. You can now login with your new password.')
+    return redirect(url_for('login'))
 
 
 
