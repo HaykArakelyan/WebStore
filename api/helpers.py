@@ -15,7 +15,8 @@ from models import User, ProductImage, db
 
 
 def send_verification_email(email, token, user_firstname):
-    resend.api_key = os.getenv("RESEND_API_KEY")
+    load_dotenv()
+    resend.api_key = os.environ["RESEND_API_KEY"]
     verification_link = f"http://localhost:5000/verify_email?token={token}"
     params = {"from": "contact.us.capstone@spiffyzone.online",
               "to": [email],
@@ -61,14 +62,12 @@ def get_user():
 def create_session():
     load_dotenv()
 
-    AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
-    AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
-    # AWS_SESSION_TOKEN = os.getenv('AWS_SESSION_TOKEN')
+    AWS_ACCESS_KEY_ID = os.environ["AWS_ACCESS_KEY_ID"]
+    AWS_SECRET_ACCESS_KEY = os.environ["AWS_SECRET_ACCESS_KEY"]
 
     session = boto3.Session(
         aws_access_key_id=AWS_ACCESS_KEY_ID,
         aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
-        # aws_session_token=AWS_SESSION_TOKEN
     )
 
     return session
@@ -90,10 +89,10 @@ def upload_product_images(product, user, list_data):
         user_hash = hash_user_id(user.id)
         product_hash = hash_product_id(product.product_id)
         s3_key = f"images/{user_hash}/products/{product_hash}/product_image_{product.product_id}_{i}.png"
-        s3_client.put_object(Bucket=os.getenv('S3_BUCKET_NAME'), Key=s3_key, Body=decoded_image,
+        s3_client.put_object(Bucket=os.environ['S3_BUCKET_NAME'], Key=s3_key, Body=decoded_image,
                              ContentType='image/png')
 
-        product_image_url = f"{os.getenv('DOMAIN_NAME')}/{s3_key}"
+        product_image_url = f"{os.environ['DOMAIN_NAME'] }/{s3_key}"
 
         new_product_image = ProductImage(product_id=product.product_id, img_path=product_image_url)
         db.session.add(new_product_image)
