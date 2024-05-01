@@ -22,10 +22,9 @@ class User(db.Model, UserMixin):
     gender = db.Column(db.String(10), nullable=False)
     age = db.Column(db.Integer, nullable=False)
     password = db.Column(db.String(255), nullable=False)
-    balance = db.Column(db.Integer, nullable=False)
     registered_at = db.Column(db.Date, nullable=False, default=datetime.utcnow)
     verification_token = db.Column(db.String(100), nullable=True)
-    reset_pasword_token = db.Column(db.String(100), nullable=True)
+    reset_password_token = db.Column(db.String(100), nullable=True)
     products = relationship('Product', backref='owner', cascade="all, delete-orphan")
 
     def user_to_dict(self):

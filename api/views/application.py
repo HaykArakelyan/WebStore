@@ -407,32 +407,32 @@ def add_review(product_id):
     return jsonify(message="Review added successfully"), 200
 
 
-@app.route('/add_report/<int:product_id>', methods=['POST'])
+@app.route('/report', methods=['POST'])
 @jwt_required()
-def add_report(product_id):
+def send_report():
+    user = get_user()
     data = request.json
-    user_id = data.get("user_id")
-    report_text = data.get("report_text")
-    if not product_id:
-        return jsonify(message="invalid json"), 404
-    prod = Product.query.get(product_id)
-    if not prod:
-        return jsonify(message="product does not exist"), 404
-    user = User.query.filter_by(id=user_id).first()
-    if not user:
-        return jsonify(message="User not found"), 404
-    if user.id == prod.owner_id:
-        return jsonify(message="You can't report to your product"), 404
-    user_prod = UserProduct.query.filter_by(user_id=user_id, product_id=product_id).first()
-    if not user_prod:
-        user_prod = UserProduct(user_id=user_id, product_id=product_id)
-        db.session.add(user_prod)
-        db.session.commit()
-    report_item = Report(user_prod_id=user_prod.user_prod_id, report_text=report_text)
-    db.session.add(report_item)
-    db.session.commit()
-    return jsonify(message="Report sent to admins successfully"), 200
+    report_text = data.get("report")
+    subject = data.get("subject")
+    if not report_text:
+        return jsonify(message="Add your report for this product"), 200
+    helpers.report_email(user.first_name, user.last_name, report_text, subject)
 
+    return jsonify(message="Report sent to support successfully"), 200
+
+@app.route('/contactUs', methods=['POST'])
+def contact_us():
+    data = request.json
+    name = data.get("name")
+    phone = data.get("phone")
+    email = data.get("email")
+    message = data.get("message")
+    subject = data.get("subject")
+    if not name and phone and email and message:
+        return jsonify(message="Be sure to fell in the fields"), 200
+    helpers.contactus_email(name, phone, email, message, subject)
+
+    return jsonify(message="Message sent to support successfully"), 200
 
 @app.route('/product/<int:product_id>', methods=['GET', 'POST'])
 @jwt_required()

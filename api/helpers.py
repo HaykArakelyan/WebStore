@@ -138,3 +138,116 @@ def reset_password_html_content(reset_link, user_firstname):
         </html>
         """
     return html_content
+
+
+
+
+def report_email(user_firstname,user_lastname, report, subject):
+    load_dotenv()
+    resend.api_key = os.environ["RESEND_API_KEY"]
+    params = {"from": "contact.us.capstone@spiffyzone.online",
+              "to": ["contact.us.capstone@gmail.com"],
+              "subject": subject,
+              "html": report_html_content(user_lastname, user_firstname, report),
+              }
+    r = resend.Emails.send(params)
+    return jsonify(r)
+
+def report_html_content(user_lastname, user_firstname, report_text):
+    html_content = f"""
+        <html>
+            <head></head>
+            <body>
+                <p>Dear Support Team,</p>
+                <p>The following report was submitted by <strong>{user_firstname} {user_lastname}</strong>:</p>
+                <p><em><strong>{report_text}</strong></em></p>
+                <p>If further action is required, please follow up with the user at their email address.</p>
+                <p>Best regards,<br/>YourCompany Support Team</p>
+            </body>
+        </html>
+        """
+    return html_content
+
+
+
+def contactus_email(name, phone, email, message, subject):
+    load_dotenv()
+    resend.api_key = os.environ["RESEND_API_KEY"]
+    params = {"from": "contact.us.capstone@spiffyzone.online",
+              "to": ["contact.us.capstone@gmail.com"],
+              "subject": subject,
+              "html": contactus_html_content(name, phone, email, message),
+              }
+    r = resend.Emails.send(params)
+    return jsonify(r)
+
+def contactus_html_content(name, phone, email, message):
+    html_content = f"""
+        <html>
+            <head>
+                <style>
+                    body {{
+                        font-family: Arial, sans-serif;
+                        background-color: #f2f2f2;
+                        margin: 0;
+                        padding: 0;
+                    }}
+                    .container {{
+                        max-width: 600px;
+                        margin: 20px auto;
+                        background-color: #fff;
+                        border-radius: 10px;
+                        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                    }}
+                    .header {{
+                        background-color: #4CAF50;
+                        color: #fff;
+                        padding: 20px;
+                        border-radius: 10px 10px 0 0;
+                    }}
+                    .content {{
+                        padding: 30px;
+                    }}
+                    h2 {{
+                        color: #333;
+                        margin-top: 0;
+                    }}
+                    p {{
+                        color: #555;
+                        margin-bottom: 15px;
+                    }}
+                    strong {{
+                        color: #000;
+                    }}
+                    .footer {{
+                        background-color: #f2f2f2;
+                        padding: 20px;
+                        border-top: 1px solid #ddd;
+                        border-radius: 0 0 10px 10px;
+                    }}
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <div class="header">
+                        <h2>Contact Us Message</h2>
+                    </div>
+                    <div class="content">
+                        <p><strong>Name:</strong> {name}</p>
+                        <p><strong>Phone:</strong> {phone}</p>
+                        <p><strong>Email:</strong> {email}</p>
+                        <p><strong>Message:</strong></p>
+                        <p>{message}</p>
+                        <p>Please follow up with the sender as soon as possible.</p>
+                    </div>
+                    <div class="footer">
+                        <p>Best regards,<br/>YourCompany Support Team</p>
+                    </div>
+                </div>
+            </body>
+        </html>
+        """
+    return html_content
+
+
+
