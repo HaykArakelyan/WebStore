@@ -4,11 +4,12 @@ import { useParams } from 'react-router-dom'
 import SlickSlider from '../../components/Slider/SlickSlider'
 import { isAuth, makeFirstUpper } from '../../CustomTools/CustomTools'
 import CustomButton from '../../components/customComponents/CustomButton'
-import { add_product_to_cart, add_rating, add_review, get_product_by_id } from '../../CustomTools/Requests'
+import { add_product_to_cart, add_rating, add_review, get_product_by_id, send_report } from '../../CustomTools/Requests'
 import { useMessageBox } from '../../components/Messages/MessageBox'
 import { AnimatePresence } from 'framer-motion'
 import CustomModal from '../../components/customComponents/CustomModal'
 import Review from '../Review/Review'
+import Report from '../Report/Report'
 import StarCounter from '../../components/Icons/StarCounter'
 import CustomImage from '../../components/customComponents/CustomImage'
 
@@ -42,6 +43,7 @@ export default function ProductPage() {
         }
     }
 
+    // TODO: Fix the Promise chain
     const handleSendReview = (message) => {
         add_review((product.product_id), { reviews: message.reviews })
             .then((res) => {
@@ -67,6 +69,25 @@ export default function ProductPage() {
             />
         )
         setIsModalHidden(false)
+    }
+
+    const handleReportButton = () => {
+        setModalElement(
+            <Report
+                productId={id}
+                onSubmit={handleSendReportButtonClick}
+            />
+        )
+        setIsModalHidden(false)
+    }
+
+    const handleSendReportButtonClick = (report) => {
+        send_report(report)
+            .then(res => {
+                showMessage({ msg: res.message, msgType: "success" })
+                setIsModalHidden(true)
+            })
+            .catch(err => showMessage({ msg: err.message, msgType: "error" }))
     }
 
     const handleCopyEmailToClipboard = () => {
@@ -159,6 +180,7 @@ export default function ProductPage() {
 
                         <CustomButton
                             text={"Report"}
+                            onClick={() => handleReportButton()}
                         />
 
                         <CustomButton

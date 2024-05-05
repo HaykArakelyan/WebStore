@@ -215,14 +215,23 @@ export const fetchAndConvertToBase64 = (url) => {
         })
 }
 
+
 export const recover_password = (email) => {
     return api.post('/recover_password', email)
         .then(res => res.data)
         .catch(err => Promise.reject(err))
 }
 
+
 export const contact_us = (message) => {
     return api.post('/contact-us', message)
+        .then(res => res.data)
+        .catch(err => Promise.reject(err))
+}
+
+
+export const send_report = (report) => {
+    return api.post('/report', report)
         .then(res => res.data)
         .catch(err => Promise.reject(err))
 }
