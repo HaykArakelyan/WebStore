@@ -113,7 +113,7 @@ def delete_objects_in_folder(bucket_name, folder_prefix):
 def reset_password_email(email, token, user_firstname):
     load_dotenv()
     resend.api_key = os.environ["RESEND_API_KEY"]
-    verification_link = f"http://localhost:5000/handle_password_reset?token={token}"
+    verification_link = f"http://localhost:5000/reset_password?token={token}"
     params = {"from": "contact.us.capstone@spiffyzone.online",
               "to": [email],
               "subject": "Verify Your Email Address",
@@ -174,7 +174,7 @@ def contactus_email(name, phone, email, message, subject):
     load_dotenv()
     resend.api_key = os.environ["RESEND_API_KEY"]
     params = {"from": "contact.us.capstone@spiffyzone.online",
-              "to": ["contact.us.capstone@gmail.com"],
+              "to": ["contact.us.capstone@gmail.com", email],
               "subject": subject,
               "html": contactus_html_content(name, phone, email, message),
               }

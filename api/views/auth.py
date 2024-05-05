@@ -65,7 +65,6 @@ def register_user():
                             gender=gender,
                             age=age,
                             password=generate_hash(password),
-                            balance=100000,
                             registered_at=datetime.now().strftime("%Y-%m-%d"),
                             verification_token=generate_verification_token(),
                             reset_password_token=generate_verification_token()
@@ -100,8 +99,6 @@ def verify_email():
 def recover_password():
     if request.method == 'POST':
         data = request.json
-        # if not data or 'email' not in data:
-        #     return jsonify(message="Invalid request. Email is missing."), 400
 
         email = data.get("email")
         print(email)
@@ -112,18 +109,17 @@ def recover_password():
         reset_password_email(email, user.reset_password_token, user.first_name)
         return jsonify(message='Password reset email sent.'), 200
 
-@app.route('/handle_password_reset', methods=['GET', 'POST'])
+@app.route('/reset_password', methods=['GET', 'POST'])
 def reset_password():
     if request.method == 'GET':
         token = request.args.get('token')
-        print("Received token:", token)
 
         if not token:
-            return jsonify(message="Invalid Token"), 400
+            return render_template('ResetPassword/error/resetPassword.html', error="Invalid Token")
 
         user = User.query.filter_by(reset_password_token=token).first()
         if not user:
-            return jsonify(message="User not found"), 400
+            return render_template('ResetPassword/error/resetPassword.html', error="User not found")
 
         return render_template('ResetPassword/resetPassword.html', token=token)
 
@@ -133,26 +129,26 @@ def reset_password():
         confirm_password = request.form.get('confirmPassword')
 
         if not token:
-            return jsonify(message="Invalid Token"), 400
+            return render_template('ResetPassword/error/resetPassword.html', error="Invalid Token")
+            # return jsonify(message="Invalid Token"), 400
 
         user = User.query.filter_by(reset_password_token=token).first()
         if not user:
-            return jsonify(message="User not found"), 400
+            return render_template('ResetPassword/error/resetPassword.html', error="User not found")
+            # return jsonify(message="User not found"), 400
 
-        # Validate that both passwords are not empty and match
         if not new_password or not confirm_password or new_password != confirm_password:
-            return jsonify(message="Passwords do not match."), 400
+            return render_template('ResetPassword/error/resetPassword.html', error="Passwords do not match.")
 
-        # Validate the length of the new password
         if len(new_password) < 6:
-            return jsonify(message="Password must be at least 6 characters long."), 400
+            return render_template('ResetPassword/error/resetPassword.html', error="Password must be at least 6 characters long.")
 
         # Update the user's password and clear the reset password token
         user.password = generate_hash(new_password)
         user.reset_password_token = None
         db.session.commit()
 
-        return jsonify(message='Password reset successfully. You can now login with your new password.')
+        return render_template('ResetPassword/success/resetPassword.html', success="Password reset successfully. You can now login with your new password.")
 
 
 

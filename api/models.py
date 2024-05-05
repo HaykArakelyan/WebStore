@@ -36,7 +36,6 @@ class User(db.Model, UserMixin):
             'phone': self.phone,
             'gender': self.gender,
             'age': self.age,
-            'balance': self.balance,
             'registered_at': self.registered_at
         }
         return user_dict
