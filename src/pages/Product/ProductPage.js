@@ -36,10 +36,9 @@ export default function ProductPage() {
     const handleAddToCart = () => {
         if (isAuth()) {
             add_product_to_cart(product)
-                .then(() => showMessage({ msg: "Product Added Successfully", msgType: "success" }))
-                .catch(() => showMessage({ msg: "Unable to Add to Cart" }))
-        } else {
-
+                .then((res) => showMessage({ msg: res.message, msgType: "success" }))
+                // TODO: Error Handlings
+                .catch((err) => showMessage({ msg: err.response.data.message, msgType: "error" }))
         }
     }
 
