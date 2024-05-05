@@ -394,6 +394,9 @@ def add_review(product_id):
     if not user:
         return jsonify(message="User not found"), 404
 
+    if prod.owner_id == user.id:
+        return jsonify(message="You can not review your own product"), 404
+
     user_prod = UserProduct.query.filter_by(user_id=user_id, product_id=product_id).first()
     if not user_prod:
         user_prod = UserProduct(user_id=user_id, product_id=product_id)
