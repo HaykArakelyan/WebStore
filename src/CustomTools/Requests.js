@@ -225,5 +225,4 @@ export const contact_us = (message) => {
     return api.post('/contact-us', message)
         .then(res => res.data)
         .catch(err => Promise.reject(err))
-
 }

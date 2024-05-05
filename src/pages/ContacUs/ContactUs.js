@@ -80,11 +80,6 @@ export default function ContactUs() {
                     </div>
 
                     <div className={styles.messageBoxRow}>
-                        {/* <CustomInputs
-                            value={message}
-                            placeholder={"Your Message"}
-                            onChange={setMessage}
-                        /> */}
                         <CustomTextArea
                             value={message}
                             placeholder={"Your Message"}
