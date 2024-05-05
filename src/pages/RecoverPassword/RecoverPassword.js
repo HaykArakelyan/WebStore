@@ -5,7 +5,7 @@ import CustomButton from '../../components/customComponents/CustomButton'
 import { useMessageBox } from '../../components/Messages/MessageBox'
 import { recover_password } from '../../CustomTools/Requests'
 import { isNullOrUndefined } from '../../CustomTools/CustomTools'
-import { isValidEmail } from '../../CustomTools/Validators.'
+import { isValidEmail } from '../../CustomTools/Validators'
 import emailSentImage from '../../assets/default/email-sent.png'
 import { useNavigate } from 'react-router-dom'
 
