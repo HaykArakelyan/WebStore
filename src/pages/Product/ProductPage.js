@@ -46,18 +46,17 @@ export default function ProductPage() {
     const handleSendReview = (message) => {
         add_review((product.product_id), { reviews: message.reviews })
             .then((res) => {
-                add_rating(id, { rating: parseInt(message.rating) })
-                    .then((res) => {
-                        showMessage({ msg: "Review Added Successfully", msgType: "success" })
-                        setIsModalHidden(true)
-                    })
-                    .catch((err) => {
-                        showMessage({ msg: "Unable to Add Review", msgType: "error" })
-                    })
+                return add_rating(id, { rating: parseInt(message.rating) })
             })
             .catch((err) => {
-                console.log(err)
-                showMessage({ msg: "Unable to Add Review", msgType: "error" })
+                showMessage({ msg: err.message, msgType: "error" })
+            })
+            .then(() => {
+                showMessage({ msg: "Review Added Successfully", msgType: "success" })
+                setIsModalHidden(true)
+            })
+            .catch((err) => {
+                showMessage({ msg: err.message, msgType: "error" })
             })
     }
 
