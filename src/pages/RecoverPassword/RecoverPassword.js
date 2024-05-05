@@ -19,7 +19,7 @@ export default function RecoverPassword() {
 
     const resetPasswordButtonClick = () => {
         if (!isNullOrUndefined(email) && isValidEmail(email)) {
-            recover_password(email)
+            recover_password({ email })
                 .then((res) => {
                     setIsEmailSent(true)
                     showMessage({ msg: 'Email Sent', msgType: 'success' })
