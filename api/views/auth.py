@@ -130,12 +130,10 @@ def reset_password():
 
         if not token:
             return render_template('ResetPassword/error/resetPassword.html', error="Invalid Token")
-            # return jsonify(message="Invalid Token"), 400
 
         user = User.query.filter_by(reset_password_token=token).first()
         if not user:
             return render_template('ResetPassword/error/resetPassword.html', error="User not found")
-            # return jsonify(message="User not found"), 400
 
         if not new_password or not confirm_password or new_password != confirm_password:
             return render_template('ResetPassword/error/resetPassword.html', error="Passwords do not match.")
@@ -143,9 +141,8 @@ def reset_password():
         if len(new_password) < 6:
             return render_template('ResetPassword/error/resetPassword.html', error="Password must be at least 6 characters long.")
 
-        # Update the user's password and clear the reset password token
         user.password = generate_hash(new_password)
-        user.reset_password_token = None
+        user.reset_password_token = generate_verification_token()
         db.session.commit()
 
         return render_template('ResetPassword/success/resetPassword.html', success="Password reset successfully. You can now login with your new password.")
