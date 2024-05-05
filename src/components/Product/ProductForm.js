@@ -6,6 +6,7 @@ import CustomInputs from '../customComponents/CustomInputs'
 import React, { useEffect, useState, useRef } from 'react'
 import styles from './ProductForm.module.css'
 import { fetchAndConvertToBase64 } from '../../CustomTools/Requests'
+import CustomTextArea from '../customComponents/CustomTextArea'
 
 
 export default function ProductForm({
@@ -183,13 +184,11 @@ export default function ProductForm({
                 </div>
                 <div className={styles.inputBox}>
                     <label className={styles.inputLabel}>Description</label>
-
-                    <CustomInputs
+                    <CustomTextArea
                         value={product.description}
                         placeholder={"Ex: Very good phone"}
-                        onChange={(e) => {
-                            handleProductEdit({ ...product, description: e })
-                        }}
+                        onChange={e => handleProductEdit({ ...product, description: e })}
+                        style={{ height: "4.5rem" }}
                     />
                 </div>
                 <div className={styles.inputBox}>
