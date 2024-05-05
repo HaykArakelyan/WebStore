@@ -420,7 +420,7 @@ def send_report():
 
     return jsonify(message="Report sent to support successfully"), 200
 
-@app.route('/contactUs', methods=['POST'])
+@app.route('/contact-us', methods=['POST'])
 def contact_us():
     data = request.json
     name = data.get("name")
