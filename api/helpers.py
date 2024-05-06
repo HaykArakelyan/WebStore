@@ -125,19 +125,65 @@ def reset_password_email(email, token, user_firstname):
 def reset_password_html_content(reset_link, user_firstname):
     html_content = f"""
         <html>
-            <head></head>
+            <head>
+                <style>
+                    body {{
+                        font-family: Arial, sans-serif;
+                        margin: 0;
+                        padding: 0;
+                        background-color: #f4f4f4;
+                    }}
+                    .container {{
+                        max-width: 600px;
+                        margin: 20px auto;
+                        padding: 20px;
+                        background-color: #fff;
+                        border-radius: 8px;
+                        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                    }}
+                    .header {{
+                        background-color: #007bff;
+                        color: #fff;
+                        padding: 10px;
+                        border-top-left-radius: 8px;
+                        border-top-right-radius: 8px;
+                    }}
+                    .content {{
+                        padding: 20px 0;
+                    }}
+                    .link {{
+                        color: #007bff;
+                        text-decoration: none;
+                    }}
+                    .link:hover {{
+                        text-decoration: underline;
+                    }}
+                    .signature {{
+                        font-size: 14px;
+                        color: #555;
+                    }}
+                </style>
+            </head>
             <body>
-                <p>Dear <strong>{user_firstname}</strong>,</p>
-                <p>We received a request to reset your password. If you did not make this request, you can safely ignore this email.</p>
-                <p>To reset your password, please click the following link:</p>
-                <p><a href="{reset_link}">{reset_link}</a></p>
-                <p>This link will expire after a certain period of time for security reasons, so please reset your password as soon as possible.</p>
-                <p>If you have any questions or need assistance, please contact our support team.</p>
-                <p>Best regards,<br/>YourCompany Support Team</p>
+                <div class="container">
+                    <div class="header">
+                        <h2>Password Reset Request</h2>
+                    </div>
+                    <div class="content">
+                        <p>Dear <strong>{user_firstname}</strong>,</p>
+                        <p>We received a request to reset your password. If you did not make this request, you can safely ignore this email.</p>
+                        <p>To reset your password, please click the following link:</p>
+                        <p><a href="{reset_link}" class="link">{reset_link}</a></p>
+                        <p>This link will expire after a certain period of time for security reasons, so please reset your password as soon as possible.</p>
+                        <p>If you have any questions or need assistance, please contact our support team.</p>
+                        <p class="signature">Best regards,<br/>YourCompany Support Team</p>
+                    </div>
+                </div>
             </body>
         </html>
         """
     return html_content
+
 
 
 def report_email(user_firstname,user_lastname, report, subject, user_email):
@@ -154,13 +200,51 @@ def report_email(user_firstname,user_lastname, report, subject, user_email):
 def report_html_content(user_lastname, user_firstname, report_text):
     html_content = f"""
         <html>
-            <head></head>
+            <head>
+                <style>
+                    body {{
+                        font-family: Arial, sans-serif;
+                        margin: 0;
+                        padding: 0;
+                        background-color: #f4f4f4;
+                    }}
+                    .container {{
+                        max-width: 600px;
+                        margin: 20px auto;
+                        padding: 20px;
+                        background-color: #fff;
+                        border-radius: 8px;
+                        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                    }}
+                    .header {{
+                        background-color: #007bff;
+                        color: #fff;
+                        padding: 10px;
+                        border-top-left-radius: 8px;
+                        border-top-right-radius: 8px;
+                    }}
+                    .content {{
+                        padding: 20px 0;
+                    }}
+                    .signature {{
+                        font-size: 14px;
+                        color: #555;
+                    }}
+                </style>
+            </head>
             <body>
-                <p>Dear Support Team,</p>
-                <p>The following report was submitted by <strong>{user_firstname} {user_lastname}</strong>:</p>
-                <p><em><strong>{report_text}</strong></em></p>
-                <p>If further action is required, please follow up with the user at their email address.</p>
-                <p>Best regards,<br/>YourCompany Support Team</p>
+                <div class="container">
+                    <div class="header">
+                        <h2>Report Submission</h2>
+                    </div>
+                    <div class="content">
+                        <p>Dear Support Team,</p>
+                        <p>We have received a report from <strong>{user_firstname} {user_lastname}</strong>:</p>
+                        <p><em>{report_text}</em></p>
+                        <p>If further action is required, please follow up with the user at their email address.</p>
+                        <p class="signature">Best regards,<br/>YourCompany Support Team</p>
+                    </div>
+                </div>
             </body>
         </html>
         """
