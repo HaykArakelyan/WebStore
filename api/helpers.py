@@ -140,13 +140,11 @@ def reset_password_html_content(reset_link, user_firstname):
     return html_content
 
 
-
-
-def report_email(user_firstname,user_lastname, report, subject):
+def report_email(user_firstname,user_lastname, report, subject, user_email):
     load_dotenv()
     resend.api_key = os.environ["RESEND_API_KEY"]
     params = {"from": "contact.us.capstone@spiffyzone.online",
-              "to": ["contact.us.capstone@gmail.com"],
+              "to": ["contact.us.capstone@gmail.com", user_email],
               "subject": subject,
               "html": report_html_content(user_lastname, user_firstname, report),
               }

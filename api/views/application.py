@@ -419,7 +419,7 @@ def send_report():
     subject = data.get("subject")
     if not report_text:
         return jsonify(message="Add your report for this product"), 200
-    helpers.report_email(user.first_name, user.last_name, report_text, subject)
+    helpers.report_email(user.first_name, user.last_name, report_text, subject, user.email)
 
     return jsonify(message="Report sent to support successfully"), 200
 
