@@ -6,7 +6,6 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship
 from werkzeug.security import generate_password_hash, check_password_hash
 
-# from app import db
 from app import app
 
 db = SQLAlchemy(app)
@@ -39,6 +38,7 @@ class User(db.Model, UserMixin):
             'registered_at': self.registered_at
         }
         return user_dict
+
     def view_user_to_dict(self):
         user_dict = {
             'id': self.id,
@@ -134,7 +134,6 @@ class ProductImage(db.Model):
 
     def image_path(self):
         return self.img_path
-
 
 
 class ProfileImages(db.Model):

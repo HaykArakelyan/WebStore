@@ -13,7 +13,6 @@ from flask_jwt_extended import decode_token, get_jwt_identity
 from models import User, ProductImage, db
 
 
-
 def send_verification_email(email, token, user_firstname):
     load_dotenv()
     resend.api_key = os.environ["RESEND_API_KEY"]
@@ -25,6 +24,7 @@ def send_verification_email(email, token, user_firstname):
               }
     r = resend.Emails.send(params)
     return jsonify(r)
+
 
 def create_html_content(verification_link, user_firstname):
     html_content = f"""
@@ -40,6 +40,7 @@ def create_html_content(verification_link, user_firstname):
         </html>
         """
     return html_content
+
 
 def generate_verification_token():
     return secrets.token_urlsafe(16)
@@ -76,8 +77,11 @@ def create_session():
 def hash_user_id(user_id):
     return hashlib.sha256(str(user_id).encode('utf-8')).hexdigest()
 
+
 def hash_product_id(product_id):
     return hashlib.sha256(str(product_id).encode('utf-8')).hexdigest()
+
+
 def decode_images(img_string):
     return base64.b64decode(img_string)
 
@@ -92,7 +96,7 @@ def upload_product_images(product, user, list_data):
         s3_client.put_object(Bucket=os.environ['S3_BUCKET_NAME'], Key=s3_key, Body=decoded_image,
                              ContentType='image/png')
 
-        product_image_url = f"{os.environ['DOMAIN_NAME'] }/{s3_key}"
+        product_image_url = f"{os.environ['DOMAIN_NAME']}/{s3_key}"
 
         new_product_image = ProductImage(product_id=product.product_id, img_path=product_image_url)
         db.session.add(new_product_image)
@@ -121,6 +125,7 @@ def reset_password_email(email, token, user_firstname):
               }
     r = resend.Emails.send(params)
     return jsonify(r)
+
 
 def reset_password_html_content(reset_link, user_firstname):
     html_content = f"""
@@ -185,8 +190,7 @@ def reset_password_html_content(reset_link, user_firstname):
     return html_content
 
 
-
-def report_email(user_firstname,user_lastname, report, subject, user_email):
+def report_email(user_firstname, user_lastname, report, subject, user_email):
     load_dotenv()
     resend.api_key = os.environ["RESEND_API_KEY"]
     params = {"from": "contact.us.capstone@spiffyzone.online",
@@ -196,6 +200,7 @@ def report_email(user_firstname,user_lastname, report, subject, user_email):
               }
     r = resend.Emails.send(params)
     return jsonify(r)
+
 
 def report_html_content(user_lastname, user_firstname, report_text):
     html_content = f"""
@@ -251,7 +256,6 @@ def report_html_content(user_lastname, user_firstname, report_text):
     return html_content
 
 
-
 def contactus_email(name, phone, email, message, subject):
     load_dotenv()
     resend.api_key = os.environ["RESEND_API_KEY"]
@@ -262,6 +266,7 @@ def contactus_email(name, phone, email, message, subject):
               }
     r = resend.Emails.send(params)
     return jsonify(r)
+
 
 def contactus_html_content(name, phone, email, message):
     html_content = f"""
@@ -330,6 +335,3 @@ def contactus_html_content(name, phone, email, message):
         </html>
         """
     return html_content
-
-
-

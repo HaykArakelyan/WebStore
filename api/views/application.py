@@ -11,7 +11,7 @@ from flask_jwt_extended import jwt_required
 import helpers
 from app import app
 from helpers import get_user
-from models import User, db, Product, UserProduct, ProfileImages, Cart, ProductImage, Review, Report, UserRates
+from models import User, db, Product, UserProduct, ProfileImages, Cart, ProductImage, Review, UserRates
 
 
 @app.route('/user_profile', methods=['GET', 'PUT', 'DELETE'])
@@ -423,6 +423,7 @@ def send_report():
 
     return jsonify(message="Report sent to support successfully"), 200
 
+
 @app.route('/contact-us', methods=['POST'])
 def contact_us():
     data = request.json
@@ -436,6 +437,7 @@ def contact_us():
     helpers.contactus_email(name, phone, email, message, subject)
 
     return jsonify(message="Message sent to support successfully"), 200
+
 
 @app.route('/product/<int:product_id>', methods=['GET', 'POST'])
 @jwt_required()
@@ -492,8 +494,6 @@ def get_product_by_id(product_id):
         prod.final_rating = round(prod.rating / prod.rating_count, 1)
         db.session.commit()
         return jsonify(message="Rating is updated"), 200
-
-
 
 
 @app.route('/test_email', methods=['POST'])

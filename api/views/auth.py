@@ -1,10 +1,9 @@
 from datetime import datetime
 
-from flask import request, jsonify, redirect, url_for, render_template
+from flask import request, jsonify, render_template
 from flask_cors import cross_origin
-from flask_jwt_extended import create_access_token, jwt_required, get_jwt, create_refresh_token, verify_jwt_in_request, get_jwt_identity
-from werkzeug.security import generate_password_hash
-
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt, create_refresh_token, verify_jwt_in_request, \
+    get_jwt_identity
 
 from app import app, login_manager, jwt
 from helpers import generate_verification_token, send_verification_email, generate_hash, reset_password_email
@@ -14,6 +13,7 @@ from models import User, db
 @app.route('/', methods=['GET'])
 def index():
     return 'it works correctly!!!!'
+
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -30,17 +30,15 @@ def login():
         user = User.query.filter_by(
             email=email, password=generate_hash(password)).first()
 
-
         if not user:
             return jsonify(message='Invalid username or password'), 401
-        #TODO Error handling from frontend
+        # TODO Error handling from frontend
         if user.verification_token:
             return jsonify(message='Verify your email'), 401
 
         access_token = create_access_token(identity=[email])
         refresh_token = create_refresh_token(identity=[email])
         return jsonify(access_token=access_token, refresh_token=refresh_token, id=user.id), 200
-
 
     return jsonify(message='Method Not Allowed'), 405
 
@@ -93,8 +91,6 @@ def verify_email():
     return render_template('verifyEmail/success/verifyEmail.html')
 
 
-
-
 @app.route('/recover_password', methods=['POST'])
 def recover_password():
     if request.method == 'POST':
@@ -108,6 +104,7 @@ def recover_password():
 
         reset_password_email(email, user.reset_password_token, user.first_name)
         return jsonify(message='Password reset email sent.'), 200
+
 
 @app.route('/reset_password', methods=['GET', 'POST'])
 def reset_password():
@@ -139,24 +136,28 @@ def reset_password():
             return render_template('ResetPassword/error/resetPassword.html', error="Passwords do not match.")
 
         if len(new_password) < 6:
-            return render_template('ResetPassword/error/resetPassword.html', error="Password must be at least 6 characters long.")
+            return render_template('ResetPassword/error/resetPassword.html',
+                                   error="Password must be at least 6 characters long.")
 
         user.password = generate_hash(new_password)
         user.reset_password_token = generate_verification_token()
         db.session.commit()
 
-        return render_template('ResetPassword/success/resetPassword.html', success="Password reset successfully. You can now login with your new password.")
+        return render_template('ResetPassword/success/resetPassword.html',
+                               success="Password reset successfully. You can now login with your new password.")
 
 
+# TODO update logout
+BLOCKLIST = set()
 
-#TODO update logout
-BLOCKLIST=set()
+
 @app.route("/logout", methods=["POST"])
 @jwt_required()
 def logout():
     jti = get_jwt()["jti"]
     BLOCKLIST.add(jti)
     return {"message": "Successfully logged out"}, 200
+
 
 @jwt.token_in_blocklist_loader
 def check_if_token_in_blacklist(jwt_header, jwt_payload):
