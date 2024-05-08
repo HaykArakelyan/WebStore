@@ -58,10 +58,6 @@ export const isNullOrUndefined = (value) => {
     return value === undefined || value === "" || value === null
 }
 
-export const isAuth = () => {
-    return !isNullOrUndefined(sessionStorage.getItem("access_token"))
-}
-
 export const clearStorage = () => {
     sessionStorage.clear()
 }

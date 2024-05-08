@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import styles from './ProductPage.module.css'
 import { useParams } from 'react-router-dom'
 import SlickSlider from '../../components/Slider/SlickSlider'
-import { isAuth, makeFirstUpper } from '../../CustomTools/CustomTools'
+import { makeFirstUpper } from '../../CustomTools/CustomTools'
 import CustomButton from '../../components/customComponents/CustomButton'
 import { add_product_to_cart, add_rating, add_review, get_product_by_id, send_report } from '../../CustomTools/Requests'
 import { useMessageBox } from '../../components/Messages/MessageBox'
@@ -12,6 +12,7 @@ import Review from '../Review/Review'
 import Report from '../Report/Report'
 import StarCounter from '../../components/Icons/StarCounter'
 import CustomImage from '../../components/customComponents/CustomImage'
+import { useAuth } from '../../auth/Auth'
 
 export default function ProductPage() {
 
@@ -19,6 +20,7 @@ export default function ProductPage() {
     const [productOwner, setProductOwner] = useState({})
     const { id } = useParams()
     const { showMessage } = useMessageBox()
+    const { isAuth } = useAuth()
 
     const [isModalHidden, setIsModalHidden] = useState(true)
     const [modalElement, setModalElement] = useState(null)

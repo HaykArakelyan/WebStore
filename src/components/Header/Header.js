@@ -2,16 +2,13 @@ import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import styles from './Header.module.css'
 import CustomButton from '../customComponents/CustomButton'
-import { clearStorage, isAuth } from '../../CustomTools/CustomTools'
+import { clearStorage } from '../../CustomTools/CustomTools'
+import { useAuth } from '../../auth/Auth'
 
 export default function Header() {
   const navigate = useNavigate()
 
-  const [isUserAuth, setIsUserAuth] = useState(isAuth());
-
-  useEffect(() => {
-    setIsUserAuth(isAuth())
-  }, [isAuth()])
+  const { isAuth } = useAuth()
 
   return (
     <div className={styles.container}>
@@ -21,7 +18,7 @@ export default function Header() {
             <li><Link to={'/'} className={styles.a}>Home</Link></li>
             <li><Link to={'/dashboard'} className={styles.a}>Dashboard</Link></li>
 
-            {isUserAuth ?
+            {isAuth() ?
               <>
                 <li>
                   <Link
@@ -50,7 +47,7 @@ export default function Header() {
           </ul>
         </div>
 
-        {isUserAuth
+        {isAuth()
           ? <div className={styles.profileButtons}>
             <CustomButton
               text={'My Profile'}
