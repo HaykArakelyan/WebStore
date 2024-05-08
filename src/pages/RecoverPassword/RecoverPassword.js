@@ -26,7 +26,7 @@ export default function RecoverPassword() {
                 })
                 .catch((err) => showMessage({ msg: err.message, msgType: "error" }))
         } else {
-            showMessage({ msg: err.message, msgType: "error" })
+            showMessage({ msg: "Please fill all the fields.", msgType: "error" })
         }
     }
 
