@@ -19,12 +19,12 @@ export default function Login() {
 
   const handleLoginClick = () => {
     get_token_login(login, passwd)
-      .then(() => {
-        showMessage({ msg: "Login Successful", msgType: "success" })
+      .then((res) => {
+        showMessage({ msg: res.message, msgType: "success" })
         navigate(`/user-profile`, { replace: true })
       })
       .catch((err) => {
-        showMessage({ msg: "Invalid Credentials", msgType: "error" })
+        showMessage({ msg: err.message, msgType: "error" })
       });
   }
 

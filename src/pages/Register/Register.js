@@ -85,11 +85,11 @@ export default function Register() {
     const handleRegister = () => {
         register_user(newUser)
             .then((res) => {
-                showMessage({ msg: "Account created", msgType: "success" })
+                showMessage({ msg: res.message, msgType: "success" })
                 navigate("/verify-email")
             })
             .catch((err) => {
-                showMessage({ msg: "Invalid Credentials", msgType: "error" })
+                showMessage({ msg: err.message, msgType: "error" })
             })
     }
 

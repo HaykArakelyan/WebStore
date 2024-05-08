@@ -83,7 +83,7 @@ export default function UserCart() {
     const handleDeleteFromCartButton = (removedProduct) => {
         delete_from_cart_by_id(parseInt(removedProduct.product_id))
             .then((res) => {
-                showMessage({ msg: "Removed From Cart Successfuly", msgType: "success" })
+                showMessage({ msg: res.message, msgType: "success" })
                 setProducts((prevProductsState) => {
                     return prevProductsState.filter((product => product != removedProduct))
                 })

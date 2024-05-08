@@ -22,11 +22,11 @@ export default function RecoverPassword() {
             recover_password({ email })
                 .then((res) => {
                     setIsEmailSent(true)
-                    showMessage({ msg: 'Email Sent', msgType: 'success' })
+                    showMessage({ msg: res.message, msgType: 'success' })
                 })
-                .catch((err) => showMessage({ msg: "Unable to send an email", msgType: "error" }))
+                .catch((err) => showMessage({ msg: err.message, msgType: "error" }))
         } else {
-            showMessage({ msg: "Invalid email", msgType: "error" })
+            showMessage({ msg: err.message, msgType: "error" })
         }
     }
 

@@ -30,10 +30,10 @@ export default function Product({
     const handleAddToCart = () => {
         add_product_to_cart(product)
             .then((res) => {
-                showMessage({ msg: "Added to Saves", msgType: "success" })
+                showMessage({ msg: res.message, msgType: "success" })
             })
             .catch((err) => {
-                showMessage({ msg: "Somethig Went Wrong", msgType: "warning" })
+                showMessage({ msg: err.message, msgType: "warning" })
             })
     }
 
@@ -75,10 +75,10 @@ export default function Product({
                         />
                     )
                     setIsModalHidden(true)
-                    showMessage({ msg: "Product Updated", msgType: "success" })
+                    showMessage({ msg: res.message, msgType: "success" })
                 })
                 .catch((err) => {
-                    showMessage({ msg: "Error Occured While Updating a Product", msgType: "error" })
+                    showMessage({ msg: err.message, msgType: "error" })
                 })
                 .finally(() => {
                     setIsNewProductAdded(true)

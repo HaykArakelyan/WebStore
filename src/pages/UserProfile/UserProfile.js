@@ -65,12 +65,12 @@ export default function UserProfile({ }) {
     const handleSaveButtonClick = (updatedUser) => {
         update_user(
             updatedUser,
-        ).then((msg) => {
-            showMessage({ msg: "Credentials Updated", msgType: "success" })
+        ).then((res) => {
+            showMessage({ msg: res.message, msgType: "success" })
             setUser({ ...user, ...updatedUser })
             setIsModalHidden(true)
         }).catch((err) => {
-            showMessage({ msg: "Something Went Wrong", msgType: "error" })
+            showMessage({ msg: err.messgae, msgType: "error" })
         })
     }
 
@@ -85,7 +85,7 @@ export default function UserProfile({ }) {
                     navigate('/')
                 })
                 .catch((err) => {
-                    showMessage({ msg: "Something went wrong", msgType: "error" })
+                    showMessage({ msg: err.messgae, msgType: "error" })
                 })
                 .finally(() => {
                 })
@@ -104,14 +104,13 @@ export default function UserProfile({ }) {
 
 
     const handlePostProductButtonClick = (e) => {
-
         add_product({ ...e, images: e.imagesBase64 })
             .then((res) => {
-                showMessage({ msg: "Product Added", msgType: "success" })
+                showMessage({ msg: res.message, msgType: "success" })
                 setUserProducts(prevProducts => [...prevProducts, e])
                 setIsModalHidden(true)
             }).catch((err) => {
-                showMessage({ msg: "Error Occured While Adding a Product", msgType: "error" })
+                showMessage({ msg: err.messgae, msgType: "error" })
             })
     }
 

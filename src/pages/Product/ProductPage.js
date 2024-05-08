@@ -32,7 +32,7 @@ export default function ProductPage() {
                 setProductOwner(product.owner_info)
             })
             .catch((err) => {
-                showMessage({ msg: "Unable to Get The Requested Product", msgType: "error" })
+                showMessage({ msg: err.message, msgType: "error" })
             })
     }, [])
 
@@ -54,8 +54,8 @@ export default function ProductPage() {
             .catch((err) => {
                 showMessage({ msg: err.message, msgType: "error" })
             })
-            .then(() => {
-                showMessage({ msg: "Review Added Successfully", msgType: "success" })
+            .then((res) => {
+                showMessage({ msg: res.message, msgType: "success" })
                 setIsModalHidden(true)
             })
             .catch((err) => {

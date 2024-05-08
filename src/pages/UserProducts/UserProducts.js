@@ -92,10 +92,10 @@ export default function UserProducts() {
                 setProducts((prevProductsState) => {
                     return prevProductsState.filter((product => product != deletedProduct))
                 })
-                showMessage({ msg: "Product Deleted", msgType: "success" })
+                showMessage({ msg: res.message, msgType: "success" })
             })
             .catch((err) => {
-                showMessage({ msg: "Error Occured While Deleting a Product", msgType: "error" })
+                showMessage({ msg: err.messgae, msgType: "error" })
             })
     }
 
@@ -125,9 +125,9 @@ export default function UserProducts() {
             .then((res) => {
                 setIsModalHidden(true)
                 setIsNewProductAdded(true)
-                showMessage({ msg: "Product Added", msgType: "success" })
+                showMessage({ msg: res.message, msgType: "success" })
             }).catch((err) => {
-                showMessage({ msg: "Error Occured While Adding a Product", msgType: "error" })
+                showMessage({ msg: err.messgae, msgType: "error" })
             })
     }
 
