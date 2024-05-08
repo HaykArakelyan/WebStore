@@ -31,14 +31,14 @@ def login():
             email=email, password=generate_hash(password)).first()
 
         if not user:
-            return jsonify(message='Invalid username or password'), 401
+            return jsonify(message='Invalid Username or Password'), 401
         # TODO Error handling from frontend
         if user.verification_token:
-            return jsonify(message='Verify your email'), 401
+            return jsonify(message='Verify Your Email First'), 401
 
         access_token = create_access_token(identity=[email])
         refresh_token = create_refresh_token(identity=[email])
-        return jsonify(access_token=access_token, refresh_token=refresh_token, id=user.id), 200
+        return jsonify(access_token=access_token, refresh_token=refresh_token, id=user.id, message="Login Successful"), 200
 
     return jsonify(message='Method Not Allowed'), 405
 
@@ -70,8 +70,8 @@ def register_user():
                 db.session.add(user)
                 db.session.commit()
                 send_verification_email(user.email, user.verification_token, user.first_name)
-                return jsonify(message='User registered. Verification email sent.'), 200
-            return jsonify(message='bad request'), 400
+                return jsonify(message='User Registered And Verification Email Sent is Sent'), 200
+            return jsonify(message='Bad Request'), 400
         return jsonify(message='Method Not Allowed'), 405
 
 
@@ -100,10 +100,10 @@ def recover_password():
         print(email)
         user = User.query.filter_by(email=email).first()
         if not user:
-            return jsonify(message="User not found"), 404
+            return jsonify(message="User Not Found"), 404
 
         reset_password_email(email, user.reset_password_token, user.first_name)
-        return jsonify(message='Password reset email sent.'), 200
+        return jsonify(message='Password Reset Email is Sent.'), 200
 
 
 @app.route('/reset_password', methods=['GET', 'POST'])
@@ -116,7 +116,7 @@ def reset_password():
 
         user = User.query.filter_by(reset_password_token=token).first()
         if not user:
-            return render_template('ResetPassword/error/resetPassword.html', error="User not found")
+            return render_template('ResetPassword/error/resetPassword.html', error="User Not Found")
 
         return render_template('ResetPassword/resetPassword.html', token=token)
 
@@ -130,21 +130,21 @@ def reset_password():
 
         user = User.query.filter_by(reset_password_token=token).first()
         if not user:
-            return render_template('ResetPassword/error/resetPassword.html', error="User not found")
+            return render_template('ResetPassword/error/resetPassword.html', error="User Not Found")
 
         if not new_password or not confirm_password or new_password != confirm_password:
             return render_template('ResetPassword/error/resetPassword.html', error="Passwords do not match.")
 
         if len(new_password) < 6:
             return render_template('ResetPassword/error/resetPassword.html',
-                                   error="Password must be at least 6 characters long.")
+                                   error="Password Must Have at Least 6 Character Length")
 
         user.password = generate_hash(new_password)
         user.reset_password_token = generate_verification_token()
         db.session.commit()
 
         return render_template('ResetPassword/success/resetPassword.html',
-                               success="Password reset successfully. You can now login with your new password.")
+                               success="Password is Reset Successfully. You Can Now Login With Your New Password")
 
 
 # TODO update logout
@@ -156,7 +156,7 @@ BLOCKLIST = set()
 def logout():
     jti = get_jwt()["jti"]
     BLOCKLIST.add(jti)
-    return {"message": "Successfully logged out"}, 200
+    return {"message": "Successfully Logged Out"}, 200
 
 
 @jwt.token_in_blocklist_loader
@@ -174,4 +174,4 @@ def refresh():
         access_token = create_access_token(identity=current_user)
         return jsonify(access_token=access_token), 200
     except:
-        return jsonify(message="Refresh token is invalid or expired"), 401
+        return jsonify(message="Refresh Token is Invalid or Expired"), 401

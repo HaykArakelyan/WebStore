@@ -60,7 +60,7 @@ def get_user_by_id():
             return jsonify(
                 {'user_info': user_info, 'products_info': products_info, "cart_products_info": cart_products_info}), 200
         else:
-            return jsonify(message="User not found"), 404
+            return jsonify(message="User Not Found"), 404
     elif request.method == 'PUT':
         data = request.json
         new_first_name = data.get('first_name')
@@ -71,10 +71,10 @@ def get_user_by_id():
         profile_image_base64 = data.get("profile_image_base64")
 
         if not data:
-            return jsonify(message='Bad request'), 400
+            return jsonify(message='Bad Request'), 400
 
         if not user:
-            return jsonify(message='User not found'), 404
+            return jsonify(message='User Not Found'), 404
 
         user.first_name = new_first_name
         user.last_name = new_last_name
@@ -95,7 +95,7 @@ def get_user_by_id():
                 new_profile_image = ProfileImages(user_id=user.id, image_path=profile_image_public_url)
                 db.session.add(new_profile_image)
         db.session.commit()
-        return jsonify({'message': 'User info updated successfully'}), 200
+        return jsonify({'message': 'User Info Updated Successfully'}), 200
     elif request.method == 'DELETE':
         if user:
             user_profile_img = ProfileImages.query.filter_by(user_id=user.id).first()
@@ -121,11 +121,11 @@ def get_user_by_id():
             user_hash = hashlib.sha256(str(user.id).encode('utf-8')).hexdigest()
             s3_folder_prefix = f"images/{user_hash}"
             helpers.delete_objects_in_folder(os.getenv('S3_BUCKET_NAME'), s3_folder_prefix)
-            return jsonify({'message': 'User and associated data deleted successfully'}), 200
+            return jsonify({'message': 'User and Associated Data Deleted Successfully'}), 200
         else:
-            return jsonify({'message': 'User not found'}), 404
+            return jsonify({'message': 'User Not Found'}), 404
 
-    return jsonify(message='Bad request'), 400
+    return jsonify(message='Bad Request'), 400
 
 
 @app.route('/add_product', methods=['POST'])
@@ -136,10 +136,10 @@ def add_product():
         user = get_user()
 
         if not user:
-            return jsonify(message="User not found"), 404
+            return jsonify(message="User Not Found"), 404
 
         if not data:
-            return jsonify(message="No data provided"), 400
+            return jsonify(message="No Data Provided"), 400
 
         title = data.get("title")
         discount_percentage = data.get("discountPercentage")
@@ -165,7 +165,7 @@ def add_product():
         if list_data:
             helpers.upload_product_images(product, user, list_data)
         db.session.commit()
-        return jsonify(message="Product and images added successfully"), 200
+        return jsonify(message="Product And Images Added Successfully"), 200
 
 
 @app.route('/edit_product/<int:product_id>', methods=['PUT', 'DELETE'])
@@ -173,19 +173,19 @@ def add_product():
 def edit_product(product_id):
     user = get_user()
     if not user:
-        return jsonify(message="You are not authorized to edit this product"), 403
+        return jsonify(message="You are Not Authorized to Edit This Product"), 403
     if request.method == 'PUT':
         data = request.json
         if not data:
-            return jsonify(message="No data provided"), 400
+            return jsonify(message="No Data Provided"), 400
 
         product = Product.query.get(product_id)
         if not product:
-            return jsonify(message="Product not found"), 404
+            return jsonify(message="Product Not Found"), 404
 
         user_product = Product.query.filter_by(product_id=product_id, owner_id=user.id).first()
         if not user_product:
-            return jsonify(message="User not found"), 404
+            return jsonify(message="User Not Found"), 404
 
         product.title = data.get("title", product.title)
         product.discountPercentage = data.get("discountPercentage", product.discountPercentage)
@@ -208,12 +208,12 @@ def edit_product(product_id):
             helpers.upload_product_images(product, user, list_data)
 
             db.session.commit()
-        return jsonify(message="Product updated successfully"), 200
+        return jsonify(message="Product Updated Successfully"), 200
 
     elif request.method == 'DELETE':
         product = Product.query.get(product_id)
         if not product:
-            return jsonify(message="Product not found"), 404
+            return jsonify(message="Product Not Found"), 404
         UserProduct.query.filter_by(product_id=product_id).delete()
         db.session.commit()
 
@@ -223,9 +223,9 @@ def edit_product(product_id):
         product_hash = helpers.hash_product_id(product.product_id)
         s3_folder_prefix = f"images/{user_hash}/products/{product_hash}"
         helpers.delete_objects_in_folder(os.getenv('S3_BUCKET_NAME'), s3_folder_prefix)
-        return jsonify(message="Product deleted successfully"), 200
+        return jsonify(message="Product Deleted Successfully"), 200
     else:
-        return jsonify(message="Invalid request method"), 405
+        return jsonify(message="Invalid Request Method"), 405
 
 
 @app.route('/products', methods=['GET'])
@@ -235,7 +235,7 @@ def get_all_products():
     products = Product.query.all()
 
     if not products:
-        return jsonify(message="Products not found"), 404
+        return jsonify(message="Products Not Found"), 404
 
     for product in products:
         product_info = product.product_to_dict()
@@ -261,7 +261,7 @@ def get_all_products():
 def get_products():
     user = get_user()
     if not user:
-        return jsonify(message="User not found"), 404
+        return jsonify(message="User Not Found"), 404
     user_products = Product.query.filter_by(owner_id=user.id).all()
     product_ids = [user_prod.product_id for user_prod in user_products]
     products = Product.query.filter(Product.product_id.in_(product_ids)).all()
@@ -292,14 +292,14 @@ def add_to_cart():
 
     prod = Product.query.get(product_id)
     if not prod:
-        return jsonify(message="Product does not exist"), 404
+        return jsonify(message="Product Does Not Exist"), 404
 
     user = get_user()
     if not user:
-        return jsonify(message="User not found"), 404
+        return jsonify(message="User Not Found"), 404
 
     if prod.owner_id == user.id:
-        return jsonify(message="You can not add own product into your cart"), 404
+        return jsonify(message="You Can Not Add Own Product Into Your Saves"), 404
 
     user_prod = UserProduct.query.filter_by(user_id=user.id, product_id=product_id).first()
     if not user_prod:
@@ -313,8 +313,8 @@ def add_to_cart():
         db.session.add(cart_item)
         db.session.commit()
 
-        return jsonify(message="Item added to cart successfully"), 200
-    return jsonify(message="Product already in cart"), 400
+        return jsonify(message="Item Added to Saves Successfully"), 200
+    return jsonify(message="Product is Already in Saves"), 400
 
 
 @app.route('/get_from_cart', methods=['GET'])
@@ -322,7 +322,7 @@ def add_to_cart():
 def get_from_cart():
     user = get_user()
     if not user:
-        return jsonify(message="User not found"), 404
+        return jsonify(message="User Not Found"), 404
     if request.method == 'GET':
         user_prods = {user_prod.user_prod_id: user_prod.product_id for user_prod in
                       UserProduct.query.filter_by(user_id=user.id).all()}
@@ -354,15 +354,15 @@ def delete_from_cart(product_id):
     user = get_user()
     product_id_to_delete = product_id
     if not product_id_to_delete:
-        return jsonify(message="Product ID to delete not provided"), 400
+        return jsonify(message="Product ID is Not Provided"), 400
 
     user_prod_id_to_delete = UserProduct.query.filter_by(user_id=user.id, product_id=product_id_to_delete).first()
     if not user_prod_id_to_delete:
-        return jsonify(message="Product not found in user's cart"), 404
+        return jsonify(message="Product Not Found in User's Saves"), 404
 
     cart_item_to_delete = Cart.query.filter_by(user_prod_id=user_prod_id_to_delete.user_prod_id).first()
     if not cart_item_to_delete:
-        return jsonify(message="Product not found in cart"), 404
+        return jsonify(message="Product Not Found in Saves"), 404
 
     db.session.delete(cart_item_to_delete)
     db.session.commit()
@@ -370,7 +370,7 @@ def delete_from_cart(product_id):
     db.session.delete(user_prod_id_to_delete)
     db.session.commit()
 
-    return jsonify(message="Product removed from cart successfully"), 200
+    return jsonify(message="Product Removed From Saves Successfully"), 200
 
 
 @app.route('/add_review/<int:product_id>', methods=['POST'])
@@ -382,20 +382,20 @@ def add_review(product_id):
     user = get_user()
     user_id = user.id
     if not user:
-        return jsonify(message="User not found"), 404
+        return jsonify(message="User Not Found"), 404
     if not product_id:
-        return jsonify(message="Product ID is required"), 400
+        return jsonify(message="Product ID is Required"), 400
 
     prod = Product.query.get(product_id)
     if not prod:
-        return jsonify(message="Product does not exist"), 404
+        return jsonify(message="Product Does Not Exist"), 404
 
     user = User.query.filter_by(id=user_id).first()
     if not user:
-        return jsonify(message="User not found"), 404
+        return jsonify(message="User Not Found"), 404
 
     if prod.owner_id == user.id:
-        return jsonify(message="You can not review your own product"), 404
+        return jsonify(message="You Can Not Review Your Own Product"), 404
 
     user_prod = UserProduct.query.filter_by(user_id=user_id, product_id=product_id).first()
     if not user_prod:
@@ -407,7 +407,7 @@ def add_review(product_id):
     db.session.add(review_item)
     db.session.commit()
 
-    return jsonify(message="Review added successfully"), 200
+    return jsonify(message="Review Added Successfully"), 200
 
 
 @app.route('/report', methods=['POST'])
@@ -418,10 +418,10 @@ def send_report():
     report_text = data.get("report")
     subject = data.get("subject")
     if not report_text:
-        return jsonify(message="Add your report for this product"), 200
+        return jsonify(message="Add Your Report Message For This Product"), 200
     helpers.report_email(user.first_name, user.last_name, report_text, subject, user.email)
 
-    return jsonify(message="Report sent to support successfully"), 200
+    return jsonify(message="Report Sent Successfully"), 200
 
 
 @app.route('/contact-us', methods=['POST'])
@@ -433,10 +433,10 @@ def contact_us():
     message = data.get("message")
     subject = data.get("subject")
     if not name and phone and email and message:
-        return jsonify(message="Be sure to fell in the fields"), 200
+        return jsonify(message="Missing Fields"), 200
     helpers.contactus_email(name, phone, email, message, subject)
 
-    return jsonify(message="Message sent to support successfully"), 200
+    return jsonify(message="Message Sent Successfully"), 200
 
 
 @app.route('/product/<int:product_id>', methods=['GET', 'POST'])
@@ -444,7 +444,7 @@ def contact_us():
 def get_product_by_id(product_id):
     prod = Product.query.filter_by(product_id=product_id).first()
     if not prod:
-        return jsonify(message="product does not exist"), 404
+        return jsonify(message="Product Does Not Exist"), 404
     if request.method == 'GET':
         prod_images = ProductImage.query.filter_by(product_id=product_id).all()
         products_info = prod.product_to_dict()
@@ -474,10 +474,10 @@ def get_product_by_id(product_id):
         rating = data.get("rating")
         user = get_user()
         if user.id == prod.owner_id:
-            return jsonify(message="You can not rate your product"), 404
+            return jsonify(message="You Can Not Rate Your Product"), 404
 
         if not 1 <= rating <= 5:
-            return jsonify(message="Rating is so high or low"), 404
+            return jsonify(message="Rating is So High or Low"), 404
 
         user_rate = UserRates.query.filter_by(user_id=user.id, product_id=product_id).first()
         if not user_rate:
@@ -493,7 +493,7 @@ def get_product_by_id(product_id):
         prod.rating_count += 1
         prod.final_rating = round(prod.rating / prod.rating_count, 1)
         db.session.commit()
-        return jsonify(message="Rating is updated"), 200
+        return jsonify(message="Rating is Updated"), 200
 
 
 @app.route('/test_email', methods=['POST'])
