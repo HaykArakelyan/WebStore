@@ -75,7 +75,7 @@ export default function EditProfile({ user, closeModal }) {
                     <label className={styles.inputLabel}>Gender</label>
                     <CustomDropdown
                         options={genders}
-                        value={newGender}
+                        selectedValue={newGender}
                         onSelect={setNewGender}
                     />
                 </div>
