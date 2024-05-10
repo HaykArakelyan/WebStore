@@ -13,6 +13,10 @@
     width: 80%;
 }
 
+.userImage {
+    display: flex;
+    justify-content: center;
+}
 
 .userImage img {
     border-radius: 50%;
