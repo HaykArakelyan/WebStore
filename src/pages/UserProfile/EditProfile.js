@@ -5,6 +5,8 @@ import CustomButton from '../../components/customComponents/CustomButton'
 import { isNullOrUndefined, parseBase64 } from '../../CustomTools/CustomTools'
 import CustomImage from '../../components/customComponents/CustomImage'
 import { useMessageBox } from '../../components/Messages/MessageBox'
+import CustomDropdown from '../../components/customComponents/CustomDropdown'
+import { genders } from '../../constants/GENDERS'
 
 export default function EditProfile({ user, closeModal }) {
 
@@ -71,7 +73,11 @@ export default function EditProfile({ user, closeModal }) {
 
                 <div className={styles.inputBox}>
                     <label className={styles.inputLabel}>Gender</label>
-                    <CustomInputs value={newGender} onChange={setNewGender} />
+                    <CustomDropdown
+                        options={genders}
+                        value={newGender}
+                        onSelect={setNewGender}
+                    />
                 </div>
             </div>
 

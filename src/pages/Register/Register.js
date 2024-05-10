@@ -11,8 +11,7 @@ import { Link } from 'react-router-dom'
 import CustomDropdown from '../../components/customComponents/CustomDropdown'
 import { register_user } from '../../CustomTools/Requests'
 import { useMessageBox } from '../../components/Messages/MessageBox'
-
-const genders = ["Male", "Female", "Rather Not To Say"]
+import { genders } from '../../constants/GENDERS'
 
 export default function Register() {
     const navigate = useNavigate()
