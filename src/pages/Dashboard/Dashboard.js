@@ -10,6 +10,7 @@ import CustomCard from '../../components/customComponents/CustomCard';
 import { faX } from '@fortawesome/free-solid-svg-icons';
 import { get_all_products } from '../../CustomTools/Requests';
 import Loader from '../../components/Loader/Loader';
+import { useMessageBox } from '../../components/Messages/MessageBox';
 
 export default function Dashboard() {
     const [products, setProducts] = useState([])
@@ -25,6 +26,7 @@ export default function Dashboard() {
 
     const [errorMessege, setErrorMessege] = useState("")
     const [isFetching, setIsFethcing] = useState(true)
+    const { showMessage } = useMessageBox()
 
     useEffect(() => {
         if (isFetching) {
@@ -39,7 +41,7 @@ export default function Dashboard() {
                 setProducts(res.products)
                 setFilteredProductList(res.products)
             })
-            .catch(err => console.log(err))
+            .catch(err => showMessage({ msg: err.message, msgType: "error" }))
         setIsFethcing(false)
     }, [])
 

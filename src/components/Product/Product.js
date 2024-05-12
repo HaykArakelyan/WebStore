@@ -56,7 +56,7 @@ export default function Product({
         })) {
             return true
         } else {
-            console.log("Invalid Data")
+            showMessage({ msg: "Invalid Data", msgType: "error" })
             return false
         }
     }

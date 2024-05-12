@@ -59,8 +59,8 @@ export default function ProductForm({
             product.discountPercentage > 100 ||
             product.discountPercentage < 0
         ) {
-            console.log("Invalid Data!");
-            return;
+            showMessage({ msg: "Ensure that the Fields are filled Correctly" })
+            return
         }
         const existingImagesBase64 = await parseUrlToBase64(product.images)
         const newImagesBase64 = await parseImagestoBase64()
