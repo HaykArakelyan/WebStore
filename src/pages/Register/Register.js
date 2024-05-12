@@ -59,6 +59,13 @@ export default function Register() {
         })
     }
 
+    const setConfirmPassword = (confirmPassword) => {
+        setNewUser({
+            ...newUser,
+            confirm_password: confirmPassword
+        })
+    }
+
     const setNewGender = (newGender) => {
         setNewUser({
             ...newUser,
@@ -149,7 +156,10 @@ export default function Register() {
                 <CustomInputs
                     placeholder={"Repeat Password"}
                     type={"password"}
-                    onChange={isMatching}
+                    onChange={(e) => {
+                        isMatching(e)
+                        setConfirmPassword(e)
+                    }}
                     style={notMatchingStyle}
                 />
 
