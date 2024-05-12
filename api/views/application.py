@@ -473,6 +473,7 @@ def get_product_by_id(product_id):
         data = request.json
         rating = data.get("rating")
         user = get_user()
+        status_code = 200
         if user.id == prod.owner_id:
             return jsonify(message="You Can Not Rate Your Product"), 404
 
@@ -482,6 +483,7 @@ def get_product_by_id(product_id):
         user_rate = UserRates.query.filter_by(user_id=user.id, product_id=product_id).first()
         if not user_rate:
             user_rate = UserRates(user_id=user.id, product_id=product_id)
+            status_code = 205
         else:
             prod.rating -= user_rate.rating
             prod.rating_count -= 1
@@ -493,7 +495,7 @@ def get_product_by_id(product_id):
         prod.rating_count += 1
         prod.final_rating = round(prod.rating / prod.rating_count, 1)
         db.session.commit()
-        return jsonify(message="Rating is Updated"), 200
+        return jsonify(message="Rating is Updated"), status_code
 
 
 @app.route('/test_email', methods=['POST'])
