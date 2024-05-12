@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import styles from './ProductPage.module.css'
 import { useParams } from 'react-router-dom'
 import SlickSlider from '../../components/Slider/SlickSlider'
-import { makeFirstUpper, getDefaultAvatar } from '../../CustomTools/CustomTools'
+import { makeFirstUpper, getDefaultAvatar, currentDate } from '../../CustomTools/CustomTools'
 import CustomButton from '../../components/customComponents/CustomButton'
 import { add_product_to_cart, add_rating, add_review, get_product_by_id, send_report } from '../../CustomTools/Requests'
 import { useMessageBox } from '../../components/Messages/MessageBox'
@@ -22,6 +22,7 @@ export default function ProductPage() {
     const { showMessage } = useMessageBox()
     const { isAuth } = useAuth()
 
+    const [isNewProductAdded, setIsNewProductAdded] = useState(false);
     const [isModalHidden, setIsModalHidden] = useState(true)
     const [modalElement, setModalElement] = useState(null)
 
@@ -34,33 +35,38 @@ export default function ProductPage() {
             .catch((err) => {
                 showMessage({ msg: err.message, msgType: "error" })
             })
-    }, [])
+    }, [isNewProductAdded])
 
-    const handleAddToCart = () => {
+    const handleAddToSaves = () => {
         if (isAuth()) {
             add_product_to_cart(product)
                 .then((res) => showMessage({ msg: res.message, msgType: "success" }))
-                // TODO: Error Handlings
                 .catch((err) => showMessage({ msg: err.response.data.message, msgType: "error" }))
         }
     }
-
     // TODO: Fix the Promise chain
     const handleSendReview = (message) => {
-        add_review((product.product_id), { reviews: message.reviews })
+        let reviewResponse
+        return add_review(product.product_id, { reviews: message.reviews })
             .then((res) => {
+                reviewResponse = res
                 return add_rating(id, { rating: parseInt(message.rating) })
             })
-            .catch((err) => {
-                showMessage({ msg: err.message, msgType: "error" })
-            })
             .then((res) => {
-                showMessage({ msg: res.message, msgType: "success" })
+                showMessage({ msg: res.data.message, msgType: "success" });
+                setIsNewProductAdded(!isNewProductAdded)
                 setIsModalHidden(true)
+
+                return { reviewResponse, ratingResponse: res }
             })
             .catch((err) => {
-                showMessage({ msg: err.message, msgType: "error" })
+                if (reviewResponse) {
+                    showMessage({ msg: reviewResponse.data.message, msgType: "error" })
+                } else {
+                    showMessage({ msg: err.message, msgType: "error" })
+                }
             })
+
     }
 
     const handleAddReviewButtonClick = () => {
@@ -128,7 +134,7 @@ export default function ProductPage() {
 
                     <div className={styles.labelBox}>
                         <div className={styles.productRating}>
-                            <StarCounter rating={product?.rating} />
+                            <StarCounter rating={product.rating} />
                             <span>{product.rating_count} review(s)</span>
                         </div>
 
@@ -176,8 +182,8 @@ export default function ProductPage() {
 
                     <div className={styles.buttons}>
                         <CustomButton
-                            text={"Add to Cart"}
-                            onClick={() => handleAddToCart()}
+                            text={"Save"}
+                            onClick={() => handleAddToSaves()}
                         />
 
                         <CustomButton

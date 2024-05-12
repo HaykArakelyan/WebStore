@@ -121,3 +121,7 @@ export const formatDate = (dateString) => {
 
     return format(date, "MMMM dd, yyyy");
 }
+
+export const currentDate = () => {
+    return format(new Date(), "EEE, dd MMM yyyy HH:mm:ss 'GMT'")
+}

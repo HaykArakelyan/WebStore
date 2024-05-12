@@ -1,13 +1,10 @@
+import { formatDate } from '../../CustomTools/CustomTools'
+import CustomButton from '../../components/customComponents/CustomButton'
+import CustomStarRating from '../../components/customComponents/CustomStarRating'
+import CustomTextArea from '../../components/customComponents/CustomTextArea'
 import React, { useState } from 'react'
 import styles from './Review.module.css'
-import CustomButton from '../../components/customComponents/CustomButton'
-import CustomTextArea from '../../components/customComponents/CustomTextArea'
-import { formatDate } from '../../CustomTools/CustomTools'
-import CustomStarRating from '../../components/customComponents/CustomStarRating'
 
-
-
-const ratingValues = [1, 2, 3, 4, 5]
 
 export default function Review({
     onSubmit,

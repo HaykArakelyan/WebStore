@@ -190,7 +190,7 @@ export const delete_from_cart_by_id = (product_id) => {
 
 export const add_rating = (productId, rating) => {
     return api.post(`/product/${productId}`, rating)
-        .then((res) => res.data)
+        .then((res) => ({ data: res.data, status: res.status }))
         .catch((err) => Promise.reject(err))
 }
 
