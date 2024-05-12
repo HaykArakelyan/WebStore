@@ -1,6 +1,7 @@
 import male_image from '../assets/user_image_male.jpg'
 import female_image from '../assets/user_image_female.jpg'
 import default_image from '../assets/default.jpg'
+import { format } from 'date-fns';
 
 
 export const isEmpty = (string) => {
@@ -113,4 +114,10 @@ export const getDefaultAvatar = (user) => {
                 return default_image
         }
     }
+}
+
+export const formatDate = (dateString) => {
+    const date = new Date(dateString)
+
+    return format(date, "MMMM dd, yyyy");
 }

@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
 import styles from './Review.module.css'
-import CustomInputs from '../../components/customComponents/CustomInputs'
-import CustomDropdown from '../../components/customComponents/CustomDropdown'
 import CustomButton from '../../components/customComponents/CustomButton'
 import CustomTextArea from '../../components/customComponents/CustomTextArea'
+import { formatDate } from '../../CustomTools/CustomTools'
+import CustomStarRating from '../../components/customComponents/CustomStarRating'
+
 
 
 const ratingValues = [1, 2, 3, 4, 5]
@@ -12,9 +13,6 @@ export default function Review({
     onSubmit,
     reviews
 }) {
-
-    console.log(reviews)
-
     const [rating, setRating] = useState(5)
     const [review, setReview] = useState("")
 
@@ -25,30 +23,39 @@ export default function Review({
                 <span>ADD REVIEW</span>
             </div>
 
-            <div className={styles.allReviews}>
-                {/* {reviews.map((r, i) => {
-                    <div key={i}>
-                        {r.comment}
+            <div className={styles.content}>
+                {reviews.length > 0
+                    ? <div className={styles.reviewsList}>
+                        {reviews.map((r, index) =>
+                            <div className={styles.reviewConatiner} key={index}>
+                                <div className={styles.reviewComment}>
+                                    {r.comment}
+                                </div>
+
+                                <div className={styles.reviewDate}>
+                                    {formatDate(r.posted_at)}
+                                </div>
+                            </div>
+                        )}
                     </div>
-                })} */}
-            </div>
+                    : <div className={styles.reviewConatiner}>
+                        <i>No Reviews Yet. Be The First One to Give a Review!</i>
+                    </div>
+                }
 
-            <div className={styles.reviewRating}>
-                <CustomDropdown
-                    options={ratingValues}
-                    onSelect={(e) => setRating(e)}
-                />
-            </div>
+                <div className={styles.inputs}>
+                    <CustomStarRating
+                        onChange={(rate) => setRating(rate)}
+                        style={{ alignSelf: "center" }}
+                    />
 
-            <div className={styles.reviewBox}>
-                <CustomTextArea
-                    value={review}
-                    onChange={setReview}
-                    placeholder={"Your Review Here"}
-                    style={{
-                        height: "5rem"
-                    }}
-                />
+                    <CustomTextArea
+                        value={review}
+                        onChange={setReview}
+                        placeholder={"Your Review Here"}
+                        style={{ minHeight: "5rem" }}
+                    />
+                </div>
             </div>
 
             <div className={styles.sendReview}>

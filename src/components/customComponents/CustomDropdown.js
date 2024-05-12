@@ -5,6 +5,7 @@ export default function CustomDropdown({
     onSelect,
     options = [],
     selectedValue,
+    style,
 }) {
 
     const selectRef = useRef()
@@ -13,6 +14,7 @@ export default function CustomDropdown({
         <div
             className={styles.container}
             title={selectedValue}
+            style={style}
         >
             <select
                 className={styles.selectBox}
