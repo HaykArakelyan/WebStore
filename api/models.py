@@ -46,6 +46,7 @@ class User(db.Model, UserMixin):
             'last_name': self.last_name,
             'email': self.email,
             'phone': self.phone,
+            'gender': self.gender
         }
         return user_dict
 
