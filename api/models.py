@@ -18,7 +18,7 @@ class User(db.Model, UserMixin):
     last_name = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(100), nullable=False)
     phone = db.Column(db.String(100), nullable=False)
-    gender = db.Column(db.String(10), nullable=False)
+    gender = db.Column(db.String(255), nullable=False)
     age = db.Column(db.Integer, nullable=False)
     password = db.Column(db.String(255), nullable=False)
     registered_at = db.Column(db.Date, nullable=False, default=datetime.utcnow)
