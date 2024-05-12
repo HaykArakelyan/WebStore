@@ -44,7 +44,7 @@ export default function ProductPage() {
                 .catch((err) => showMessage({ msg: err.response.data.message, msgType: "error" }))
         }
     }
-    // TODO: Fix the Promise chain
+
     const handleSendReview = (message) => {
         let reviewResponse
         return add_review(product.product_id, { reviews: message.reviews })
