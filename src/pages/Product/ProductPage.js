@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import styles from './ProductPage.module.css'
 import { useParams } from 'react-router-dom'
 import SlickSlider from '../../components/Slider/SlickSlider'
-import { makeFirstUpper } from '../../CustomTools/CustomTools'
+import { makeFirstUpper, getDefaultAvatar } from '../../CustomTools/CustomTools'
 import CustomButton from '../../components/customComponents/CustomButton'
 import { add_product_to_cart, add_rating, add_review, get_product_by_id, send_report } from '../../CustomTools/Requests'
 import { useMessageBox } from '../../components/Messages/MessageBox'
@@ -13,8 +13,6 @@ import Report from '../Report/Report'
 import StarCounter from '../../components/Icons/StarCounter'
 import CustomImage from '../../components/customComponents/CustomImage'
 import { useAuth } from '../../auth/Auth'
-import male_image from '../../assets/user_image_male.jpg'
-import female_image from '../../assets/user_image_female.jpg'
 
 export default function ProductPage() {
 
@@ -114,10 +112,6 @@ export default function ProductPage() {
             })
     }
 
-    const hasImage = (image) => {
-        return image !== "" && image !== undefined && image !== null;
-    }
-
     return (
         <div className={styles.container}>
             <div className={styles.content}>
@@ -201,12 +195,7 @@ export default function ProductPage() {
                 <div className={styles.ownerInfo}>
                     <div className={styles.ownerImage}>
                         <CustomImage
-                            url={hasImage(productOwner.profile_image)
-                                ? productOwner.profile_image
-                                : productOwner.gender == "Male"
-                                    ? male_image
-                                    : female_image
-                            }
+                            url={getDefaultAvatar(productOwner)}
                             style={{ borderRadius: "50%", border: "1px solid #5042A8" }}
                             name={productOwner.first_name + " " + productOwner.last_name}
                         />

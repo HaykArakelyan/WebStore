@@ -1,3 +1,8 @@
+import male_image from '../assets/user_image_male.jpg'
+import female_image from '../assets/user_image_female.jpg'
+import default_image from '../assets/default.jpg'
+
+
 export const isEmpty = (string) => {
     if (string == null || string === '') {
         return true
@@ -93,4 +98,19 @@ export const parseBase64 = (file, onError) => {
 
         reader.readAsDataURL(file);
     })
+}
+
+export const getDefaultAvatar = (user) => {
+    if (user.profile_image !== "" && user.profile_image !== undefined && user.profile_image !== null) {
+        return user.profile_image
+    } else {
+        switch (user.gender) {
+            case "Male":
+                return male_image
+            case "Female":
+                return female_image
+            case "Rather Not To Say":
+                return default_image
+        }
+    }
 }

@@ -180,6 +180,7 @@ export const get_product_by_id = (productId) => {
         .catch((err) => Promise.reject(err))
 }
 
+
 export const delete_from_cart_by_id = (product_id) => {
     return api.delete(`/delete_from_cart/${product_id}`,)
         .then((res) => res.data)

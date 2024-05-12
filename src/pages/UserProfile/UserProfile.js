@@ -1,18 +1,14 @@
-import React, { useState, useEffect } from 'react'
-import styles from './UserProfile.module.css'
-
+import { AnimatePresence } from 'framer-motion'
+import { delete_user, update_user, get_user, add_product } from '../../CustomTools/Requests'
+import { makeFirstUpper, makeStringShorter, clearStorage, getDefaultAvatar } from '../../CustomTools/CustomTools'
+import { useMessageBox } from '../../components/Messages/MessageBox'
 import { useNavigate } from 'react-router-dom'
-
-import male_image from '../../assets/user_image_male.jpg'
-import female_image from '../../assets/user_image_female.jpg'
-import { makeFirstUpper, makeStringShorter, clearStorage } from '../../CustomTools/CustomTools'
 import CustomButton from '../../components/customComponents/CustomButton'
 import CustomModal from '../../components/customComponents/CustomModal'
-import { AnimatePresence } from 'framer-motion'
 import EditProfile from './EditProfile'
-import { delete_user, update_user, get_user, add_product } from '../../CustomTools/Requests'
 import ProductForm from '../../components/Product/ProductForm'
-import { useMessageBox } from '../../components/Messages/MessageBox'
+import React, { useState, useEffect } from 'react'
+import styles from './UserProfile.module.css'
 
 export default function UserProfile({ }) {
     const navigate = useNavigate()
@@ -45,10 +41,6 @@ export default function UserProfile({ }) {
                 showMessage({ msg: err.message, msgType: "error" })
             })
     }, [])
-
-    const hasImage = (image) => {
-        return image !== "" && image !== undefined && image !== null;
-    }
 
 
     const handleEditbuttonClick = () => {
@@ -124,12 +116,7 @@ export default function UserProfile({ }) {
                         <img
                             title={"It's you dude"}
                             alt={"Your image"}
-                            src={hasImage(user.profile_image)
-                                ? user.profile_image
-                                : user.gender == "Male"
-                                    ? male_image
-                                    : female_image
-                            }
+                            src={getDefaultAvatar(user)}
                         />
                     </div>
 
