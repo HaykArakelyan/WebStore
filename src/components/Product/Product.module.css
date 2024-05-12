@@ -76,7 +76,6 @@
     display: flex;
     flex-direction: column;
     gap: 2rem;
-    justify-content: center;
     padding-top: 1rem;
     text-align: start;
     height: 200px;
