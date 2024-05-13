@@ -24,6 +24,9 @@ cors = CORS(app, resources={r"/*": {"origins": "*"}}, expose_headers=["content-r
 # csrf = CSRFProtect(app)
 from views.auth import *
 from views.application import *
+from views.saves import *
+from views.product import *
+from views.user import *
 
 from models import *
 
