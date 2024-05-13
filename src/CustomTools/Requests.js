@@ -196,8 +196,7 @@ export const add_rating = (productId, rating) => {
 
 
 export const fetchAndConvertToBase64 = (url) => {
-    const corsProxyUrl = 'https://cors-anywhere.herokuapp.com/'
-    return api.get(corsProxyUrl + url, { responseType: 'blob' })
+    return api.get(url, { responseType: 'blob' })
         .then((res) => {
             const reader = new FileReader()
             reader.readAsDataURL(res.data)
