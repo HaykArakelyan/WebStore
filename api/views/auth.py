@@ -1,14 +1,14 @@
 from datetime import datetime
 
-from flask import request, jsonify, render_template
+from flask import request, render_template, jsonify
 from flask_cors import cross_origin
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt, create_refresh_token, verify_jwt_in_request, \
     get_jwt_identity
-
+import constants
 from app import app, login_manager, jwt
-from helpers import generate_verification_token, send_verification_email, generate_hash, reset_password_email
+from helpers import generate_verification_token, send_verification_email, generate_hash, reset_password_email, is_valid_password
 from models import User, db
-
+import re
 
 @app.route('/', methods=['GET'])
 def index():
@@ -30,9 +30,10 @@ def login():
         user = User.query.filter_by(
             email=email, password=generate_hash(password)).first()
 
+        if not email or not password:
+            return jsonify(message=constants.ErrorMessages.missing_credentials), 400
         if not user:
-            return jsonify(message='Invalid Username or Password'), 401
-        # TODO Error handling from frontend
+            return jsonify(message=constants.ErrorMessages.invalid_credentials), 401
         if user.verification_token:
             return jsonify(message='Verify Your Email First'), 401
 
@@ -54,24 +55,54 @@ def register_user():
         gender = data.get('gender')
         age = data.get('age')
         password = data.get('password')
-        if first_name and last_name and gender and email and phone and password and age:
-            if not User.query.filter_by(email=email).first():
-                user = User(first_name=first_name,
-                            last_name=last_name,
-                            email=email,
-                            phone=phone,
-                            gender=gender,
-                            age=age,
-                            password=generate_hash(password),
-                            registered_at=datetime.now().strftime("%Y-%m-%d"),
-                            verification_token=generate_verification_token(),
-                            reset_password_token=generate_verification_token()
-                            )
-                db.session.add(user)
-                db.session.commit()
-                send_verification_email(user.email, user.verification_token, user.first_name)
-                return jsonify(message='User Registered And Verification Email Sent is Sent'), 200
-            return jsonify(message='Bad Request'), 400
+        confirm_password = data.get('confirm_password')
+
+        if not all([first_name, last_name, gender, email, phone, password, age, confirm_password]):
+            missing_fields = [field for field, value in {
+                'first_name': first_name,
+                'last_name': last_name,
+                'gender': gender,
+                'email': email,
+                'phone': phone,
+                'password': password,
+                'age': age,
+                'confirm_password': confirm_password
+            }.items() if not value]
+
+            return jsonify(
+                message=constants.ErrorMessages.missing_required_fields.format(', '.join(missing_fields))), 400
+
+        if not re.match(constants.EMAIL_REGEX, email):
+            return jsonify(message=constants.ErrorMessages.email_invalid), 400
+
+        if User.query.filter_by(email=email).first():
+            return jsonify(message=constants.ErrorMessages.email_exist), 400
+
+        if not is_valid_password(password):
+            return jsonify(message=constants.ErrorMessages.password_length), 400
+
+        if not any(char in password for char in constants.ALLOWED_CHARACTERS_IN_PASSWORD):
+            return jsonify(message=constants.ErrorMessages.password_chars), 400
+
+        if password != confirm_password:
+            return jsonify(message=constants.ErrorMessages.password_match), 400
+
+        user = User(first_name=first_name,
+                    last_name=last_name,
+                    email=email,
+                    phone=phone,
+                    gender=gender,
+                    age=age,
+                    password=generate_hash(password),
+                    registered_at=datetime.now().strftime("%Y-%m-%d"),
+                    verification_token=generate_verification_token(),
+                    reset_password_token=generate_verification_token()
+                    )
+        db.session.add(user)
+        db.session.commit()
+        send_verification_email(user.email, user.verification_token, user.first_name)
+        return jsonify(message=constants.successMessages.success_register), 200
+    else:
         return jsonify(message='Method Not Allowed'), 405
 
 
@@ -97,7 +128,6 @@ def recover_password():
         data = request.json
 
         email = data.get("email")
-        print(email)
         user = User.query.filter_by(email=email).first()
         if not user:
             return jsonify(message="User Not Found"), 404

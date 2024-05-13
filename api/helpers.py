@@ -335,3 +335,8 @@ def contactus_html_content(name, phone, email, message):
         </html>
         """
     return html_content
+
+def is_valid_password(password):
+    if len(password) < 8:
+        return False
+    return True
