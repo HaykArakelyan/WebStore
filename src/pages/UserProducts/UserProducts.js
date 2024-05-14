@@ -161,7 +161,7 @@ export default function UserProducts() {
             </div>
 
             <div className={styles.userProducts}>
-                {products.map((product, i) =>
+                {currentData.map((product, i) =>
                     <CustomCard
                         key={i}
                         p={product}
