@@ -55,7 +55,6 @@ export default function UserProducts() {
             })
             .finally(() => {
                 setIsFethcing(false)
-                setIsNewProductAdded(false)
             })
     }, [isNewProductAdded])
 
@@ -80,6 +79,7 @@ export default function UserProducts() {
                 setModalElement={setModalElement}
                 updateProductList={updateProductsOnproductUpdate}
                 setIsNewProductAdded={setIsNewProductAdded}
+                isNewProductAdded={isNewProductAdded}
             />
         )
         setIsModalHidden(false)
@@ -124,7 +124,7 @@ export default function UserProducts() {
         add_product({ ...e, images: e.imagesBase64 })
             .then((res) => {
                 setIsModalHidden(true)
-                setIsNewProductAdded(true)
+                setIsNewProductAdded(prevValue => !prevValue)
                 showMessage({ msg: res.message, msgType: "success" })
             }).catch((err) => {
                 showMessage({ msg: err.messgae, msgType: "error" })
@@ -161,7 +161,7 @@ export default function UserProducts() {
             </div>
 
             <div className={styles.userProducts}>
-                {currentData.map((product, i) =>
+                {products.map((product, i) =>
                     <CustomCard
                         key={i}
                         p={product}

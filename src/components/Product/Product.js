@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './Product.module.css'
 import SlickSlider from '../Slider/SlickSlider'
 import StarCounter from '../Icons/StarCounter'
@@ -16,7 +16,6 @@ export default function Product({
     onDeleteButtonClick,
     product,
     setIsModalHidden,
-    setIsNewProductAdded,
     setModalElement,
     updateProductList,
     userCartProduct = false,
@@ -25,7 +24,11 @@ export default function Product({
     const navigate = useNavigate()
     const { showMessage } = useMessageBox()
 
-    const [productImages, setProductImages] = useState(product.images)
+    const [productImages, setProductImages] = useState([])
+
+    useEffect(() => {
+        setProductImages(product.images)
+    }, [])
 
     const handleAddToCart = () => {
         add_product_to_cart(product)
@@ -79,9 +82,6 @@ export default function Product({
                 })
                 .catch((err) => {
                     showMessage({ msg: err.message, msgType: "error" })
-                })
-                .finally(() => {
-                    setIsNewProductAdded(true)
                 })
         }
     }
@@ -151,7 +151,7 @@ export default function Product({
                         ? <div className={styles.controlButtons}>
                             <CustomButton
                                 text={"Edit Product"}
-                                onClick={() => handleOpenEditProductForm(product)}
+                                onClick={() => handleOpenEditProductForm({ ...product, images: [...productImages] })}
                             />
 
                             <CustomButton
