@@ -1,3 +1,4 @@
+import json
 import os
 from datetime import datetime
 
@@ -59,7 +60,10 @@ def edit_product(product_id):
     if not user:
         return jsonify(message="You are Not Authorized to Edit This Product"), 403
     if request.method == 'PUT':
-        data = request.json
+        # data = request.json
+        form_data = request.form
+        json_data_string = form_data.get('data')
+        data = json.loads(json_data_string)
         if not data:
             return jsonify(message="No Data Provided"), 400
 
@@ -80,15 +84,16 @@ def edit_product(product_id):
         product.price = data.get("price", product.price)
         db.session.commit()
         # list_data = data.get("images")
-        deleted_images_ids = data.get('images').get('deleted_images')
+        deleted_images_ids = data.get('deleted_images')
         new_images = request.files.getlist("new_images")
 
         if deleted_images_ids:
             helpers.delete_objects_by_ids(os.getenv('S3_BUCKET_NAME'), deleted_images_ids)
         if new_images:
+            print("New Images Upload")
             helpers.upload_product_images(product, user, new_images)
 
-            db.session.commit()
+        db.session.commit()
         return jsonify(message="Product Updated Successfully"), 200
 
     elif request.method == 'DELETE':

@@ -109,6 +109,7 @@ def upload_product_images(product, user, new_images):
     product_hash = hash_product_id(product.product_id)
 
     for i, img_file in enumerate(new_images):
+        print("putting S3 Bucket")
         s3_key = f"images/{user_hash}/products/{product_hash}/product_image_{product.product_id}_{i}.png"
         s3_client.upload_fileobj(img_file, os.environ['S3_BUCKET_NAME'], s3_key)
         product_image_url = f"{os.environ['DOMAIN_NAME']}/{s3_key}"
@@ -127,7 +128,7 @@ def delete_objects_by_ids(bucket_name, image_ids):
     for image_id in image_ids:
         product_image = ProductImage.query.filter_by(img_id=image_id).first()
         if not product_image:
-            ...
+            return jsonify(message="Product image not found"), 404
         img_path = product_image.img_path
         domain_length = len(os.environ['DOMAIN_NAME'])+1
         s3_key = img_path[domain_length:]
