@@ -79,17 +79,14 @@ def edit_product(product_id):
         product.description = data.get("description", product.description)
         product.price = data.get("price", product.price)
         db.session.commit()
-        list_data = data.get("images")
-        if list_data is not None:
-            user_hash = helpers.hash_user_id(user.id)
-            product_hash = helpers.hash_product_id(product.product_id)
-            s3_folder_prefix = f"images/{user_hash}/products/{product_hash}"
-            helpers.delete_objects_in_folder(os.getenv('S3_BUCKET_NAME'), s3_folder_prefix)
-            delete_iamges = ProductImage.query.filter_by(product_id=product.product_id).all()
+        # list_data = data.get("images")
+        deleted_images_ids = data.get('images').get('deleted_images')
+        new_images = request.files.getlist("new_images")
 
-            for i in delete_iamges:
-                db.session.delete(i)
-            helpers.upload_product_images(product, user, list_data)
+        if deleted_images_ids:
+            helpers.delete_objects_by_ids(os.getenv('S3_BUCKET_NAME'), deleted_images_ids)
+        if new_images:
+            helpers.upload_product_images(product, user, new_images)
 
             db.session.commit()
         return jsonify(message="Product Updated Successfully"), 200

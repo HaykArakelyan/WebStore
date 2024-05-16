@@ -17,11 +17,12 @@ def send_verification_email(email, token, user_firstname):
     load_dotenv()
     resend.api_key = os.environ["RESEND_API_KEY"]
     verification_link = f"http://localhost:5000/verify_email?token={token}"
-    params = {"from": "contact.us.capstone@spiffyzone.online",
-              "to": [email],
-              "subject": "Verify Your Email Address",
-              "html": create_html_content(verification_link, user_firstname),
-              }
+    params = {
+        "from": "contact.us.capstone@spiffyzone.online",
+        "to": [email],
+        "subject": "Verify Your Email Address",
+        "html": create_html_content(verification_link, user_firstname),
+    }
     r = resend.Emails.send(params)
     return jsonify(r)
 
@@ -86,20 +87,55 @@ def decode_images(img_string):
     return base64.b64decode(img_string)
 
 
-def upload_product_images(product, user, list_data):
-    s3_client = create_session().client('s3')
-    for i, img in enumerate(list_data):
-        decoded_image = decode_images(img)
-        user_hash = hash_user_id(user.id)
-        product_hash = hash_product_id(product.product_id)
-        s3_key = f"images/{user_hash}/products/{product_hash}/product_image_{product.product_id}_{i}.png"
-        s3_client.put_object(Bucket=os.environ['S3_BUCKET_NAME'], Key=s3_key, Body=decoded_image,
-                             ContentType='image/png')
+# def upload_product_images(product, user, list_data):
+#     s3_client = create_session().client('s3')
+#     for i, img in enumerate(list_data):
+#         decoded_image = decode_images(img)
+#         user_hash = hash_user_id(user.id)
+#         product_hash = hash_product_id(product.product_id)
+#         s3_key = f"images/{user_hash}/products/{product_hash}/product_image_{product.product_id}_{i}.png"
+#         s3_client.put_object(Bucket=os.environ['S3_BUCKET_NAME'], Key=s3_key, Body=decoded_image,
+#                              ContentType='image/png')
+#
+#         product_image_url = f"{os.environ['DOMAIN_NAME']}/{s3_key}"
+#
+#         new_product_image = ProductImage(product_id=product.product_id, img_path=product_image_url)
+#         db.session.add(new_product_image)
 
+def upload_product_images(product, user, new_images):
+    s3_client = create_session().client('s3')
+
+    user_hash = hash_user_id(user.id)
+    product_hash = hash_product_id(product.product_id)
+
+    for i, img_file in enumerate(new_images):
+        s3_key = f"images/{user_hash}/products/{product_hash}/product_image_{product.product_id}_{i}.png"
+        s3_client.upload_fileobj(img_file, os.environ['S3_BUCKET_NAME'], s3_key)
         product_image_url = f"{os.environ['DOMAIN_NAME']}/{s3_key}"
+        print(s3_key)
 
         new_product_image = ProductImage(product_id=product.product_id, img_path=product_image_url)
+
         db.session.add(new_product_image)
+    return jsonify(message="Images uploaded successfully"), 200
+
+
+def delete_objects_by_ids(bucket_name, image_ids):
+    s3 = create_session().client('s3')
+    objects_to_delete = []
+
+    for image_id in image_ids:
+        product_image = ProductImage.query.filter_by(img_id=image_id).first()
+        if not product_image:
+            ...
+        img_path = product_image.img_path
+        domain_length = len(os.environ['DOMAIN_NAME'])+1
+        s3_key = img_path[domain_length:]
+        objects_to_delete.append({'Key': s3_key})
+        db.session.delete(product_image)
+
+    if objects_to_delete:
+        s3.delete_objects(Bucket=bucket_name, Delete={'Objects': objects_to_delete})
 
 
 def delete_objects_in_folder(bucket_name, folder_prefix):
@@ -335,6 +371,7 @@ def contactus_html_content(name, phone, email, message):
         </html>
         """
     return html_content
+
 
 def is_valid_password(password):
     if len(password) < 8:
