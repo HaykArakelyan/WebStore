@@ -134,7 +134,7 @@ class ProductImage(db.Model):
     img_path = db.Column(db.String(255), nullable=False)  # Add nullable and unique constraints
 
     def image_path(self):
-        return self.img_path
+        return {"id": self.img_id, "path": self.img_path}
 
 
 class ProfileImages(db.Model):
