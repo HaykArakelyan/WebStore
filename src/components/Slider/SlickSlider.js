@@ -45,7 +45,7 @@ export default function SlickSlider({
                 >
                     {images?.map((i) =>
                         <div key={i} className={styles.productImageContainer}>
-                            <img src={i} className={styles.productImage} />
+                            <img src={i.path} className={styles.productImage} />
                         </div>
                     )}
                 </Slider >
