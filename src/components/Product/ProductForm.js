@@ -1,4 +1,4 @@
-import { parseBase64 } from '../../CustomTools/CustomTools'
+import { isBlob, parseBase64 } from '../../CustomTools/CustomTools'
 import { useMessageBox } from '../../components/Messages/MessageBox'
 import CustomButton from '../customComponents/CustomButton'
 import CustomImage from '../customComponents/CustomImage'
@@ -31,11 +31,13 @@ export default function ProductForm({
 
     const fileInputRef = useRef(null)
 
-    const [newImagesBlobs, setNewImagesBlobs] = useState(product.images)
-    const [newImagesObjects, setNewImagesObjects] = useState([])
+    const [deletedImages, setDeletedImages] = useState([]) // {id, path}
+    const [newImages, setNewImages] = useState([]) // {image, path--blob}
+    const [imagesBlobsAndUrls, setImagesBlobsAndUrls] = useState(product.images) // All
+
+    const [productImages, setProductImages] = useState(product.images) // { id, url }
 
     const { showMessage } = useMessageBox()
-
 
     useEffect(() => {
         if (p) {
@@ -47,10 +49,14 @@ export default function ProductForm({
         setProduct(value)
     }
 
-    const handleRemoveImageClick = (indexToRemove) => {
-        setNewImagesBlobs(prevUrls => prevUrls.filter((url, index) => index !== indexToRemove))
-        setNewImagesObjects(prevImagesObject => prevImagesObject.filter((imageObject, index) => index !== indexToRemove))
-    };
+    const handleRemoveImageClick = (removedImage) => {
+        if (!isBlob(removedImage)) {
+            setDeletedImages(prevDeletedImages => [...prevDeletedImages, removedImage]) // If URL
+        } else {
+            setNewImages(prevImages => prevImages.filter(image => removedImage !== image.path)) // if Blob
+        }
+        setImagesBlobsAndUrls(prevBlobs => prevBlobs.filter(blob => removedImage !== blob))
+    }
 
     const handleSubmitButtonClick = async () => {
         if (
@@ -62,45 +68,52 @@ export default function ProductForm({
             showMessage({ msg: "Ensure that the Fields are filled Correctly" })
             return
         }
-        const existingImagesBase64 = await parseUrlToBase64(product.images)
-        const newImagesBase64 = await parseImagestoBase64()
+
+        const deletedImagesIds = deletedImages.map(deletedImage => deletedImage.id)
+        const newImagesFiles = newImages.map(newImages => newImages.image)
+
+        const formData = new FormData()
 
         const newProduct = {
             ...product,
             price: parseFloat(product.price),
             discountPercentage: parseFloat(product.discountPercentage),
             stock: parseFloat(product.stock),
-            images: newImagesBlobs,
-            imagesBase64: [...existingImagesBase64, ...newImagesBase64]
-        };
+            images: {
+                deleted_images: deletedImagesIds,
+                new_images: newImagesFiles
+            },
+        }
 
-        onSubmit(newProduct)
-    };
+        const newProductJson = JSON.stringify(newProduct)
+        formData.append("data", newProductJson)
+        onSubmit(newProductJson)
+    }
 
     const parseImagestoBase64 = () => {
-        try {
-            const base64Promises = newImagesObjects.map((imageFile) => {
-                return parseBase64(imageFile, showMessage)
-            });
+        // try {
+        //     const base64Promises = newImagesObjects.map((imageFile) => {
+        //         return parseBase64(imageFile, showMessage)
+        //     });
 
-            return Promise.all(base64Promises)
-        } catch (err) {
-            throw err
-        }
+        //     return Promise.all(base64Promises)
+        // } catch (err) {
+        //     throw err
+        // }
     }
 
     const parseUrlToBase64 = () => {
-        try {
-            const base64Url = newImagesBlobs.map((url) => {
-                if (!url.startsWith('blob:')) {
-                    return fetchAndConvertToBase64(url)
-                }
-            })
-            return Promise.all(base64Url.filter(url => url != undefined))
-        }
-        catch (err) {
-            throw err
-        }
+        // try {
+        //     const base64Url = newImagesBlobs.map((url) => {
+        //         if (!url.startsWith('blob:')) {
+        //             return fetchAndConvertToBase64(url)
+        //         }
+        //     })
+        //     return Promise.all(base64Url.filter(url => url != undefined))
+        // }
+        // catch (err) {
+        //     throw err
+        // }
 
     }
 
@@ -200,14 +213,14 @@ export default function ProductForm({
                         multiple
                         onChange={(imagesFiles) => {
                             const images = Array.from(imagesFiles).filter(file => file.type.startsWith('image/'));
-                            const totalImages = newImagesBlobs.length + images.length;
+                            const totalImages = productImages.length + images.length;
 
                             if (totalImages <= 5) {
                                 images.forEach((image) => {
-                                    setNewImagesObjects(prevImagesObjects => [...prevImagesObjects, image])
-                                    const imageBlob = URL.createObjectURL(image);
-                                    setNewImagesBlobs(prevBlobs => [...prevBlobs, imageBlob]);
-                                });
+                                    const imageBlob = URL.createObjectURL(image)
+                                    setImagesBlobsAndUrls(prevBlobs => [...prevBlobs, imageBlob])
+                                    setNewImages(prevNewImages => [...prevNewImages, { image, path: imageBlob }])
+                                })
                             } else {
                                 showMessage({ msg: "You can only upload up to 5 images.", msgType: "warning" });
                             }
@@ -216,18 +229,20 @@ export default function ProductForm({
 
                     <div className={styles.imageControls}>
                         <div className={styles.productImages}>
-                            {newImagesBlobs.map((newImageUrl, index) => (
-                                <div key={index} onClick={() => handleRemoveImageClick(index)}>
-                                    <CustomImage
-                                        url={newImageUrl.path ? newImageUrl.path : newImageUrl}
-                                        name={"new image"}
-                                        style={{
-                                            width: "2.5rem",
-                                            height: "2.5rem"
-                                        }}
-                                    />
-                                </div>
-                            ))}
+                            {imagesBlobsAndUrls.map((image, index) => {
+                                return (
+                                    <div key={index} onClick={() => handleRemoveImageClick(image)}>
+                                        <CustomImage
+                                            url={image.path ? image.path : image}
+                                            name={"new image"}
+                                            style={{
+                                                width: "2.5rem",
+                                                height: "2.5rem"
+                                            }}
+                                        />
+                                    </div>
+                                )
+                            })}
                         </div>
 
                         <CustomButton

@@ -125,3 +125,7 @@ export const formatDate = (dateString) => {
 export const currentDate = () => {
     return format(new Date(), "EEE, dd MMM yyyy HH:mm:ss 'GMT'")
 }
+
+export const isBlob = (obj) => {
+    return typeof obj === 'string'
+}
