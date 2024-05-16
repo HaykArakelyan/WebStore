@@ -234,7 +234,7 @@ export default function UserProfile({ }) {
                                     return (
                                         <div className={styles.productBox} key={i}>
                                             <div className={styles.product}>
-                                                <img src={e.images[0]} className={styles.productImage} />
+                                                <img src={e.images[0].path} className={styles.productImage} />
                                                 <span className={styles.productDescription}>
                                                     {makeStringShorter(e.description, 41)}
                                                 </span>
@@ -258,7 +258,7 @@ export default function UserProfile({ }) {
                                     return (
                                         <div className={styles.productBox} key={i}>
                                             <div className={styles.product}>
-                                                <img src={e.images[0]} className={styles.productImage} />
+                                                <img src={e.images[0].path} className={styles.productImage} />
                                                 <span className={styles.productDescription}>
                                                     {makeStringShorter(e.description, 41)}
                                                 </span>
