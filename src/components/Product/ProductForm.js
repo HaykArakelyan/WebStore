@@ -219,7 +219,7 @@ export default function ProductForm({
                             {newImagesBlobs.map((newImageUrl, index) => (
                                 <div key={index} onClick={() => handleRemoveImageClick(index)}>
                                     <CustomImage
-                                        url={newImageUrl}
+                                        url={newImageUrl.path}
                                         name={"new image"}
                                         style={{
                                             width: "2.5rem",
