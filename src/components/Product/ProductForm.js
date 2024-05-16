@@ -69,52 +69,20 @@ export default function ProductForm({
             return
         }
 
-        const deletedImagesIds = deletedImages.map(deletedImage => deletedImage.id)
-        const newImagesFiles = newImages.map(newImages => newImages.image)
-
         const formData = new FormData()
+        deletedImages.map(deletedImage => formData.append("deleted_images", deletedImage.id))
+        newImages.map(newImages => formData.append("new_images", newImages.image))
+
 
         const newProduct = {
             ...product,
             price: parseFloat(product.price),
             discountPercentage: parseFloat(product.discountPercentage),
             stock: parseFloat(product.stock),
-            images: {
-                deleted_images: deletedImagesIds,
-                new_images: newImagesFiles
-            },
         }
 
-        const newProductJson = JSON.stringify(newProduct)
-        formData.append("data", newProductJson)
-        onSubmit(product.product_id, newProductJson)
-    }
-
-    const parseImagestoBase64 = () => {
-        // try {
-        //     const base64Promises = newImagesObjects.map((imageFile) => {
-        //         return parseBase64(imageFile, showMessage)
-        //     });
-
-        //     return Promise.all(base64Promises)
-        // } catch (err) {
-        //     throw err
-        // }
-    }
-
-    const parseUrlToBase64 = () => {
-        // try {
-        //     const base64Url = newImagesBlobs.map((url) => {
-        //         if (!url.startsWith('blob:')) {
-        //             return fetchAndConvertToBase64(url)
-        //         }
-        //     })
-        //     return Promise.all(base64Url.filter(url => url != undefined))
-        // }
-        // catch (err) {
-        //     throw err
-        // }
-
+        formData.append(JSON.stringify(newProduct))
+        onSubmit(product.product_id, formData)
     }
 
     return (
