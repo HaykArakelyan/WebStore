@@ -125,8 +125,8 @@ export const add_product = (newProduct) => {
 }
 
 
-export const edit_product = (productId, updatedtProduct) => {
-    return api.put(`edit_product/${productId}`, updatedtProduct)
+export const edit_product = (productId, updatedProduct) => {
+    return api.put(`edit_product/${productId}`, updatedProduct)
         .then((res) => res.data)
         .catch((err) => Promise.reject(err))
 }
@@ -232,6 +232,13 @@ export const contact_us = (message) => {
 
 export const send_report = (report) => {
     return api.post('/report', report)
+        .then(res => res.data)
+        .catch(err => Promise.reject(err))
+}
+
+
+export const logout = () => {
+    return api.post("/logout", { refresh_token: sessionStorage.getItem("refresh_token"), })
         .then(res => res.data)
         .catch(err => Promise.reject(err))
 }

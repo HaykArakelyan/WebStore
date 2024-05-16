@@ -4,11 +4,14 @@ import styles from './Header.module.css'
 import CustomButton from '../customComponents/CustomButton'
 import { clearStorage } from '../../CustomTools/CustomTools'
 import { useAuth } from '../../auth/Auth'
+import { logout } from '../../CustomTools/Requests'
+import { useMessageBox } from '../Messages/MessageBox'
 
 export default function Header() {
   const navigate = useNavigate()
 
   const { isAuth } = useAuth()
+  const { showMessage } = useMessageBox()
 
   return (
     <div className={styles.container}>
@@ -57,8 +60,13 @@ export default function Header() {
             <CustomButton
               text={"Sign Out"}
               onClick={() => {
-                clearStorage()
-                navigate('/login')
+                logout()
+                  .then(res => {
+                    clearStorage()
+                    navigate('/login')
+                    showMessage({ msg: res.message, msgType: "success" })
+                  })
+                  .catch(err => showMessage({ msg: err.msg, msgType: "error" }))
               }}
             />
           </div>

@@ -16,6 +16,7 @@ export default function Product({
     onDeleteButtonClick,
     product,
     setIsModalHidden,
+    setIsNewProductAdded,
     setModalElement,
     updateProductList,
     userCartProduct = false,
@@ -64,19 +65,13 @@ export default function Product({
         }
     }
 
-    const handleEditProductButtonClick = (e, productId) => {
+    const handleEditProductButtonClick = (e, productId, imageBlobsAndUrls) => {
         if (isProductValid(e)) {
             edit_product(productId, e)
                 .then((res) => {
-                    updateProductList(e)
-                    setProductImages(e.images)
-                    setModalElement(
-                        <Product
-                            product={e}
-                            onEditButtonClick={handleOpenEditProductForm}
-                            currentUserProduct
-                        />
-                    )
+                    updateProductList(imageBlobsAndUrls)
+                    setProductImages(imageBlobsAndUrls)
+                    setIsNewProductAdded(prevValue => !prevValue)
                     setIsModalHidden(true)
                     showMessage({ msg: res.message, msgType: "success" })
                 })

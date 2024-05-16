@@ -31,11 +31,11 @@ export default function ProductForm({
 
     const fileInputRef = useRef(null)
 
-    const [deletedImages, setDeletedImages] = useState([]) // {id, path}
-    const [newImages, setNewImages] = useState([]) // {image, path--blob}
-    const [imagesBlobsAndUrls, setImagesBlobsAndUrls] = useState(product.images) // All
+    const [deletedImages, setDeletedImages] = useState([])
+    const [newImages, setNewImages] = useState([])
+    const [imagesBlobsAndUrls, setImagesBlobsAndUrls] = useState(product.images)
 
-    const [productImages, setProductImages] = useState(product.images) // { id, url }
+    const [productImages, setProductImages] = useState(product.images)
 
     const { showMessage } = useMessageBox()
 
@@ -82,7 +82,7 @@ export default function ProductForm({
         }
 
         formData.append("data", JSON.stringify(newProduct))
-        onSubmit(formData, product.product_id)
+        onSubmit(formData, product.product_id, imagesBlobsAndUrls)
     }
 
     return (

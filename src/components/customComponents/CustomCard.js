@@ -34,7 +34,7 @@ export default function CustomCard({
             onClick={onClick}
         >
             <CustomImage
-                url={p.images[0].path}
+                url={p?.images[0]?.path}
                 name={p.title}
             />
             <label className={styles.title}>
