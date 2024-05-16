@@ -89,6 +89,7 @@ def decode_images(img_string):
 
 
 def upload_product_images(product, user, new_images):
+    load_dotenv()
     s3_client = create_session().client('s3')
 
     user_hash = hash_user_id(user.id)
@@ -106,6 +107,7 @@ def upload_product_images(product, user, new_images):
 
 
 def delete_objects_by_ids(bucket_name, image_ids):
+    load_dotenv()
     s3 = create_session().client('s3')
     objects_to_delete = []
 
@@ -124,6 +126,7 @@ def delete_objects_by_ids(bucket_name, image_ids):
 
 
 def delete_objects_in_folder(bucket_name, folder_prefix):
+    load_dotenv()
     s3 = create_session().client('s3')
     objects_to_delete = []
     paginator = s3.get_paginator('list_objects_v2')

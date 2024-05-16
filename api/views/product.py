@@ -4,7 +4,7 @@ from datetime import datetime
 
 from flask import request, jsonify
 from flask_jwt_extended import jwt_required
-
+from dotenv import load_dotenv
 import helpers
 from app import app
 from helpers import get_user
@@ -16,6 +16,7 @@ from models import User, db, Product, UserProduct, ProfileImages, ProductImage, 
 @jwt_required()
 def add_product():
     if request.method == "POST":
+        load_dotenv()
         json_data_string = request.form.get('data')
         data = json.loads(json_data_string)
         user = get_user()
@@ -61,6 +62,7 @@ def edit_product(product_id):
     if not user:
         return jsonify(message="You are Not Authorized to Edit This Product"), 403
     if request.method == 'PUT':
+        load_dotenv()
         form_data = request.form
         json_data_string = form_data.get('data')
         data = json.loads(json_data_string)
@@ -88,7 +90,7 @@ def edit_product(product_id):
         new_images = request.files.getlist("new_images")
 
         if deleted_images_ids:
-            helpers.delete_objects_by_ids("capstone-webstore-images", deleted_images_ids)
+            helpers.delete_objects_by_ids(os.environ['S3_BUCKET_NAME'], deleted_images_ids)
         if new_images:
             helpers.upload_product_images(product, user, new_images)
 
@@ -96,6 +98,7 @@ def edit_product(product_id):
         return jsonify(message="Product Updated Successfully"), 200
 
     elif request.method == 'DELETE':
+        load_dotenv()
         product = Product.query.get(product_id)
         if not product:
             return jsonify(message="Product Not Found"), 404
