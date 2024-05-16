@@ -64,7 +64,7 @@ export default function Product({
         }
     }
 
-    const handleEditProductButtonClick = (productId, e) => {
+    const handleEditProductButtonClick = (e, productId) => {
         if (isProductValid(e)) {
             edit_product(productId, e)
                 .then((res) => {

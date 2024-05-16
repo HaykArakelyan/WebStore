@@ -81,8 +81,8 @@ export default function ProductForm({
             stock: parseFloat(product.stock),
         }
 
-        formData.append(JSON.stringify(newProduct))
-        onSubmit(product.product_id, formData)
+        formData.append("data", JSON.stringify(newProduct))
+        onSubmit(formData, product.product_id)
     }
 
     return (

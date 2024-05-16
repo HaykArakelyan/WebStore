@@ -121,7 +121,7 @@ export default function UserProducts() {
     }
 
     const handlePostProductButtonClick = (e) => {
-        add_product({ ...e, images: e.imagesBase64 })
+        add_product(e)
             .then((res) => {
                 setIsModalHidden(true)
                 setIsNewProductAdded(prevValue => !prevValue)
