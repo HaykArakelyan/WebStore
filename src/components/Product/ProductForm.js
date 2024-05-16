@@ -87,7 +87,7 @@ export default function ProductForm({
 
         const newProductJson = JSON.stringify(newProduct)
         formData.append("data", newProductJson)
-        onSubmit(newProductJson)
+        onSubmit(product.product_id, newProductJson)
     }
 
     const parseImagestoBase64 = () => {

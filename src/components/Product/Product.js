@@ -64,9 +64,9 @@ export default function Product({
         }
     }
 
-    const handleEditProductButtonClick = (e) => {
+    const handleEditProductButtonClick = (productId, e) => {
         if (isProductValid(e)) {
-            edit_product(e.product_id, e)
+            edit_product(productId, e)
                 .then((res) => {
                     updateProductList(e)
                     setProductImages(e.images)
