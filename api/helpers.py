@@ -6,6 +6,7 @@ from hashlib import sha256
 
 import boto3
 import resend
+import uuid
 from dotenv import load_dotenv
 from flask import jsonify
 from flask_jwt_extended import decode_token, get_jwt_identity
@@ -87,33 +88,16 @@ def decode_images(img_string):
     return base64.b64decode(img_string)
 
 
-# def upload_product_images(product, user, list_data):
-#     s3_client = create_session().client('s3')
-#     for i, img in enumerate(list_data):
-#         decoded_image = decode_images(img)
-#         user_hash = hash_user_id(user.id)
-#         product_hash = hash_product_id(product.product_id)
-#         s3_key = f"images/{user_hash}/products/{product_hash}/product_image_{product.product_id}_{i}.png"
-#         s3_client.put_object(Bucket=os.environ['S3_BUCKET_NAME'], Key=s3_key, Body=decoded_image,
-#                              ContentType='image/png')
-#
-#         product_image_url = f"{os.environ['DOMAIN_NAME']}/{s3_key}"
-#
-#         new_product_image = ProductImage(product_id=product.product_id, img_path=product_image_url)
-#         db.session.add(new_product_image)
-
 def upload_product_images(product, user, new_images):
     s3_client = create_session().client('s3')
 
     user_hash = hash_user_id(user.id)
     product_hash = hash_product_id(product.product_id)
-
     for i, img_file in enumerate(new_images):
-        print("putting S3 Bucket")
-        s3_key = f"images/{user_hash}/products/{product_hash}/product_image_{product.product_id}_{i}.png"
-        s3_client.upload_fileobj(img_file, os.environ['S3_BUCKET_NAME'], s3_key)
+        shortened_uuid = str(uuid.uuid4())[:4]
+        s3_key = f"images/{user_hash}/products/{product_hash}/product_image_{product.product_id}_{shortened_uuid}.png"
+        s3_client.upload_fileobj(img_file, os.environ['S3_BUCKET_NAME'], s3_key, ExtraArgs={'ContentType': 'image/png'})
         product_image_url = f"{os.environ['DOMAIN_NAME']}/{s3_key}"
-        print(s3_key)
 
         new_product_image = ProductImage(product_id=product.product_id, img_path=product_image_url)
 
@@ -126,7 +110,7 @@ def delete_objects_by_ids(bucket_name, image_ids):
     objects_to_delete = []
 
     for image_id in image_ids:
-        product_image = ProductImage.query.filter_by(img_id=image_id).first()
+        product_image = ProductImage.query.filter_by(img_id=int(image_id)).first()
         if not product_image:
             return jsonify(message="Product image not found"), 404
         img_path = product_image.img_path

@@ -84,8 +84,8 @@ def get_user_by_id():
             s3 = helpers.create_session().resource('s3')
             profile_image_data = base64.b64decode(profile_image_base64)
             s3_key = f"images/{sha256(str(user.id).encode('utf-8')).hexdigest()}/avatar/profile_image.png"
-            s3.Object(os.getenv('S3_BUCKET_NAME'), s3_key).put(Body=profile_image_data, ContentType='image/png')
-            profile_image_public_url = f"{os.getenv('DOMAIN_NAME')}/images/{sha256(str(user.id).encode('utf-8')).hexdigest()}/avatar/profile_image.png"
+            s3.Object(os.environ['S3_BUCKET_NAME'], s3_key).put(Body=profile_image_data, ContentType='image/png')
+            profile_image_public_url = f"{os.environ['DOMAIN_NAME']}/images/{sha256(str(user.id).encode('utf-8')).hexdigest()}/avatar/profile_image.png"
             profile_image = ProfileImages.query.filter_by(user_id=user.id).first()
             if profile_image:
                 profile_image.image_path = profile_image_public_url
@@ -118,7 +118,7 @@ def get_user_by_id():
             db.session.commit()
             user_hash = hashlib.sha256(str(user.id).encode('utf-8')).hexdigest()
             s3_folder_prefix = f"images/{user_hash}"
-            helpers.delete_objects_in_folder(os.getenv('S3_BUCKET_NAME'), s3_folder_prefix)
+            helpers.delete_objects_in_folder(os.environ['S3_BUCKET_NAME'], s3_folder_prefix)
             return jsonify({'message': 'User and Associated Data Deleted Successfully'}), 200
         else:
             return jsonify({'message': 'User Not Found'}), 404

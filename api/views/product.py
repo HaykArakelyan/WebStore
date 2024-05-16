@@ -16,7 +16,8 @@ from models import User, db, Product, UserProduct, ProfileImages, ProductImage, 
 @jwt_required()
 def add_product():
     if request.method == "POST":
-        data = request.json
+        json_data_string = request.form.get('data')
+        data = json.loads(json_data_string)
         user = get_user()
 
         if not user:
@@ -33,7 +34,7 @@ def add_product():
         description = data.get("description")
         price = data.get("price")
 
-        list_data = data.get("images")
+        new_images = request.files.getlist("new_images")
         product = Product(
             title=title,
             discountPercentage=discount_percentage,
@@ -46,8 +47,8 @@ def add_product():
         )
         db.session.add(product)
         db.session.commit()
-        if list_data:
-            helpers.upload_product_images(product, user, list_data)
+        if new_images:
+            helpers.upload_product_images(product, user, new_images)
         db.session.commit()
         return jsonify(message="Product And Images Added Successfully"), 200
 
@@ -60,7 +61,6 @@ def edit_product(product_id):
     if not user:
         return jsonify(message="You are Not Authorized to Edit This Product"), 403
     if request.method == 'PUT':
-        # data = request.json
         form_data = request.form
         json_data_string = form_data.get('data')
         data = json.loads(json_data_string)
@@ -83,14 +83,13 @@ def edit_product(product_id):
         product.description = data.get("description", product.description)
         product.price = data.get("price", product.price)
         db.session.commit()
-        # list_data = data.get("images")
-        deleted_images_ids = data.get('deleted_images')
+
+        deleted_images_ids = request.form.getlist("deleted_images")
         new_images = request.files.getlist("new_images")
 
         if deleted_images_ids:
-            helpers.delete_objects_by_ids(os.getenv('S3_BUCKET_NAME'), deleted_images_ids)
+            helpers.delete_objects_by_ids("capstone-webstore-images", deleted_images_ids)
         if new_images:
-            print("New Images Upload")
             helpers.upload_product_images(product, user, new_images)
 
         db.session.commit()
@@ -108,7 +107,7 @@ def edit_product(product_id):
         user_hash = helpers.hash_user_id(user.id)
         product_hash = helpers.hash_product_id(product.product_id)
         s3_folder_prefix = f"images/{user_hash}/products/{product_hash}"
-        helpers.delete_objects_in_folder(os.getenv('S3_BUCKET_NAME'), s3_folder_prefix)
+        helpers.delete_objects_in_folder(os.environ['S3_BUCKET_NAME'], s3_folder_prefix)
         return jsonify(message="Product Deleted Successfully"), 200
     else:
         return jsonify(message="Invalid Request Method"), 405
@@ -121,7 +120,7 @@ def get_all_products():
     products = Product.query.all()
 
     if not products:
-        return jsonify(message="Products Not Found"), 404
+        return jsonify({"products": []}), 200
 
     for product in products:
         product_info = product.product_to_dict()

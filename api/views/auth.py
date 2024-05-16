@@ -3,12 +3,14 @@ from datetime import datetime
 from flask import request, render_template, jsonify
 from flask_cors import cross_origin
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt, create_refresh_token, verify_jwt_in_request, \
-    get_jwt_identity
+    get_jwt_identity, decode_token
 import constants
 from app import app, login_manager, jwt
 from helpers import generate_verification_token, send_verification_email, generate_hash, reset_password_email, is_valid_password
 from models import User, db
 import re
+
+BLOCKLIST = set()
 
 @app.route('/', methods=['GET'])
 def index():
@@ -177,15 +179,15 @@ def reset_password():
                                success="Password is Reset Successfully. You Can Now Login With Your New Password")
 
 
-# TODO update logout
-BLOCKLIST = set()
-
-
 @app.route("/logout", methods=["POST"])
 @jwt_required()
 def logout():
+    data = request.json
     jti = get_jwt()["jti"]
+    refresh_token = data.get("refresh_token")
+    refresh_token_jti = decode_token(refresh_token)["jti"]
     BLOCKLIST.add(jti)
+    BLOCKLIST.add(refresh_token_jti)
     return {"message": "Successfully Logged Out"}, 200
 
 
@@ -198,10 +200,12 @@ def check_if_token_in_blacklist(jwt_header, jwt_payload):
 @app.route('/refresh_token', methods=['POST'])
 @jwt_required(refresh=True)
 def refresh():
-    try:
-        verify_jwt_in_request(refresh=True)
-        current_user = get_jwt_identity()
-        access_token = create_access_token(identity=current_user)
-        return jsonify(access_token=access_token), 200
-    except:
+    refresh_token = request.headers.get('Authorization')
+
+    if refresh_token in BLOCKLIST:
         return jsonify(message="Refresh Token is Invalid or Expired"), 401
+
+    verify_jwt_in_request(refresh=True)
+    current_user = get_jwt_identity()
+    access_token = create_access_token(identity=current_user)
+    return jsonify(access_token=access_token), 200
