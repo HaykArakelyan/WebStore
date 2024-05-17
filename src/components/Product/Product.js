@@ -10,6 +10,7 @@ import { makeStringShorter } from '../../CustomTools/CustomTools'
 import ProductForm from './ProductForm'
 import { isNullOrUndefined } from '../../CustomTools/CustomTools'
 import { edit_product } from '../../CustomTools/Requests'
+import default_product from '../../assets/product/default_product.png'
 
 export default function Product({
     currentUserProduct = false,
@@ -85,7 +86,7 @@ export default function Product({
         <div className={styles.container}>
             <div className={styles.productImageSlider}>
                 {product?.images?.length > 0
-                    ? <SlickSlider images={productImages} />
+                    ? <SlickSlider images={productImages || [default_product]} />
                     : null
                 }
             </div>

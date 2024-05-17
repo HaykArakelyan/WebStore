@@ -9,6 +9,7 @@ import EditProfile from './EditProfile'
 import ProductForm from '../../components/Product/ProductForm'
 import React, { useState, useEffect } from 'react'
 import styles from './UserProfile.module.css'
+import default_product from '../../assets/product/default_product.png'
 
 export default function UserProfile({ }) {
     const navigate = useNavigate()
@@ -236,7 +237,7 @@ export default function UserProfile({ }) {
                                     return (
                                         <div className={styles.productBox} key={i}>
                                             <div className={styles.product}>
-                                                <img src={e.images[0].path} className={styles.productImage} />
+                                                <img src={e?.images[0]?.path || default_product} className={styles.productImage} />
                                                 <span className={styles.productDescription}>
                                                     {makeStringShorter(e.title, 41)}
                                                 </span>
@@ -260,7 +261,7 @@ export default function UserProfile({ }) {
                                     return (
                                         <div className={styles.productBox} key={i}>
                                             <div className={styles.product}>
-                                                <img src={e.images[0].path} className={styles.productImage} />
+                                                <img src={e?.images[0]?.path || default_product} className={styles.productImage} />
                                                 <span className={styles.productDescription}>
                                                     {makeStringShorter(e.title, 41)}
                                                 </span>

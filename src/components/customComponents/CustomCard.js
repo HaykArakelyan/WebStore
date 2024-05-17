@@ -2,6 +2,7 @@ import React from 'react'
 import styles from './CustomCard.module.css'
 import CustomImage from './CustomImage'
 import { makeStringShorter } from "../../CustomTools/CustomTools.js"
+import default_product from '../../assets/product/default_product.png'
 
 import Star from '../Icons/Star'
 
@@ -34,7 +35,7 @@ export default function CustomCard({
             onClick={onClick}
         >
             <CustomImage
-                url={p?.images[0]?.path}
+                url={p?.images[0]?.path || default_product}
                 name={p.title}
             />
             <label className={styles.title}>
