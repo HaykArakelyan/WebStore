@@ -17,7 +17,7 @@ from models import User, ProductImage, db
 def send_verification_email(email, token, user_firstname):
     load_dotenv()
     resend.api_key = os.environ["RESEND_API_KEY"]
-    verification_link = f"http://localhost:5000/verify_email?token={token}"
+    verification_link = f"https://api.spiffyzone.online/verify_email?token={token}"
     params = {
         "from": "contact.us.capstone@spiffyzone.online",
         "to": [email],
@@ -141,7 +141,7 @@ def delete_objects_in_folder(bucket_name, folder_prefix):
 def reset_password_email(email, token, user_firstname):
     load_dotenv()
     resend.api_key = os.environ["RESEND_API_KEY"]
-    verification_link = f"http://localhost:5000/reset_password?token={token}"
+    verification_link = f"https://api.spiffyzone.online/reset_password?token={token}"
     params = {"from": "contact.us.capstone@spiffyzone.online",
               "to": [email],
               "subject": "Verify Your Email Address",
