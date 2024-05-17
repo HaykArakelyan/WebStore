@@ -123,7 +123,7 @@ export default function Product({
                                 </div>
                             )}
                         </div>
-                        : <div className={styles.review}>
+                        : <div className={styles.review} style={{ marginTop: "1rem" }}>
                             No Reviews
                         </div>
                     }

@@ -27,6 +27,7 @@ export default function UserProfile({ }) {
 
     const [isModalHidden, setIsModalHidden] = useState(true)
     const [modalElement, setModalElement] = useState()
+    const [isNewProductAdded, setIsNewProductAdded] = useState(false)
 
     const { showMessage } = useMessageBox()
 
@@ -40,7 +41,7 @@ export default function UserProfile({ }) {
             .catch((err) => {
                 showMessage({ msg: err.message, msgType: "error" })
             })
-    }, [])
+    }, [isNewProductAdded])
 
 
     const handleEditbuttonClick = () => {
@@ -95,11 +96,12 @@ export default function UserProfile({ }) {
     }
 
 
-    const handlePostProductButtonClick = (e) => {
-        add_product({ ...e, images: e.imagesBase64 })
+    const handlePostProductButtonClick = (e, productId, imagesBlobsAndUrls) => {
+        add_product(e)
             .then((res) => {
                 showMessage({ msg: res.message, msgType: "success" })
-                setUserProducts(prevProducts => [...prevProducts, e])
+                // setUserProducts(prevProducts => [...prevProducts, imagesBlobsAndUrls])
+                setIsNewProductAdded(prevValue => !prevValue)
                 setIsModalHidden(true)
             }).catch((err) => {
                 showMessage({ msg: err.messgae, msgType: "error" })
@@ -236,7 +238,7 @@ export default function UserProfile({ }) {
                                             <div className={styles.product}>
                                                 <img src={e.images[0].path} className={styles.productImage} />
                                                 <span className={styles.productDescription}>
-                                                    {makeStringShorter(e.description, 41)}
+                                                    {makeStringShorter(e.title, 41)}
                                                 </span>
                                             </div>
                                         </div>
@@ -260,7 +262,7 @@ export default function UserProfile({ }) {
                                             <div className={styles.product}>
                                                 <img src={e.images[0].path} className={styles.productImage} />
                                                 <span className={styles.productDescription}>
-                                                    {makeStringShorter(e.description, 41)}
+                                                    {makeStringShorter(e.title, 41)}
                                                 </span>
                                             </div>
                                         </div>
