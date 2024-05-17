@@ -7,6 +7,7 @@ import CustomImage from '../../components/customComponents/CustomImage'
 import { useMessageBox } from '../../components/Messages/MessageBox'
 import CustomDropdown from '../../components/customComponents/CustomDropdown'
 import { genders } from '../../constants/GENDERS'
+import { isValidEmail, isValidPhone } from '../../CustomTools/Validators'
 
 export default function EditProfile({ user, closeModal }) {
 
@@ -28,15 +29,19 @@ export default function EditProfile({ user, closeModal }) {
     const { showMessage } = useMessageBox()
 
     const handleSaveChangesClick = () => {
-        closeModal({
-            first_name: newFirstName,
-            last_name: newLastName,
-            email: newEmail,
-            phone: newPhone,
-            gender: newGender,
-            profile_image: newImageUrl,
-            profile_image_base64: newImageBase64
-        })
+        if (isValidEmail(newEmail) && isValidPhone(newPhone)) {
+            closeModal({
+                first_name: newFirstName,
+                last_name: newLastName,
+                email: newEmail,
+                phone: newPhone,
+                gender: newGender,
+                profile_image: newImageUrl,
+                profile_image_base64: newImageBase64
+            })
+        } else {
+            showMessage({ msg: "Email or Phone Number is Invalid", msgType: "error" })
+        }
     }
 
     return (

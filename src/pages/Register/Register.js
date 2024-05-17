@@ -12,6 +12,7 @@ import CustomDropdown from '../../components/customComponents/CustomDropdown'
 import { register_user } from '../../CustomTools/Requests'
 import { useMessageBox } from '../../components/Messages/MessageBox'
 import { genders } from '../../constants/GENDERS'
+import { isValidEmail, isValidPhone } from '../../CustomTools/Validators'
 
 export default function Register() {
     const navigate = useNavigate()
@@ -89,14 +90,18 @@ export default function Register() {
     }
 
     const handleRegister = () => {
-        register_user(newUser)
-            .then((res) => {
-                showMessage({ msg: res.message, msgType: "success" })
-                navigate("/verify-email")
-            })
-            .catch((err) => {
-                showMessage({ msg: err.message, msgType: "error" })
-            })
+        if (isValidEmail(newUser.email) && isValidPhone(newUser.phone)) {
+            register_user(newUser)
+                .then((res) => {
+                    showMessage({ msg: res.message, msgType: "success" })
+                    navigate("/verify-email")
+                })
+                .catch((err) => {
+                    showMessage({ msg: err.message, msgType: "error" })
+                })
+        } else {
+            showMessage({ msg: "Email or Phone Number is Invalid", msgType: "error" })
+        }
     }
 
     return (
