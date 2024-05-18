@@ -13,6 +13,7 @@ import Report from '../Report/Report'
 import StarCounter from '../../components/Icons/StarCounter'
 import CustomImage from '../../components/customComponents/CustomImage'
 import { useAuth } from '../../auth/Auth'
+import default_product from '../../assets/product/default_product.png'
 
 export default function ProductPage() {
 
@@ -29,11 +30,12 @@ export default function ProductPage() {
     useEffect(() => {
         get_product_by_id(id)
             .then((product) => {
-                setProduct(product.products_info)
+                setProduct({ ...product.products_info, images: product.products_info.images.length ? product.products_info.images : [default_product] })
+
                 setProductOwner(product.owner_info)
             })
             .catch((err) => {
-                showMessage({ msg: err.response.data.message, msgType: "error" })
+                showMessage({ msg: err.response?.data?.message, msgType: "error" })
             })
     }, [isNewProductAdded])
 

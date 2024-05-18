@@ -17,5 +17,5 @@ export const isInRange = (number, min, max) => {
 }
 
 export const isNumber = (value) => {
-    return validator.isNumeric(value)
+    return validator.isNumeric(value + "")
 }

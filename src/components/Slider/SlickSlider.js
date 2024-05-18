@@ -51,7 +51,7 @@ export default function SlickSlider({
                 </Slider >
             </div>
 
-            {images.length > 1 && <div className={styles.controlPanel}>
+            {images?.length > 1 && <div className={styles.controlPanel}>
 
                 <CustomIcon
                     icon={faChevronLeft}
