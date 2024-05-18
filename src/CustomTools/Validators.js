@@ -11,3 +11,11 @@ export const isValidField = (str) => {
 export const isValidPhone = (phone) => {
     return validator.isMobilePhone(phone, ['am-AM'])
 }
+
+export const isInRange = (number, min, max) => {
+    return number >= min && number <= max
+}
+
+export const isNumber = (value) => {
+    return validator.isNumeric(value)
+}

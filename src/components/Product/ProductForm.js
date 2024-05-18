@@ -1,13 +1,12 @@
-import { isBlob, parseBase64 } from '../../CustomTools/CustomTools'
+import { isBlob } from '../../CustomTools/CustomTools'
 import { useMessageBox } from '../../components/Messages/MessageBox'
 import CustomButton from '../customComponents/CustomButton'
 import CustomImage from '../customComponents/CustomImage'
 import CustomInputs from '../customComponents/CustomInputs'
 import React, { useEffect, useState, useRef } from 'react'
 import styles from './ProductForm.module.css'
-import { fetchAndConvertToBase64 } from '../../CustomTools/Requests'
 import CustomTextArea from '../customComponents/CustomTextArea'
-import { isValidField } from '../../CustomTools/Validators'
+import { isInRange, isNumber, isValidField } from '../../CustomTools/Validators'
 
 
 export default function ProductForm({
@@ -52,26 +51,23 @@ export default function ProductForm({
 
     const handleRemoveImageClick = (removedImage) => {
         if (!isBlob(removedImage)) {
-            setDeletedImages(prevDeletedImages => [...prevDeletedImages, removedImage]) // If URL
+            setDeletedImages(prevDeletedImages => [...prevDeletedImages, removedImage])
         } else {
-            setNewImages(prevImages => prevImages.filter(image => removedImage !== image.path)) // if Blob
+            setNewImages(prevImages => prevImages.filter(image => removedImage !== image.path))
         }
         setImagesBlobsAndUrls(prevBlobs => prevBlobs.filter(blob => removedImage !== blob))
     }
 
     const handleSubmitButtonClick = async () => {
         if (
-            product.price < 0 ||
-            product.stock < 0 ||
-            product.discountPercentage > 100 ||
-            product.discountPercentage < 0 ||
             !isValidField(product.title) ||
             !isValidField(product.description) ||
             !isValidField(product.category) ||
             !isValidField(product.brand) ||
-            !isValidField(product.price) ||
-            !isValidField(product.stock) ||
-            !isValidField(product.discountPercentage)
+            !isNumber(product.price) ||
+            !isNumber(product.stock) ||
+            !isNumber(product.discountPercentage) ||
+            !isInRange(product.discountPercentage, 0, 100)
         ) {
             showMessage({ msg: "Ensure that the Fields are filled Correctly", msgType: "error" })
             return

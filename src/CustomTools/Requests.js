@@ -195,27 +195,6 @@ export const add_rating = (productId, rating) => {
 }
 
 
-export const fetchAndConvertToBase64 = (url) => {
-    return api.get(url, { responseType: 'blob' })
-        .then((res) => {
-            const reader = new FileReader()
-            reader.readAsDataURL(res.data)
-            return new Promise((resolve, reject) => {
-                reader.onloadend = () => {
-                    const base64String = reader.result
-                    resolve(base64String.split(',')[1])
-                }
-                reader.onerror = (error) => {
-                    reject(error)
-                }
-            })
-        })
-        .catch((error) => {
-            return Promise.reject(error)
-        })
-}
-
-
 export const recover_password = (email) => {
     return api.post('/recover_password', email)
         .then(res => res.data)
