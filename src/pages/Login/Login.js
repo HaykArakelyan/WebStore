@@ -24,7 +24,7 @@ export default function Login() {
         navigate(`/user-profile`, { replace: true })
       })
       .catch((err) => {
-        showMessage({ msg: err.message, msgType: "error" })
+        showMessage({ msg: err.response.data.message, msgType: "error" })
       });
   }
 

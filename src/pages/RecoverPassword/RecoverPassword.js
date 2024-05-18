@@ -24,7 +24,7 @@ export default function RecoverPassword() {
                     setIsEmailSent(true)
                     showMessage({ msg: res.message, msgType: 'success' })
                 })
-                .catch((err) => showMessage({ msg: err.message, msgType: "error" }))
+                .catch((err) => showMessage({ msg: err.response.data.message, msgType: "error" }))
         } else {
             showMessage({ msg: "Please fill all the fields.", msgType: "error" })
         }

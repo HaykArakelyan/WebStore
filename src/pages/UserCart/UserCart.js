@@ -90,7 +90,7 @@ export default function UserCart() {
                 setIsModalHidden(true)
             })
             .catch((err) => {
-                showMessage({ msg: err.message, msgType: "error" })
+                showMessage({ msg: err.response.data.message, msgType: "error" })
             })
     }
 

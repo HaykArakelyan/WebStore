@@ -40,7 +40,7 @@ export default function UserProfile({ }) {
                 setUserCart([...userCart, ...res.cart_products_info])
             })
             .catch((err) => {
-                showMessage({ msg: err.message, msgType: "error" })
+                showMessage({ msg: err.response.data.message, msgType: "error" })
             })
     }, [isNewProductAdded])
 

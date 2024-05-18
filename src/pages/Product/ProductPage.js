@@ -33,7 +33,7 @@ export default function ProductPage() {
                 setProductOwner(product.owner_info)
             })
             .catch((err) => {
-                showMessage({ msg: err.message, msgType: "error" })
+                showMessage({ msg: err.response.data.message, msgType: "error" })
             })
     }, [isNewProductAdded])
 
@@ -63,7 +63,7 @@ export default function ProductPage() {
                 if (reviewResponse) {
                     showMessage({ msg: reviewResponse.data.message, msgType: "error" })
                 } else {
-                    showMessage({ msg: err.message, msgType: "error" })
+                    showMessage({ msg: err.response.data.message, msgType: "error" })
                 }
             })
 
@@ -95,7 +95,7 @@ export default function ProductPage() {
                 showMessage({ msg: res.message, msgType: "success" })
                 setIsModalHidden(true)
             })
-            .catch(err => showMessage({ msg: err.message, msgType: "error" }))
+            .catch(err => showMessage({ msg: err.response.data.message, msgType: "error" }))
     }
 
     const handleCopyEmailToClipboard = () => {

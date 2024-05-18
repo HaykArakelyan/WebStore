@@ -97,7 +97,7 @@ export default function Register() {
                     navigate("/verify-email")
                 })
                 .catch((err) => {
-                    showMessage({ msg: err.message, msgType: "error" })
+                    showMessage({ msg: err.response.data.message, msgType: "error" })
                 })
         } else {
             showMessage({ msg: "Email or Phone Number is Invalid", msgType: "error" })

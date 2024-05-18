@@ -38,7 +38,7 @@ export default function Product({
                 showMessage({ msg: res.message, msgType: "success" })
             })
             .catch((err) => {
-                showMessage({ msg: err.message, msgType: "warning" })
+                showMessage({ msg: err.response.data.message, msgType: "warning" })
             })
     }
 
@@ -77,7 +77,7 @@ export default function Product({
                     showMessage({ msg: res.message, msgType: "success" })
                 })
                 .catch((err) => {
-                    showMessage({ msg: err.message, msgType: "error" })
+                    showMessage({ msg: err.response.data.message, msgType: "error" })
                 })
         }
     }

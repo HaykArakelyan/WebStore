@@ -41,7 +41,7 @@ export default function Dashboard() {
                 setProducts(res.products)
                 setFilteredProductList(res.products)
             })
-            .catch(err => showMessage({ msg: err.message, msgType: "error" }))
+            .catch(err => showMessage({ msg: err.response.data.message, msgType: "error" }))
         setIsFethcing(false)
     }, [])
 

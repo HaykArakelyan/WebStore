@@ -28,7 +28,7 @@ export default function ContactUs() {
                         showMessage({ msg: res.message, msgType: "success" })
                         setIsSent(true)
                     })
-                    .catch((err) => showMessage({ msg: err.message, msgType: "error" }))
+                    .catch((err) => showMessage({ msg: err.response.data.message, msgType: "error" }))
             } else {
                 showMessage({ msg: "Please Fill All Fields Correctly", msgType: "error" })
             }

@@ -7,6 +7,7 @@ import React, { useEffect, useState, useRef } from 'react'
 import styles from './ProductForm.module.css'
 import { fetchAndConvertToBase64 } from '../../CustomTools/Requests'
 import CustomTextArea from '../customComponents/CustomTextArea'
+import { isValidField } from '../../CustomTools/Validators'
 
 
 export default function ProductForm({
@@ -63,9 +64,16 @@ export default function ProductForm({
             product.price < 0 ||
             product.stock < 0 ||
             product.discountPercentage > 100 ||
-            product.discountPercentage < 0
+            product.discountPercentage < 0 ||
+            !isValidField(product.title) ||
+            !isValidField(product.description) ||
+            !isValidField(product.category) ||
+            !isValidField(product.brand) ||
+            !isValidField(product.price) ||
+            !isValidField(product.stock) ||
+            !isValidField(product.discountPercentage)
         ) {
-            showMessage({ msg: "Ensure that the Fields are filled Correctly" })
+            showMessage({ msg: "Ensure that the Fields are filled Correctly", msgType: "error" })
             return
         }
 
