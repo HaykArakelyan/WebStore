@@ -136,7 +136,7 @@ export default function Product({
                         />
 
                         <CustomButton
-                            text={"Add to Cart"}
+                            text={"Add to Saves"}
                             onClick={() => handleAddToCart()}
                         />
                     </div>
