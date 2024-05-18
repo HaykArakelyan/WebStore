@@ -29,7 +29,7 @@ export default function Product({
     const [productImages, setProductImages] = useState([])
 
     useEffect(() => {
-        setProductImages(product.images)
+        setProductImages(product.images.length ? product.images : [default_product])
     }, [])
 
     const handleAddToCart = () => {
@@ -49,7 +49,7 @@ export default function Product({
     const handleOpenEditProductForm = (activeProduct) => {
         setModalElement(
             <ProductForm
-                p={activeProduct}
+                p={{ ...activeProduct, images: productImages.length === 1 && productImages[0] === default_product ? [] : productImages }}
                 onSubmit={handleEditProductButtonClick}
             />
         )
@@ -85,10 +85,7 @@ export default function Product({
     return (
         <div className={styles.container}>
             <div className={styles.productImageSlider}>
-                {product?.images?.length > 0
-                    ? <SlickSlider images={productImages || [default_product]} />
-                    : null
-                }
+                <SlickSlider images={productImages} />
             </div>
 
             <div className={styles.productInfo}>

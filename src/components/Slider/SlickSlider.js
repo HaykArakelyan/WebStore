@@ -43,15 +43,15 @@ export default function SlickSlider({
                     ref={sliderRef}
                     className={styles.slider}
                 >
-                    {images?.map((i) =>
-                        <div key={i} className={styles.productImageContainer}>
-                            <img src={i.path} className={styles.productImage} />
+                    {images?.map((img, index) =>
+                        <div key={index} className={styles.productImageContainer}>
+                            <img src={img.path || img} className={styles.productImage} />
                         </div>
                     )}
                 </Slider >
             </div>
 
-            <div className={styles.controlPanel}>
+            {images.length > 1 && <div className={styles.controlPanel}>
 
                 <CustomIcon
                     icon={faChevronLeft}
@@ -74,7 +74,7 @@ export default function SlickSlider({
                         sliderRef?.current?.slickNext()
                     }}
                 />
-            </div>
+            </div>}
         </div>
     )
 }
