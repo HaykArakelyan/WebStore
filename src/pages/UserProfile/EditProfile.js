@@ -36,6 +36,7 @@ export default function EditProfile({ user, closeModal }) {
                 email: newEmail,
                 phone: newPhone,
                 gender: newGender,
+                age: parseInt(newAge),
                 profile_image: newImageUrl,
                 profile_image_base64: newImageBase64
             })
