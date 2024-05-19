@@ -31,7 +31,7 @@ api.interceptors.response.use(
         if (status === 401) {
             if (!isRefreshing) {
                 isRefreshing = true
-                api.post('/refresh_token', {}, {
+                return api.post('/refresh_token', {}, {
                     headers: {
                         'Authorization': `Bearer ${sessionStorage.getItem("refresh_token")}`
                     }
@@ -73,8 +73,7 @@ export const get_token_login = (email, password) => {
         .then((res) => {
             sessionStorage.setItem("refresh_token", res.data.refresh_token)
             sessionStorage.setItem("access_token", res.data.access_token)
-            sessionStorage.setItem("id", res.data.id)
-            return res.data.id
+            return res.data
         })
         .catch((err) => {
             return Promise.reject(err)
@@ -218,6 +217,6 @@ export const send_report = (report) => {
 
 export const logout = () => {
     return api.post("/logout", { refresh_token: sessionStorage.getItem("refresh_token"), })
-        .then(res => res.data)
+        .then(res => res?.data)
         .catch(err => Promise.reject(err))
 }
