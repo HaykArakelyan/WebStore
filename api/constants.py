@@ -1,23 +1,23 @@
 # constants.py
 
 class ErrorMessages:
-    age_required = 'Age is required'
-    firstname_required = 'First name is required'
-    lastname_required = 'Last name is required'
-    username_required = 'Username is required'
-    email_required = 'Email is required'
-    phone_required = 'Phone is required'
-    password_length = 'Password should be at least 8 characters long'
-    password_match = 'Passwords must match'
-    age_invalid = 'Age must be between 18 and 100'
-    email_invalid = 'Invalid email format'
-    gender_required = 'Gender is required'
-    email_exist = "Email already exists"
-    missing_required_fields = "Missing required field: {}"
-    password_chars = 'Password must contain at least one of the following characters: !, @, #, $, %, &, *, .'
-    missing_credentials = 'Email and password are required'
-    invalid_credentials = 'Invalid email or password'
-    unverified_email = 'Please verify your email before logging in'
+    age_required = 'Age is Required'
+    firstname_required = 'First Name is Required'
+    lastname_required = 'Last Name is Required'
+    username_required = 'Username is Required'
+    email_required = 'Email is Required'
+    phone_required = 'Phone is Required'
+    password_length = 'Password Should be At Least 8 Characters Long'
+    password_match = 'Passwords Must Match'
+    age_invalid = 'Age Must be Between 18 and 100'
+    email_invalid = 'Invalid Email Format'
+    gender_required = 'Gender is Required'
+    email_exist = "Email Already Exists"
+    missing_required_fields = "Missing Required Field: {}"
+    password_chars = 'Password Must Contain at Least One of the Following Characters: !, @, #, $, %, &, *, .'
+    missing_credentials = 'Email and Password are Required'
+    invalid_credentials = 'Invalid Email or Password'
+    unverified_email = 'Please Verify Your Email Before Logging In'
 class successMessages:
     success_register = 'User Registered And Verification Email Sent'
     login_successful = 'Login Successful'

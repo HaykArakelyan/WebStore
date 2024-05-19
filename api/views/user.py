@@ -1,5 +1,6 @@
 import base64
 import hashlib
+from hmac import new
 import os
 from hashlib import sha256
 
@@ -66,6 +67,7 @@ def get_user_by_id():
         new_email = data.get('email')
         new_phone = data.get('phone')
         new_gender = data.get('gender')
+        new_age = data.get('age')
         profile_image_base64 = data.get("profile_image_base64")
 
         if not data:
@@ -79,6 +81,7 @@ def get_user_by_id():
         user.email = new_email
         user.phone = new_phone
         user.gender = new_gender
+        user.age = new_age
 
         if profile_image_base64:
             s3 = helpers.create_session().resource('s3')
